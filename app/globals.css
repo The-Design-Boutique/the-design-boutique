@@ -1,0 +1,82 @@
+/*
+ * TDB design tokens (from the live site's Elementor Default Kit).
+ * Dark theme, single typeface (Signika), orange accent, square buttons,
+ * full-bleed containers with a 50px side gutter.
+ * Breakpoints: mobile <=575, tablet <=991, desktop >991.
+ */
+:root {
+  /* color */
+  --tdb-black: #070707;      /* primary / page background */
+  --tdb-dark: #202020;       /* secondary surface */
+  --tdb-gray: #363636;       /* custom gray */
+  --tdb-offwhite: #e3e3e3;   /* custom off-white */
+  --tdb-white: #ffffff;      /* body text */
+  --tdb-accent: #f26722;     /* brand orange */
+
+  /* type (--font-signika is provided by next/font in app/layout.tsx) */
+  --font-sans: var(--font-signika), -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --fw-regular: 400;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* layout */
+  --gutter: 50px;
+  --radius: 0px; /* square buttons/cards, per the brand */
+
+  /* breakpoints (reference values; used in media queries) */
+  --bp-mobile: 575px;
+  --bp-tablet: 991px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--tdb-black);
+  color: var(--tdb-white);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--tdb-accent);
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--fw-bold);
+  line-height: 1.1;
+  margin: 0;
+}
+
+button,
+.btn {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  border-radius: var(--radius);
+  border: 1px solid var(--tdb-accent);
+  background: var(--tdb-accent);
+  color: var(--tdb-white);
+  padding: 0.9rem 1.6rem;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 575px) {
+  :root { --gutter: 20px; }
+}
