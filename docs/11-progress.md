@@ -8,28 +8,30 @@ Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Ange
 ## Status at a glance
 
 - Docs and management system: in place.
-- Git repo: live at github.com/The-Design-Boutique/the-design-boutique, default branch `main`, foundations pushed. Working via `phaseN/*` branches and draft PRs at review gates from here.
-- Blocked on Angelo for: Sanity org access + Vercel link (see "Needed from Angelo"). Both block the code scaffold and walking skeleton.
+- Git repo: PUBLIC at github.com/The-Design-Boutique/the-design-boutique, default branch `main`. Working via `phaseN/*` branches and draft PRs at review gates.
+- Sanity: project `inapmf9l` ("the-design-boutique"), dataset `production` (public). Access via an Editor API token in `.env.local` (gitignored). Note: the claude.ai Sanity connector is stale (cannot manage this project), so project-admin actions (CORS, etc.) need Angelo via the UI or an admin-scoped token.
+- Blocked on Angelo for: add CORS origins to the Sanity project (localhost + Vercel URLs); Vercel link. See "Needed from Angelo".
 - Blocked on Laney for: sign-off on the free 2.3 SEO Health panel (does not block Phases 0 to 2).
 
 ## Needed from Angelo to unblock (you provide access)
 
-1. Sanity (blocking): my connected Sanity tool is logged in as `angelo.marasa@kaleidico.com`, which currently sees only the Kaleidico org, not the new "The Design Boutique" org. Invite `angelo.marasa@kaleidico.com` to the TDB org as Administrator (manage.sanity.io -> the org -> Members -> Invite). Once invited, I can create the project in that org myself. Confirm dataset name `production`.
-2. Vercel (blocking for deploy): connect the GitHub repo to a Vercel project via Git integration in the TDB Vercel account (no secret needed; every push deploys). Alternative if CLI deploys are preferred: a Vercel access token in the environment.
-3. GitHub: DONE. Repo live, `main` default, foundations pushed.
-4. Google Search Console: confirm the `gsc-tdb` connection covers the thedesignboutique.com property (likely already does).
-5. Content/media: the local WP import at `~/Sites/tdb` covers this; no action needed unless a fresh export is wanted.
+1. Sanity CORS (blocking full Studio connect): the Editor token cannot manage CORS, and my connector is stale. Add `http://localhost:3009` (dev) and the Vercel URLs (once known) as CORS origins with credentials allowed, at manage.sanity.io -> project inapmf9l -> API -> CORS Origins. OR send an Admin-permission token and I will self-serve all project config from here.
+2. Vercel (blocking for deploy): import the (now public) GitHub repo into the TDB Vercel account. Add `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and the Sanity token as Vercel env vars (I will give the exact values). Add the resulting Vercel URL to Sanity CORS.
+3. GitHub: DONE. Repo public, `main` default.
+4. Sanity project + token: DONE (project inapmf9l, Editor token stored locally).
+5. Google Search Console: confirm the `gsc-tdb` connection covers the thedesignboutique.com property (likely already does).
 
 ## Phase 0 — Foundations & walking skeleton
 
 - [x] Management system: SOW compliance matrix, engineering standards, progress board
-- [x] Git repository initialized (local)
-- [ ] Design reference captured: screenshots of every page at 3 breakpoints into `design-reference/`
-- [ ] Design tokens as code (colors, Signika, spacing, breakpoints, button style)
-- [ ] Repo scaffold: Next.js (App Router, TS) + embedded Sanity Studio v6 [needs Sanity project]
-- [ ] Shared schema objects (`seoFields`, `link`, `sectionSettings`, image+alt)
+- [x] Git repository (public, main default)
+- [~] Design reference captured: homepage done (desktop + mobile); remaining pages/breakpoints to follow
+- [x] Design tokens as code (colors, Signika via next/font, spacing, breakpoints, square buttons) in `app/globals.css`
+- [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified end to end: clean production build; home renders on-brand; Studio embeds AND connects to project inapmf9l (CORS added for localhost:3009; login screen shows the project).
+- [x] Shared schema objects: `seoFields` (full SOW 2.4 stack + char/pixel counter inputs), `link`, `sectionSettings`, `imageWithAlt`. Verified: clean build; `page` type using them created + read back via the API.
 - [ ] CI: build + type-check + lint on push
-- [ ] Walking skeleton: one content type end to end (schema -> block -> frontend render -> SEO fields -> live preview -> deployed to staging) [needs Sanity + Vercel]
+- [~] Walking skeleton: `page` schema + data layer done (seed Home page reads back). Remaining: frontend render + generateMetadata from SEO fields + Vercel deploy.
+- [ ] Deferred to Phase 1: desk icons (`@sanity/icons` export not resolvable under Turbopack yet; solve with the WP-familiar desk).
 - [ ] Phase 0 QC + Angelo review gate
 
 ## Phase 1 — Content model & blocks
