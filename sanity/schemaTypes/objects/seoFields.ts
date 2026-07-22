@@ -10,9 +10,11 @@ export const seoFields = defineType({
   name: 'seoFields',
   title: 'SEO',
   type: 'object',
-  options: { collapsible: true, collapsed: true },
+  // Not collapsible: under the document's SEO tab the fields show directly, no extra expand.
+  options: { collapsible: false },
   fieldsets: [
-    { name: 'social', title: 'Social sharing', options: { collapsible: true, collapsed: true } },
+    // Social is open by default; only the power-user "Advanced" fields are tucked away.
+    { name: 'social', title: 'Social sharing', options: { collapsible: true, collapsed: false } },
     { name: 'advanced', title: 'Advanced', options: { collapsible: true, collapsed: true } },
   ],
   fields: [

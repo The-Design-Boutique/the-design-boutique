@@ -30,8 +30,12 @@ Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Ange
 - [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified end to end: clean production build; home renders on-brand; Studio embeds AND connects to project inapmf9l (CORS added for localhost:3009; login screen shows the project).
 - [x] Shared schema objects: `seoFields` (full SOW 2.4 stack + char/pixel counter inputs), `link`, `sectionSettings`, `imageWithAlt`. Verified: clean build; `page` type using them created + read back via the API.
 - [ ] CI: build + type-check + lint on push
-- [~] Walking skeleton: `page` schema + data layer done (seed Home page reads back). Remaining: frontend render + generateMetadata from SEO fields + Vercel deploy.
+- [x] Walking skeleton: complete end to end. `/[slug]` route renders a page from Sanity (title + Portable Text body) with SEO metadata (title/description/canonical/OG) from the shared `seoFields`. Verified locally at `/home` from the seed page; deployed to staging.
+- SEO editor UX: flattened the SEO tab (no nested collapsibles; only "Advanced" tucked away) per Angelo's feedback. Full Rank-Math-style SERP-preview panel is Phase 4 (SOW 2.5).
+
+Known items to revisit:
 - [ ] Deferred to Phase 1: desk icons (`@sanity/icons` export not resolvable under Turbopack yet; solve with the WP-familiar desk).
+- [ ] Frontend reads use the write token server-side (works, secure). Later: create a dedicated read-only token, and sort out true public reads for CDN caching (dataset shows `public` but unauthenticated reads return nothing, a newer Sanity access setting). Add revalidation.
 - [ ] Phase 0 QC + Angelo review gate
 
 ## Phase 1 — Content model & blocks
