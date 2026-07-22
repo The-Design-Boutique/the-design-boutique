@@ -28,9 +28,10 @@ Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Ange
 - [~] Design reference captured: homepage done (desktop + mobile); remaining pages/breakpoints to follow
 - [x] Design tokens as code (colors, Signika via next/font, spacing, breakpoints, square buttons) in `app/globals.css`
 - [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified end to end: clean production build; home renders on-brand; Studio embeds AND connects to project inapmf9l (CORS added for localhost:3009; login screen shows the project).
-- [ ] Shared schema objects (`seoFields`, `link`, `sectionSettings`, image+alt)
+- [x] Shared schema objects: `seoFields` (full SOW 2.4 stack + char/pixel counter inputs), `link`, `sectionSettings`, `imageWithAlt`. Verified: clean build; `page` type using them created + read back via the API.
 - [ ] CI: build + type-check + lint on push
-- [ ] Walking skeleton: one content type end to end (schema -> block -> frontend render -> SEO fields -> live preview -> deployed to staging) [needs CORS + Vercel]
+- [~] Walking skeleton: `page` schema + data layer done (seed Home page reads back). Remaining: frontend render + generateMetadata from SEO fields + Vercel deploy.
+- [ ] Deferred to Phase 1: desk icons (`@sanity/icons` export not resolvable under Turbopack yet; solve with the WP-familiar desk).
 - [ ] Phase 0 QC + Angelo review gate
 
 ## Phase 1 — Content model & blocks

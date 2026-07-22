@@ -37,16 +37,18 @@ Last updated: July 22, 2026 (project kickoff, nothing built yet).
 
 | # | Requirement | Where implemented | Status | Notes |
 |---|---|---|---|---|
-| 2.4a | SEO title (char + pixel-width guidance) | `seoFields` object | Planned | Cross-cutting: verified on every content type |
-| 2.4b | Meta description (char guidance) | `seoFields` | Planned | |
-| 2.4c | Canonical URL | `seoFields` | Planned | |
-| 2.4d | URL slug | `seoFields` | Planned | |
-| 2.4e | Focus / target keyword | `seoFields` | Planned | |
-| 2.4f | Robots directives (index/noindex, follow/nofollow) | `seoFields` | Planned | |
-| 2.4g | Open Graph fields (title, description, image) | `seoFields` | Planned | |
-| 2.4h | Twitter/X card fields | `seoFields` | Planned | |
-| 2.4i | JSON-LD schema markup, page-level type selectable | `seoFields` | Planned | Org, Service, FAQ, Article, LocalBusiness, WebPage |
-| 2.4j | Breadcrumb title | `seoFields` | Planned | |
+| 2.4a | SEO title (char + pixel-width guidance) | `seoFields.title` (+ `SeoTitleInput`) | Built | Cross-cutting: verify on every content type. Char + SERP pixel counter. |
+| 2.4b | Meta description (char guidance) | `seoFields.metaDescription` (+ `MetaDescriptionInput`) | Built | Char counter, 50-160 guidance |
+| 2.4c | Canonical URL | `seoFields.canonicalUrl` | Built | |
+| 2.4d | URL slug | `page.slug` (document level) | Built | Slug lives on the document for routing, not in the seo object |
+| 2.4e | Focus / target keyword | `seoFields.focusKeyword` | Built | |
+| 2.4f | Robots directives (index/noindex, follow/nofollow) | `seoFields.robots` | Built | |
+| 2.4g | Open Graph fields (title, description, image) | `seoFields.og*` | Built | |
+| 2.4h | Twitter/X card fields | `seoFields.twitter*` + cardType | Built | |
+| 2.4i | JSON-LD schema markup, page-level type selectable | `seoFields.schemaType` | Built | Org, Service, FAQ, Article, LocalBusiness, WebPage. Rendering to JSON-LD is Phase 4. |
+| 2.4j | Breadcrumb title | `seoFields.breadcrumbTitle` | Built | |
+
+Note: fields are Built (defined + compile + accept content, verified via API round-trip on the `page` type). They reach Verified once rendered into page `<head>` on the frontend (Phase 2/4) and confirmed present on every content type.
 
 ## 2.5 Rank Math Pro-style toolset
 
