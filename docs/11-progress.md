@@ -27,7 +27,7 @@ Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Ange
 - [x] Git repository (public, main default)
 - [~] Design reference captured: homepage done (desktop + mobile); remaining pages/breakpoints to follow
 - [x] Design tokens as code (colors, Signika via next/font, spacing, breakpoints, square buttons) in `app/globals.css`
-- [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified: clean production build; home renders on-brand; Studio embeds and correctly targets project inapmf9l. Full connect pending CORS.
+- [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified end to end: clean production build; home renders on-brand; Studio embeds AND connects to project inapmf9l (CORS added for localhost:3009; login screen shows the project).
 - [ ] Shared schema objects (`seoFields`, `link`, `sectionSettings`, image+alt)
 - [ ] CI: build + type-check + lint on push
 - [ ] Walking skeleton: one content type end to end (schema -> block -> frontend render -> SEO fields -> live preview -> deployed to staging) [needs CORS + Vercel]
