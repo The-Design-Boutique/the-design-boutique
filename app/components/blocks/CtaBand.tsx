@@ -6,7 +6,7 @@ export function CtaBand({ block }: { block: any }) {
   const settings = block.settings || { background: 'forest' }
   return (
     <Section settings={{ ...settings, background: settings.background || 'forest' }}>
-      <div style={{ textAlign: 'center', maxWidth: '40ch', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', maxWidth: '46rem', margin: '0 auto' }}>
         <h2 className="h2" style={{ whiteSpace: 'pre-line' }}>{block.headline}</h2>
         {block.body ? <p className="lead" style={{ margin: '1rem auto 0' }}>{block.body}</p> : null}
         {Array.isArray(block.ctas) && block.ctas.length ? (

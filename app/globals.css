@@ -336,6 +336,10 @@ a.service-card:hover .service-text { color: #fff; }
 .contact-address-line { display: flex; align-items: flex-start; gap: 0.6rem; margin: 0 0 0.75rem; color: var(--tdb-offwhite); }
 .contact-form-heading { margin-bottom: 1.75rem; }
 .contact-form-heading .lead { margin-top: 0.75rem; }
+/* Centered contact (no left column, e.g. the Contact page) */
+.contact-centered .contact-form-heading { text-align: center; margin-bottom: 2.5rem; }
+.contact-centered .contact-form-heading .eyebrow { text-align: center; }
+.contact-centered .contact-form-heading .lead { margin-inline: auto; }
 
 /* Contact form fields: orange placeholders, bordered, orange select values */
 .contact-form input::placeholder,
