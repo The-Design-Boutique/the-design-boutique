@@ -9,6 +9,13 @@ export const servicesGrid = defineType({
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
     defineField({
+      name: 'columns',
+      title: 'Columns',
+      type: 'string',
+      initialValue: '3',
+      options: { list: [{ title: '3 across', value: '3' }, { title: '2 across', value: '2' }] },
+    }),
+    defineField({
       name: 'services',
       title: 'Services',
       type: 'array',

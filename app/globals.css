@@ -434,8 +434,21 @@ a.service-card:hover .service-text { color: #fff; }
 .subpage-banner { padding: 150px 0 90px; }
 @media (max-width: 991px) { .subpage-banner { padding: 120px 0 64px; } }
 .subpage-banner-title { text-align: center; }
+.subpage-banner-title--left { text-align: left; }
+.subpage-banner-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: center; }
+@media (max-width: 991px) { .subpage-banner-grid { grid-template-columns: 1fr; gap: 2rem; } }
+.subpage-banner-media img { display: block; width: 100%; height: auto; }
 .subpage-banner-subtitle { max-width: 100%; margin: 1.5rem 0 0; }
 .subpage-banner-cta { margin-top: 1.75rem; }
+
+/* Image gallery */
+.gallery-grid { display: grid; gap: 1.5rem; justify-items: center; }
+.gallery-grid img { display: block; width: 100%; height: auto; }
+.gallery-grid--1 { grid-template-columns: 1fr; }
+.gallery-grid--1 img { max-width: 420px; }
+.gallery-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.gallery-grid--3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 767px) { .gallery-grid--2, .gallery-grid--3 { grid-template-columns: 1fr; } }
 
 /* Rich text images */
 .prose-img { display: block; max-width: 600px; width: 100%; height: auto; margin: 0 0 1.75rem; }

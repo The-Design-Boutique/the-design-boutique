@@ -13,7 +13,7 @@ export function ServicesGrid({ block }: { block: any }) {
           {block.intro ? <p className="lead">{block.intro}</p> : null}
         </div>
       )}
-      <div className="grid grid--3 services-grid">
+      <div className={`grid grid--${block.columns === '2' ? '2' : '3'} services-grid`}>
         {services.map((s, i) => {
           const icon = s.iconImage?.asset ? urlFor(s.iconImage).width(96).url() : undefined
           const hover = s.hoverImage?.asset ? urlFor(s.hoverImage).width(900).quality(75).url() : undefined
