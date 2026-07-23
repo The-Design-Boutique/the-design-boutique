@@ -413,6 +413,16 @@ a.service-card:hover .service-text { color: #fff; }
   box-shadow: 5px 5px 10px #00000030;
 }
 
+/* Subpage banner (first section under the fixed header) */
+.subpage-banner { padding: 150px 0 90px; }
+@media (max-width: 991px) { .subpage-banner { padding: 120px 0 64px; } }
+.subpage-banner-title { text-align: center; }
+.subpage-banner-subtitle { max-width: 100%; margin: 1.5rem 0 0; }
+.subpage-banner-cta { margin-top: 1.75rem; }
+
+/* Rich text images */
+.prose-img { display: block; max-width: 600px; width: 100%; height: auto; margin: 0 0 1.75rem; }
+
 /* Portable text spacing */
 .prose p { margin: 0 0 1rem; }
 .prose h2 { margin: 2rem 0 0.75rem; }
