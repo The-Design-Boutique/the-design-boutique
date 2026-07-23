@@ -37,7 +37,7 @@ export function Header({ nav, settings }: { nav?: any; settings?: any }) {
         </nav>
 
         <div className="site-header-right">
-          {cta?.label ? <CtaLink cta={{ label: `${cta.label}  +`, href: cta.link?.href }} /> : null}
+          {cta?.label ? <CtaLink cta={{ label: cta.label, href: cta.link?.href }} /> : null}
           {phone ? <a className="site-header-phone" href={`tel:${phone.replace(/[^0-9.]/g, '')}`}>{phone}</a> : null}
         </div>
 
