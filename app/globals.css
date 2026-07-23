@@ -313,9 +313,21 @@ a.service-card:hover .service-text { color: #fff; }
 .contact-bullets { list-style: none; padding: 0; margin: 0 0 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
 .contact-bullets li { position: relative; padding-left: 1.6rem; color: var(--tdb-white); }
 .contact-bullets li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 9px; height: 9px; background: var(--tdb-accent); }
-.contact-address { color: var(--tdb-offwhite); margin: 1.5rem 0 0; }
-.contact-form-heading { margin-bottom: 1.5rem; }
+.contact-address { margin: 2rem 0 0; }
+.contact-address-heading { font-weight: 700; margin: 0 0 0.85rem; }
+.contact-address-line { display: flex; align-items: flex-start; gap: 0.6rem; margin: 0 0 0.75rem; color: var(--tdb-offwhite); }
+.contact-form-heading { margin-bottom: 1.75rem; }
 .contact-form-heading .lead { margin-top: 0.75rem; }
+
+/* Contact form fields: orange placeholders, bordered, orange select values */
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--tdb-accent); opacity: 1; }
+.contact-form select { color: var(--tdb-accent); }
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus { outline: none; border-color: var(--tdb-accent); }
+.btn--send { width: 100%; padding: 1.15rem; font-size: 1.05rem; }
+.btn--send:hover { background: #ffffff; color: var(--tdb-accent); border-color: var(--tdb-accent); }
 
 /* Split row (media + text) */
 .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
