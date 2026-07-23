@@ -295,6 +295,8 @@ a.service-card:hover .service-text { color: #fff; }
 }
 .bg-leaf > .container, .with-leaf > .container { position: relative; z-index: 1; }
 @media (max-width: 991px) { .bg-leaf::before, .with-leaf::before { display: none; } }
+/* FAQ leaf sits low (behind the accordion), keeping the heading clean */
+.faq-with-leaf::before { top: auto; bottom: -80px; transform: none; opacity: 0.35; }
 
 /* Testimonial */
 .testimonial-section { position: relative; }
