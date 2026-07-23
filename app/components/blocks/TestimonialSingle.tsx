@@ -5,7 +5,7 @@ export function TestimonialSingle({ block }: { block: any }) {
   const t = block.testimonial
   if (!t) return null
   return (
-    <Section settings={block.settings} className="testimonial-section">
+    <Section settings={block.settings} container="wide" className="testimonial-section">
       <div className="testimonial">
         {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
         {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
