@@ -21,6 +21,7 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
       ...,
       ctas[]${linkProjection},
       cta${linkProjection},
+      cardsLink${linkProjection},
       services[]{ title, description, icon, iconImage, hoverImage, link${linkProjection} },
       testimonial->{ name, roleCompany, quote, videoUrl, featured, image },
       testimonials[]->{ name, roleCompany, quote, image, videoUrl },

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export type SectionSettings = {
-  background?: 'black' | 'dark' | 'white' | 'forest'
+  background?: 'black' | 'dark' | 'white' | 'forest' | 'leaf'
   paddingTop?: 'none' | 'small' | 'medium' | 'large'
   paddingBottom?: 'none' | 'small' | 'medium' | 'large'
   anchorId?: string

@@ -17,6 +17,7 @@ export const sectionSettings = defineType({
           { title: 'Black (default)', value: 'black' },
           { title: 'Dark gray', value: 'dark' },
           { title: 'Forest motif', value: 'forest' },
+          { title: 'Leaf motif', value: 'leaf' },
           { title: 'White', value: 'white' },
         ],
       },

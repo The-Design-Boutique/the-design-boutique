@@ -5,6 +5,7 @@ export const contactForm = defineType({
   title: 'Contact Form',
   type: 'object',
   fields: [
+    defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
     defineField({ name: 'submitLabel', title: 'Submit button label', type: 'string', initialValue: 'Send a Message' }),

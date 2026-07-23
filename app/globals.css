@@ -104,15 +104,16 @@ img {
 .bg-dark { background: var(--tdb-dark); color: var(--tdb-white); }
 .bg-white { background: var(--tdb-white); color: var(--tdb-black); }
 .bg-white a { color: var(--tdb-accent); }
-/* Forest motif: the migrated forest photo under a dark overlay (brand signature). */
+/* Forest motif: the Madron Canyon forest photo under a dark overlay (brand signature). */
 .bg-forest {
   color: var(--tdb-white);
   background:
-    linear-gradient(rgba(7, 7, 7, 0.78), rgba(7, 7, 7, 0.9)),
-    url('https://cdn.sanity.io/images/inapmf9l/production/5409792715b6c85959f34abe784ae0a7f69c561c-2560x1920.jpg');
+    linear-gradient(rgba(7, 7, 7, 0.55), rgba(7, 7, 7, 0.7)),
+    url('https://cdn.sanity.io/images/inapmf9l/production/178e2334e02bba7e7069abb11ba3b4f1c1988d20-2560x908.jpg');
   background-size: cover;
   background-position: center;
 }
+.section.bg-forest { padding-block: 150px; }
 
 /* Typography */
 .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 1.05rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.9rem; }
@@ -207,6 +208,18 @@ a.service-card:hover .service-text { color: #fff; }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ring-text { animation: none; } }
 
+/* Logo wall (Check Out Our Clients Feeling the Love Right Now) */
+.logowall-heading { max-width: none; }
+.logo-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 6%; }
+.logo-row .logo-item { width: auto; flex: 0 0 auto; }
+/* Match the live per-logo display heights (uniform ~0.75 scale of natural) */
+.logo-row .logo-item:nth-child(1) { height: 79px; }
+.logo-row .logo-item:nth-child(2) { height: 53px; }
+.logo-row .logo-item:nth-child(3) { height: 38px; }
+.logo-row .logo-item:nth-child(4) { height: 87px; }
+.logo-row .logo-item:nth-child(5) { height: 48px; }
+@media (max-width: 991px) { .logo-row { flex-wrap: wrap; gap: 2rem 3rem; } }
+
 /* About section (We love what we do) */
 .about-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 3.5rem; align-items: center; }
 @media (max-width: 991px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
@@ -224,6 +237,62 @@ a.service-card:hover .service-text { color: #fff; }
 .about-card p { margin: 0; color: var(--tdb-offwhite); }
 .about-cta .btn { border-color: var(--tdb-accent); background: var(--tdb-black); color: var(--tdb-white); padding: 1.1rem 2.4rem; }
 .about-cta .btn:hover { background: var(--tdb-accent); color: #fff; }
+
+/* Industries section (two-column: heading + stats | cards) */
+.industries-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@media (max-width: 991px) { .industries-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+.industries-body { max-width: 60ch; margin: 1.25rem 0 2.25rem; }
+.industries-stats-heading { font-weight: 700; font-size: 1.15rem; margin: 0 0 1.75rem; }
+.industries-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2.25rem 2.5rem; }
+.stat-value { color: var(--tdb-accent); font-weight: 600; font-size: 3.4rem; line-height: 1; }
+.stat-suffix { font-size: 2.2rem; }
+.stat-label { margin: 0.6rem 0 0; color: var(--tdb-offwhite); }
+.industries-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.industry-card { background: var(--tdb-dark); min-height: 200px; }
+.industry-card .service-card-body { justify-content: flex-start; }
+@media (max-width: 575px) { .industries-stats, .industries-cards { grid-template-columns: 1fr; } }
+
+/* Work showcase (See, feel, and practically smell the difference) */
+.work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 991px) { .work-grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; } }
+.work-card { display: block; text-decoration: none; color: var(--tdb-white); }
+.work-thumb { display: block; overflow: hidden; background: var(--tdb-dark); }
+.work-thumb img { display: block; width: 100%; height: 380px; object-fit: cover; transition: transform 0.4s ease; }
+.work-card:hover .work-thumb img { transform: scale(1.04); }
+.work-label { display: block; margin-top: 1rem; font-weight: 700; font-size: 1.15rem; text-align: center; }
+
+/* Leaf background (We know what the algorithms want) */
+.bg-leaf { position: relative; overflow: hidden; }
+.bg-leaf::before {
+  content: ''; position: absolute; left: -80px; top: 50%; transform: translateY(-50%);
+  width: 620px; height: 760px; max-width: 50%;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/a0289ede76893701a44477927c7e12159b9c198e-1269x1085.webp') no-repeat center / contain;
+  opacity: 0.5; z-index: 0; pointer-events: none;
+}
+.bg-leaf > .container { position: relative; z-index: 1; }
+@media (max-width: 991px) { .bg-leaf::before { display: none; } }
+
+/* Testimonial */
+.testimonial { max-width: 60rem; }
+.testimonial .h2 { margin-bottom: 1.5rem; }
+.testimonial-mark { display: block; font-size: 6rem; line-height: 0.6; color: var(--tdb-accent); font-weight: 700; height: 3rem; }
+.testimonial blockquote { margin: 0; font-size: clamp(1.15rem, 2vw, 1.5rem); line-height: 1.45; color: var(--tdb-white); }
+.testimonial figcaption { margin-top: 1.5rem; font-weight: 700; font-size: 1.15rem; }
+.testimonial figcaption span { color: var(--tdb-offwhite); font-weight: 400; }
+
+/* FAQ accordion */
+.faq-list { max-width: 100%; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid #2b2b2b; }
+.faq-item summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.15rem 0; font-weight: 700; font-size: 1.1rem; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; color: var(--tdb-accent); font-size: 1.6rem; font-weight: 700; line-height: 1; flex: 0 0 auto; }
+.faq-item[open] summary::after { content: '\2013'; }
+.faq-answer { padding: 0 0 1.25rem; color: var(--tdb-offwhite); }
+
+/* Contact section (two-column) */
+.contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 3.5rem; align-items: start; }
+@media (max-width: 991px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } }
+.contact-intro .lead { margin-bottom: 1.5rem; }
 
 /* Split row (media + text) */
 .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }

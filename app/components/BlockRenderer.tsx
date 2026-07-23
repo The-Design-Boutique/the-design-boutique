@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import { HeroHome } from './blocks/HeroHome'
 import { SubpageBanner } from './blocks/SubpageBanner'
 import { AboutSection } from './blocks/AboutSection'
+import { IndustriesSection } from './blocks/IndustriesSection'
+import { WorkShowcase } from './blocks/WorkShowcase'
 import { RichTextBlock } from './blocks/RichTextBlock'
 import { ServicesGrid } from './blocks/ServicesGrid'
 import { IconGrid } from './blocks/IconGrid'
@@ -30,6 +32,8 @@ const registry: Record<string, BlockComponent> = {
   heroHome: HeroHome,
   subpageBanner: SubpageBanner,
   aboutSection: AboutSection,
+  industriesSection: IndustriesSection,
+  workShowcase: WorkShowcase,
   richText: RichTextBlock,
   servicesGrid: ServicesGrid,
   iconGrid: IconGrid,

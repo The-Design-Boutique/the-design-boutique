@@ -6,16 +6,11 @@ export function LogoWall({ block }: { block: any }) {
   const logos: any[] = Array.isArray(block.logos) ? block.logos : []
   return (
     <Section settings={block.settings}>
-      {block.heading ? <div className="section-heading"><h2 className="h2">{block.heading}</h2></div> : null}
-      <div className="grid grid--4" style={{ alignItems: 'center' }}>
+      {block.heading ? <div className="section-heading logowall-heading"><h2 className="h2">{block.heading}</h2></div> : null}
+      <div className="logo-row">
         {logos.map((logo, i) =>
           logo?.asset ? (
-            <img
-              key={i}
-              src={urlFor(logo).width(240).url()}
-              alt={logo.alt || ''}
-              style={{ maxHeight: 64, width: 'auto', margin: '0 auto', objectFit: 'contain' }}
-            />
+            <img key={i} className="logo-item" src={urlFor(logo).height(240).url()} alt={logo.alt || ''} loading="lazy" />
           ) : null,
         )}
       </div>
