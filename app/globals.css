@@ -141,6 +141,43 @@ img {
 .card h3 { margin: 0 0 0.5rem; }
 .card p { margin: 0; color: var(--tdb-offwhite); }
 
+/* Left-aligned section heading (e.g. Services) */
+.section-heading--left { text-align: left; max-width: none; margin: 0 0 2.5rem; }
+.section-heading--left .lead { margin-inline: 0; }
+
+/* Services grid (Growth, Engineered in the AI Era) */
+.services-section { position: relative; overflow: hidden; }
+.services-section::before {
+  content: '';
+  position: absolute; top: 50%; right: -30px; transform: translateY(-50%);
+  width: 726px; height: 920px; max-width: 55%;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png') no-repeat center / contain;
+  opacity: 0.5; pointer-events: none; z-index: 0;
+}
+.services-section > .container { position: relative; z-index: 1; }
+@media (max-width: 991px) { .services-section::before { display: none; } }
+
+.services-grid { gap: 1.5rem; }
+.service-card {
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
+  min-height: 320px; padding: 2rem;
+  border: 1px solid rgba(227, 227, 227, 0.35);
+  background: rgba(189, 186, 186, 0.14);
+  color: var(--tdb-white); text-decoration: none;
+  transition: border-color 0.3s ease;
+}
+a.service-card:hover { border-color: #ffffff; }
+.service-card-hover {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 0.3s ease; z-index: 0;
+}
+a.service-card:hover .service-card-hover { opacity: 1; }
+.service-card-body { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; flex: 1; }
+.service-icon { width: 48px; height: 48px; margin-bottom: 1rem; }
+.service-title { display: block; margin-bottom: 0.75rem; }
+.service-text { display: block; color: var(--tdb-offwhite); }
+a.service-card:hover .service-text { color: #fff; }
+
 /* Header responsive nav */
 @media (max-width: 991px) {
   .site-nav { display: none !important; }
