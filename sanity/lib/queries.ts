@@ -36,5 +36,5 @@ export const LAYOUT_QUERY = defineQuery(`{
     headerCta{ label, link${linkProjection} },
     footerColumns[]{ title, links[]${linkProjection} }
   },
-  "settings": *[_id == "siteSettings"][0]{ siteName, logo, email, phone }
+  "settings": *[_id == "siteSettings"][0]{ siteName, logo, logoSecondary, email, phone, address, socialLinks[]{ platform, url } }
 }`)

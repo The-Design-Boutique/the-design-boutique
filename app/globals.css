@@ -179,9 +179,25 @@ a.service-card:hover .service-card-hover { opacity: 1; }
 .service-text { display: block; color: var(--tdb-offwhite); }
 a.service-card:hover .service-text { color: #fff; }
 
+/* Header */
+.site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: transparent; transition: background 0.3s ease; }
+.site-header--solid { background: rgba(7, 7, 7, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a; }
+.site-header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 96px; }
+.site-logo { display: inline-flex; align-items: center; gap: 0.5rem; }
+.site-logo img { height: 56px; width: auto; display: block; }
+.site-nav { display: flex; gap: 1.75rem; align-items: center; }
+.site-nav a { color: var(--tdb-white); font-weight: 600; }
+.site-nav a:hover { color: var(--tdb-accent); }
+.site-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+.site-header-phone { color: var(--tdb-white); font-weight: 700; font-size: 1.05rem; }
+.site-nav-toggle { display: none; background: transparent; border: 0; color: var(--tdb-white); font-size: 1.5rem; cursor: pointer; padding: 0.25rem 0.5rem; }
+.site-nav-mobile { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.5rem var(--gutter) 1rem; background: rgba(7, 7, 7, 0.97); }
+.site-nav-mobile a { color: var(--tdb-white); padding: 0.5rem 0; }
+
 /* Header responsive nav */
 @media (max-width: 991px) {
-  .site-nav { display: none !important; }
+  .site-header { background: rgba(7, 7, 7, 0.95); }
+  .site-nav, .site-header-right { display: none !important; }
   .site-nav-toggle { display: inline-block !important; }
 }
 
@@ -348,14 +364,39 @@ a.service-card:hover .service-text { color: #fff; }
   .flip-box-inner { transition: none; }
 }
 
+/* Footer */
+.site-footer { background: var(--tdb-black); padding-block: 4rem 2rem; }
+.footer-top { display: grid; grid-template-columns: auto 1.6fr 0.9fr 1.1fr 1.1fr 1.3fr; gap: 2.5rem; align-items: start; }
+@media (max-width: 1200px) { .footer-top { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 767px) { .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+.footer-brand { display: flex; flex-direction: column; gap: 1.5rem; }
+.footer-logo { height: 66px; width: auto; }
+.footer-social { display: flex; flex-wrap: wrap; gap: 1rem; }
+.footer-social a { color: var(--tdb-white); display: inline-flex; }
+.footer-social a:hover { color: var(--tdb-accent); }
+.footer-col-title { font-size: 1.1rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 1.1rem; }
+.footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-links a { color: var(--tdb-white); }
+.footer-links a:hover { color: var(--tdb-accent); }
+.footer-col--wide .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem 1.5rem; }
+.footer-contact-line { display: block; color: var(--tdb-white); margin: 0 0 0.9rem; }
+.footer-subscribe { display: flex; flex-direction: column; gap: 0.85rem; }
+.footer-subscribe input { padding: 0.85rem 1rem; background: transparent; border: 1px solid #5a5a5a; color: var(--tdb-white); font-family: inherit; font-size: 1rem; }
+.footer-subscribe input::placeholder { color: var(--tdb-accent); opacity: 1; }
+.footer-subscribe .btn { width: 100%; }
+.footer-bottom { margin-top: 3rem; padding-top: 1.75rem; border-top: 1px solid #333; }
+.footer-bottom p { margin: 0; color: var(--tdb-offwhite); font-size: 0.95rem; }
+.footer-bottom a { color: var(--tdb-white); text-decoration: underline; }
+
 /* Back-to-top button (matches the live #scroll-to-top styling) */
 .back-to-top {
   position: fixed; right: 0; bottom: 100px; z-index: 90;
-  width: 50px; height: 50px; display: grid; place-items: center;
-  background: #666; color: #ffffff; border: 0; cursor: pointer;
+  width: 50px; height: 50px; border: 0; cursor: pointer; font-size: 0;
+  background-color: #666;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z" fill="%23ffffff"/></svg>');
+  background-position: 50%; background-repeat: no-repeat; background-size: 50%;
   box-shadow: 5px 5px 10px #00000030;
 }
-.back-to-top svg { width: 25px; height: 25px; }
 
 /* Portable text spacing */
 .prose p { margin: 0 0 1rem; }
