@@ -115,7 +115,7 @@ img {
 }
 
 /* Typography */
-.eyebrow { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.8rem; font-weight: 700; color: var(--tdb-accent); margin: 0 0 0.75rem; }
+.eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 1.05rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.9rem; }
 .h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; }
 .h2 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; }
 .h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.2; }
@@ -206,6 +206,24 @@ a.service-card:hover .service-text { color: #fff; }
 .ring-text text { fill: var(--tdb-white); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ring-text { animation: none; } }
+
+/* About section (We love what we do) */
+.about-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 3.5rem; align-items: center; }
+@media (max-width: 991px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+.about-media img { display: block; width: 100%; height: auto; }
+.about-content .h2 { margin-bottom: 1.25rem; }
+.about-body { max-width: 62ch; margin: 0 0 2.25rem; }
+.about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+@media (max-width: 575px) { .about-cards { grid-template-columns: 1fr; } }
+.about-card { position: relative; background: var(--tdb-dark); padding: 1.85rem; overflow: hidden; }
+.about-card::after {
+  content: ''; position: absolute; top: 1.5rem; right: 1.5rem; width: 58px; height: 24px;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png') no-repeat center / contain;
+}
+.about-card h3 { margin: 0 0 0.85rem; padding-right: 3.5rem; }
+.about-card p { margin: 0; color: var(--tdb-offwhite); }
+.about-cta .btn { border-color: var(--tdb-accent); background: var(--tdb-black); color: var(--tdb-white); padding: 1.1rem 2.4rem; }
+.about-cta .btn:hover { background: var(--tdb-accent); color: #fff; }
 
 /* Split row (media + text) */
 .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }

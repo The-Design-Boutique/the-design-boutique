@@ -1,5 +1,6 @@
 import { heroHome } from './heroHome'
 import { subpageBanner } from './subpageBanner'
+import { aboutSection } from './aboutSection'
 import { richText } from './richText'
 import { ctaBand } from './ctaBand'
 import { videoEmbed } from './videoEmbed'
@@ -28,6 +29,7 @@ export const blocks = [
   subpageBanner,
   // content
   richText,
+  aboutSection,
   servicesGrid,
   iconGrid,
   solutionsRow,

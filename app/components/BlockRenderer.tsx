@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { HeroHome } from './blocks/HeroHome'
 import { SubpageBanner } from './blocks/SubpageBanner'
+import { AboutSection } from './blocks/AboutSection'
 import { RichTextBlock } from './blocks/RichTextBlock'
 import { ServicesGrid } from './blocks/ServicesGrid'
 import { IconGrid } from './blocks/IconGrid'
@@ -28,6 +29,7 @@ type BlockComponent = (props: { block: any }) => ReactNode | Promise<ReactNode>
 const registry: Record<string, BlockComponent> = {
   heroHome: HeroHome,
   subpageBanner: SubpageBanner,
+  aboutSection: AboutSection,
   richText: RichTextBlock,
   servicesGrid: ServicesGrid,
   iconGrid: IconGrid,
