@@ -9,6 +9,7 @@ import { testimonial } from './documents/testimonial'
 import { author } from './documents/author'
 import { category } from './documents/category'
 import { clientCategory } from './documents/clientCategory'
+import { formSubmission } from './documents/formSubmission'
 
 // Singletons
 import { siteSettings } from './singletons/siteSettings'
@@ -38,6 +39,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     author,
     category,
     clientCategory,
+    // operational
+    formSubmission,
     // singletons
     siteSettings,
     navigation,

@@ -3,7 +3,7 @@
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
 Last updated: July 22, 2026.
-Current phase: Phase 1 COMPLETE (content model + 22 blocks). Next: Phase 2 (frontend rendering & design system). Phase 0 live on staging; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
+Current phase: Phase 2 (frontend rendering & design system) IN PROGRESS. Home page renders from the CMS and matches the reference design; remaining block components + nested routing + signature motion to go. Phase 0/1 live; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
 
 ## Status at a glance
 
@@ -49,12 +49,15 @@ Note: the page's simple `body` was replaced by `pageBuilder`. The `/[slug]` rout
 
 ## Phase 2 — Frontend & design system
 
-- [ ] BlockRenderer (_type -> component)
-- [ ] Every block component, exact-matched to reference
-- [ ] Nested routing (parent-chain URLs preserved)
-- [ ] Global header (with "Hire Us!" CTA) + footers
-- [ ] Signature elements: forest motif, "Laney Said" video ring
-- [ ] Phase 2 QC + review gate
+- [x] Design-system CSS (containers, sections + background variants incl. forest, grids, buttons, cards, prose) on top of the tokens.
+- [x] BlockRenderer (`_type` -> component).
+- [~] Block components: homepage/common set built and rendering (heroHome, subpageBanner, richText, servicesGrid, iconGrid, ctaBand, statsCounters, faqAccordion, logoWall, videoEmbed, testimonialSingle, contactForm, htmlEmbed). Remaining: solutionsRow, portfolioMosaic/Loop, clientInfo/Solution, testimonialCarousel, imageGallery, flipBoxGrid, newsletterSignup.
+- [x] Global header (logo, menu, "Hire Us!" CTA, responsive mobile toggle) + footer, driven by the navigation singleton. Studio kept chrome-free via an `app/(site)` route group.
+- [x] Home page renders end to end from the CMS via `pageBuilder`; verified against the reference design (dark/Signika/orange, services grid, forest CTA, stat counters, Joe Montana testimonial, FAQ, contact form, footer).
+- [x] Functional contact form: client form -> `/api/contact` -> stored as `formSubmission` docs (visible in the WP-style desk). Email notification is a later add.
+- [ ] Nested routing (parent-chain URLs preserved) — flat `/[slug]` for now.
+- [ ] Signature elements: forest artwork + "Laney Said" video ring (forest is CSS-approximated pending media migration).
+- [ ] Remaining block components + full reference-diff pass + Phase 2 QC.
 
 ## Phase 3 — Pages & migration
 

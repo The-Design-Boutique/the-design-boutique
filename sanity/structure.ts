@@ -30,6 +30,8 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
+      S.documentTypeListItem('formSubmission').title('Form Submissions').icon(() => '📥'),
+
       S.divider(),
 
       S.listItem()

@@ -80,3 +80,76 @@ img {
 @media (max-width: 575px) {
   :root { --gutter: 20px; }
 }
+
+/* ============================================================
+   Design system
+   ============================================================ */
+
+/* Layout */
+.container { max-width: 1200px; margin-inline: auto; padding-inline: var(--gutter); }
+.container--wide { max-width: 1440px; }
+.container--narrow { max-width: 820px; }
+
+.section { padding-block: 96px; }
+.section[data-pt='none'] { padding-top: 0; }
+.section[data-pt='small'] { padding-top: 40px; }
+.section[data-pt='medium'] { padding-top: 64px; }
+.section[data-pb='none'] { padding-bottom: 0; }
+.section[data-pb='small'] { padding-bottom: 40px; }
+.section[data-pb='medium'] { padding-bottom: 64px; }
+@media (max-width: 991px) { .section { padding-block: 64px; } }
+
+/* Backgrounds */
+.bg-black { background: var(--tdb-black); color: var(--tdb-white); }
+.bg-dark { background: var(--tdb-dark); color: var(--tdb-white); }
+.bg-white { background: var(--tdb-white); color: var(--tdb-black); }
+.bg-white a { color: var(--tdb-accent); }
+/* Forest motif: dark base with a soft radial depth. Real forest artwork is
+   swapped in with media migration (Phase 3); this keeps the brand feel now. */
+.bg-forest {
+  color: var(--tdb-white);
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(20, 32, 22, 0.55), rgba(7, 7, 7, 0.95) 60%),
+    var(--tdb-black);
+}
+
+/* Typography */
+.eyebrow { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.8rem; font-weight: 700; color: var(--tdb-accent); margin: 0 0 0.75rem; }
+.h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; }
+.h2 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; }
+.h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.2; }
+.lead { font-size: 1.15rem; color: var(--tdb-offwhite); max-width: 60ch; }
+.section-heading { text-align: center; margin: 0 auto 2.5rem; max-width: 40ch; }
+.section-heading .lead { margin-inline: auto; }
+
+/* Buttons */
+.btn--outline { background: transparent; color: var(--tdb-white); border-color: var(--tdb-white); }
+.btn--outline:hover { background: var(--tdb-white); color: var(--tdb-black); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* Grids */
+.grid { display: grid; gap: 1.25rem; }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 991px) { .grid--3, .grid--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 575px) { .grid--2, .grid--3, .grid--4 { grid-template-columns: 1fr; } }
+
+/* Card */
+.card { background: var(--tdb-dark); border: 1px solid #2b2b2b; padding: 1.75rem; }
+.card h3 { margin: 0 0 0.5rem; }
+.card p { margin: 0; color: var(--tdb-offwhite); }
+
+/* Header responsive nav */
+@media (max-width: 991px) {
+  .site-nav { display: none !important; }
+  .site-nav-toggle { display: inline-block !important; }
+}
+
+/* Portable text spacing */
+.prose p { margin: 0 0 1rem; }
+.prose h2 { margin: 2rem 0 0.75rem; }
+.prose h3 { margin: 1.5rem 0 0.5rem; }
+.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
+.prose a { color: var(--tdb-accent); }
+
