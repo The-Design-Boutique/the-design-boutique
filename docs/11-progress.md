@@ -40,8 +40,8 @@ Known items to revisit:
 
 ## Phase 1 — Content model & blocks
 
-- [~] Document types: `page` + singletons `siteSettings`, `navigation` done. Remaining: post (Laney Said), client, goldEvent, testimonial, category, clientCategory, officeLocation, redirect, notFoundEntry, operational docs.
-- [x] WP-familiar desk structure (`sanity/structure.ts`, emoji icons): Pages, then pinned Navigation + Site Settings singletons. Singletons cannot be created/duplicated/deleted (WP-settings behavior). New content types get added here as built.
+- [x] Content document types: `page`, `post` (Laney Said), `client`, `goldEvent`, `testimonial`, plus taxonomies `author`, `category`, `clientCategory`, and singletons `siteSettings`, `navigation`. All routable types carry the shared SEO stack. (Operational docs, `officeLocation`, `redirect`, `notFoundEntry`, `cwvSnapshot`, `seoAudit`, are built with their Phase 4/5 features.)
+- [x] WP-familiar desk structure (`sanity/structure.ts`, emoji icons): Pages, Laney Said, Clients, Gold Events, Testimonials, a grouped Taxonomies section, then pinned Navigation + Site Settings. Singletons cannot be created/duplicated/deleted (WP-settings behavior).
 - [ ] The ~21 blocks with fields, previews, icons, initial values
 - [ ] Phase 1 QC + review gate
 

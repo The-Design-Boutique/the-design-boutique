@@ -2,6 +2,13 @@ import { type SchemaTypeDefinition } from 'sanity'
 
 // Documents
 import { page } from './documents/page'
+import { post } from './documents/post'
+import { client } from './documents/client'
+import { goldEvent } from './documents/goldEvent'
+import { testimonial } from './documents/testimonial'
+import { author } from './documents/author'
+import { category } from './documents/category'
+import { clientCategory } from './documents/clientCategory'
 
 // Singletons
 import { siteSettings } from './singletons/siteSettings'
@@ -18,8 +25,16 @@ export const SINGLETONS = ['siteSettings', 'navigation'] as const
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
-    // documents
+    // content documents
     page,
+    post,
+    client,
+    goldEvent,
+    testimonial,
+    // taxonomies
+    author,
+    category,
+    clientCategory,
     // singletons
     siteSettings,
     navigation,
