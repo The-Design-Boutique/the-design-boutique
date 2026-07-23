@@ -5,6 +5,7 @@ export const servicesGrid = defineType({
   title: 'Services Grid',
   type: 'object',
   fields: [
+    defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
     defineField({
@@ -18,10 +19,12 @@ export const servicesGrid = defineType({
           fields: [
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() }),
             defineField({ name: 'description', title: 'Description', type: 'text', rows: 2 }),
-            defineField({ name: 'icon', title: 'Icon', type: 'string', description: 'Icon key (mapped to an icon on the frontend).' }),
+            defineField({ name: 'iconImage', title: 'Icon', type: 'image', description: 'Line-art icon shown at the top of the card.' }),
+            defineField({ name: 'hoverImage', title: 'Hover background', type: 'image', description: 'Photo revealed behind the card on hover.' }),
+            defineField({ name: 'icon', title: 'Icon key (legacy)', type: 'string', hidden: true }),
             defineField({ name: 'link', title: 'Link', type: 'link' }),
           ],
-          preview: { select: { title: 'title', subtitle: 'description' } },
+          preview: { select: { title: 'title', subtitle: 'description', media: 'iconImage' } },
         }),
       ],
     }),

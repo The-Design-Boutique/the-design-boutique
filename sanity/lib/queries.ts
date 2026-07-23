@@ -20,7 +20,7 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     pageBuilder[]{
       ...,
       ctas[]${linkProjection},
-      services[]{ title, description, icon, link${linkProjection} },
+      services[]{ title, description, icon, iconImage, hoverImage, link${linkProjection} },
       testimonial->{ name, roleCompany, quote, videoUrl, featured, image },
       testimonials[]->{ name, roleCompany, quote, image, videoUrl },
       clients[]->{ title, "slug": slug.current, logo }

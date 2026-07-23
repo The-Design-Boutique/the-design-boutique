@@ -12,10 +12,12 @@ export function Section({
   settings,
   children,
   container = 'default',
+  className,
 }: {
   settings?: SectionSettings
   children: ReactNode
   container?: 'default' | 'wide' | 'narrow' | 'none'
+  className?: string
 }) {
   const bg = settings?.background || 'black'
   const containerClass =
@@ -27,7 +29,7 @@ export function Section({
   return (
     <section
       id={settings?.anchorId || undefined}
-      className={`section bg-${bg}`}
+      className={`section bg-${bg}${className ? ' ' + className : ''}`}
       data-pt={settings?.paddingTop && settings.paddingTop !== 'large' ? settings.paddingTop : undefined}
       data-pb={settings?.paddingBottom && settings.paddingBottom !== 'large' ? settings.paddingBottom : undefined}
     >

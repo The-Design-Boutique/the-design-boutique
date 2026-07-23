@@ -13,14 +13,19 @@ function ytId(url: string): string | null {
 }
 
 export function HeroHome({ block }: { block: any }) {
-  const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2400).quality(80).url() : undefined
+  const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2560).quality(85).url() : undefined
+  const poster = block.posterImage?.asset ? urlFor(block.posterImage).width(320).url() : undefined
   const vid = block.videoUrl ? ytId(block.videoUrl) : null
   const style = bg
-    ? { backgroundImage: `linear-gradient(rgba(7,7,7,0.6), rgba(7,7,7,0.85)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    ? {
+        backgroundImage: `linear-gradient(180deg, rgba(7,7,7,0.28) 0%, rgba(7,7,7,0.12) 45%, rgba(7,7,7,0.60) 100%), url(${bg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }
     : undefined
 
   return (
-    <section className="hero bg-black" style={style}>
+    <section className="hero" style={style}>
       <div className="container hero-grid">
         <div className="hero-copy">
           {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
@@ -34,8 +39,8 @@ export function HeroHome({ block }: { block: any }) {
         </div>
 
         {vid ? (
-          <div className="hero-ring">
-            <div className="video-ring">
+          <div className="hero-video">
+            <div className="hero-video-frame">
               <iframe
                 src={`https://www.youtube.com/embed/${vid}?autoplay=1&mute=1&loop=1&playlist=${vid}&controls=0&playsinline=1&rel=0&modestbranding=1`}
                 title="The Design Boutique"
@@ -43,14 +48,18 @@ export function HeroHome({ block }: { block: any }) {
                 allowFullScreen
               />
             </div>
-            <svg className="ring-text" viewBox="0 0 200 200" aria-hidden="true">
-              <defs>
-                <path id="ringPath" d="M100,100 m-92,0 a92,92 0 1,1 184,0 a92,92 0 1,1 -184,0" />
-              </defs>
-              <text>
-                <textPath href="#ringPath">PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;</textPath>
-              </text>
-            </svg>
+            <a className="play-badge" href={`https://www.youtube.com/watch?v=${vid}`} target="_blank" rel="noopener noreferrer" aria-label="Play video">
+              {poster ? <img className="play-badge-photo" src={poster} alt="" /> : null}
+              <span className="play-badge-triangle" aria-hidden="true" />
+              <svg className="ring-text" viewBox="0 0 200 200" aria-hidden="true">
+                <defs>
+                  <path id="ringPath" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" />
+                </defs>
+                <text>
+                  <textPath href="#ringPath">PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;PLAY VIDEO&nbsp;&nbsp;&bull;&nbsp;&nbsp;</textPath>
+                </text>
+              </svg>
+            </a>
           </div>
         ) : null}
       </div>
