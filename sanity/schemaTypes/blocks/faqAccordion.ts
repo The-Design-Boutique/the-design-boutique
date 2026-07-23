@@ -5,6 +5,7 @@ export const faqAccordion = defineType({
   title: 'FAQ Accordion',
   type: 'object',
   fields: [
+    defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     defineField({
       name: 'faqs',

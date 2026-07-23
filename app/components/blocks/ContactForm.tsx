@@ -61,19 +61,20 @@ export function ContactForm({ block }: { block: any }) {
   }
 
   return (
-    <Section settings={block.settings} container="narrow">
-      {(block.heading || block.intro) && (
-        <div className="section-heading">
+    <Section settings={block.settings}>
+      <div className="contact-grid">
+        <div className="contact-intro">
+          {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
           {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
           {block.intro ? <p className="lead">{block.intro}</p> : null}
         </div>
-      )}
+        <div className="contact-form-col">
       {status === 'sent' ? (
-        <p role="status" style={{ textAlign: 'center', color: 'var(--tdb-accent)', fontWeight: 700 }}>
+        <p role="status" style={{ color: 'var(--tdb-accent)', fontWeight: 700 }}>
           {block.successMessage || 'Thanks, we will be in touch shortly.'}
         </p>
       ) : (
-        <form onSubmit={onSubmit} style={{ display: 'grid', gap: '1rem', maxWidth: '40rem', margin: '0 auto' }}>
+        <form onSubmit={onSubmit} style={{ display: 'grid', gap: '1rem' }}>
           <input type="text" name="company" tabIndex={-1} autoComplete="off" style={{ display: 'none' }} aria-hidden="true" />
           <div className="split-row" style={{ gap: '1rem' }}>
             <Field label="First Name *"><input style={inputStyle} type="text" name="firstName" required /></Field>
@@ -100,6 +101,8 @@ export function ContactForm({ block }: { block: any }) {
           {status === 'error' ? <p style={{ color: '#ff6b6b' }}>Something went wrong. Please try again.</p> : null}
         </form>
       )}
+        </div>
+      </div>
     </Section>
   )
 }
