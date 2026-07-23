@@ -14,7 +14,9 @@ export function Footer({ nav, settings }: { nav?: any; settings?: any }) {
   const columns: any[] = Array.isArray(nav?.footerColumns) ? nav.footerColumns : []
   const social: any[] = Array.isArray(settings?.socialLinks) ? settings.socialLinks : []
   const siteName = settings?.siteName || 'The Design Boutique'
-  const logo = settings?.logoSecondary?.asset ? urlFor(settings.logoSecondary).height(120).url() : undefined
+  const logoSource = settings?.footerLogo?.asset ? settings.footerLogo : settings?.logoSecondary
+  const logo = logoSource?.asset ? urlFor(logoSource).height(160).url() : undefined
+  const googleBadge = settings?.googleBadgeUrl
   const phone = settings?.phone
   const address = settings?.address
 
@@ -29,14 +31,7 @@ export function Footer({ nav, settings }: { nav?: any; settings?: any }) {
                 {social.map((s, i) =>
                   s.platform === 'google' ? (
                     <a key={i} className="footer-google" href={s.url} target="_blank" rel="noopener noreferrer" aria-label="Google reviews">
-                      <span className="footer-google-word">Google</span>
-                      <span className="footer-google-card">
-                        <svg className="footer-google-avatar" viewBox="0 0 24 24" aria-hidden="true">
-                          <circle cx="12" cy="8" r="4" fill="currentColor" />
-                          <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" fill="currentColor" />
-                        </svg>
-                        <span className="footer-google-stars" aria-hidden="true">★★★★★</span>
-                      </span>
+                      {googleBadge ? <img src={googleBadge} alt="Google reviews" /> : null}
                     </a>
                   ) : (
                     <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.platform}>

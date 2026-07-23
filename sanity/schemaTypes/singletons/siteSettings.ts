@@ -14,6 +14,9 @@ export const siteSettings = defineType({
   fields: [
     defineField({ name: 'siteName', title: 'Site name', type: 'string', group: 'general', initialValue: 'The Design Boutique' }),
     defineField({ name: 'logo', title: 'Logo', type: 'imageWithAlt', group: 'general' }),
+    defineField({ name: 'logoSecondary', title: 'Secondary logo', type: 'imageWithAlt', group: 'general', description: 'Shown beside the primary logo in the header (the "TDB Digital" mark).' }),
+    defineField({ name: 'footerLogo', title: 'Footer logo', type: 'imageWithAlt', group: 'general', description: 'The compact square mark used in the footer.' }),
+    defineField({ name: 'googleBadgeUrl', title: 'Google reviews badge URL', type: 'url', group: 'general', description: 'SVG badge shown in the footer social row.' }),
     defineField({ name: 'phone', title: 'Phone', type: 'string', group: 'contact' }),
     defineField({ name: 'email', title: 'Email', type: 'string', group: 'contact' }),
     defineField({ name: 'address', title: 'Address', type: 'text', rows: 3, group: 'contact' }),
