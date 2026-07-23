@@ -7,6 +7,7 @@ export const ctaBand = defineType({
   fields: [
     defineField({ name: 'headline', title: 'Headline', type: 'string', validation: (Rule) => Rule.required() }),
     defineField({ name: 'body', title: 'Body', type: 'text', rows: 2 }),
+    defineField({ name: 'underlineLastLine', title: 'Underline last line', type: 'boolean', description: 'Underline the final line of the headline (e.g. "Let\'s Go!").' }),
     defineField({ name: 'ctas', title: 'Buttons', type: 'array', of: [defineArrayMember({ type: 'link' })] }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
   ],
