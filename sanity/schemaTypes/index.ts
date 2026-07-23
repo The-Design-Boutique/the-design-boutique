@@ -20,6 +20,9 @@ import { link } from './objects/link'
 import { sectionSettings } from './objects/sectionSettings'
 import { imageWithAlt } from './objects/imageWithAlt'
 
+// Page-builder blocks
+import { blocks } from './blocks'
+
 /** Document type names that are singletons (one instance, pinned in the desk). */
 export const SINGLETONS = ['siteSettings', 'navigation'] as const
 
@@ -43,5 +46,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     link,
     sectionSettings,
     imageWithAlt,
+    // page-builder blocks
+    ...blocks,
   ],
 }

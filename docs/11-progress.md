@@ -3,7 +3,7 @@
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
 Last updated: July 22, 2026.
-Current phase: Phase 1 (Content model & blocks). Phase 0 complete and live on staging, except CI (see below). Sequencing: strictly linear by phase (Angelo's call).
+Current phase: Phase 1 COMPLETE (content model + 22 blocks). Next: Phase 2 (frontend rendering & design system). Phase 0 live on staging; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
 
 ## Status at a glance
 
@@ -42,8 +42,10 @@ Known items to revisit:
 
 - [x] Content document types: `page`, `post` (Laney Said), `client`, `goldEvent`, `testimonial`, plus taxonomies `author`, `category`, `clientCategory`, and singletons `siteSettings`, `navigation`. All routable types carry the shared SEO stack. (Operational docs, `officeLocation`, `redirect`, `notFoundEntry`, `cwvSnapshot`, `seoAudit`, are built with their Phase 4/5 features.)
 - [x] WP-familiar desk structure (`sanity/structure.ts`, emoji icons): Pages, Laney Said, Clients, Gold Events, Testimonials, a grouped Taxonomies section, then pinned Navigation + Site Settings. Singletons cannot be created/duplicated/deleted (WP-settings behavior).
-- [ ] The ~21 blocks with fields, previews, icons, initial values
-- [ ] Phase 1 QC + review gate
+- [x] Page-builder blocks: 22 block types built (hero, subpage banner, rich text, services grid, icon grid, solutions row, stats/counters, FAQ accordion, image gallery, flip boxes, logo wall, portfolio mosaic, portfolio loop, client info, client solution, testimonial carousel, testimonial single, video, CTA band, contact form, newsletter, HTML embed). Each with a preview and shared `sectionSettings`. Registered and wired into the page `pageBuilder` with a grid insert menu (WP-widget feel). Verified: clean build + type-check.
+- [x] Phase 1 QC: build + type-check green; schema loads. (Visual/editor QC happens when rendering lands in Phase 2.)
+
+Note: the page's simple `body` was replaced by `pageBuilder`. The `/[slug]` route still renders the seed page's legacy body, so `/home` keeps showing content; block rendering (BlockRenderer) is Phase 2, at which point the seed page migrates to blocks.
 
 ## Phase 2 — Frontend & design system
 

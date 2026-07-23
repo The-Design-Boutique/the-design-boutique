@@ -1,9 +1,9 @@
 import { defineField, defineType } from 'sanity'
+import { blockArrayMembers } from '../blocks'
 
 /**
- * Page document. Minimal for the Phase 0 walking skeleton (title, slug, body,
- * shared SEO stack). The full block builder and page hierarchy arrive in Phase 1.
- * (Desk icons are added in Phase 1 with the WP-familiar structure.)
+ * Page document: title, slug, the page-builder block array, and the shared SEO
+ * stack. Frontend rendering of the blocks arrives in Phase 2 (BlockRenderer).
  */
 export const page = defineType({
   name: 'page',
@@ -31,11 +31,12 @@ export const page = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'body',
-      title: 'Body',
+      name: 'pageBuilder',
+      title: 'Page content',
       type: 'array',
       group: 'content',
-      of: [{ type: 'block' }],
+      of: blockArrayMembers,
+      options: { insertMenu: { views: [{ name: 'grid' }, { name: 'list' }] } },
     }),
     defineField({
       name: 'seo',
