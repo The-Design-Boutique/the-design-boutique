@@ -1,3 +1,4 @@
+import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/sanity/lib/image'
 import { CtaLink } from '../CtaLink'
 
@@ -12,7 +13,13 @@ export function SubpageBanner({ block }: { block: any }) {
       <div className="container">
         {block.eyebrow ? <p className="eyebrow" style={{ textAlign: 'center' }}>{block.eyebrow}</p> : null}
         <h1 className="h1 subpage-banner-title">{block.title}</h1>
-        {block.subtitle ? <p className="lead subpage-banner-subtitle">{block.subtitle}</p> : null}
+        {Array.isArray(block.subtitleRich) && block.subtitleRich.length ? (
+          <div className="lead subpage-banner-subtitle prose">
+            <PortableText value={block.subtitleRich} />
+          </div>
+        ) : block.subtitle ? (
+          <p className="lead subpage-banner-subtitle">{block.subtitle}</p>
+        ) : null}
         {block.cta?.href ? (
           <div className="subpage-banner-cta">
             <CtaLink cta={block.cta} variant="accent" />
