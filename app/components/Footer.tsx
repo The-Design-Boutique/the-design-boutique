@@ -29,8 +29,14 @@ export function Footer({ nav, settings }: { nav?: any; settings?: any }) {
                 {social.map((s, i) =>
                   s.platform === 'google' ? (
                     <a key={i} className="footer-google" href={s.url} target="_blank" rel="noopener noreferrer" aria-label="Google reviews">
-                      <span className="footer-google-stars" aria-hidden="true">★★★★★</span>
-                      <span className="footer-google-label">Google Reviews</span>
+                      <span className="footer-google-word">Google</span>
+                      <span className="footer-google-card">
+                        <svg className="footer-google-avatar" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle cx="12" cy="8" r="4" fill="currentColor" />
+                          <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" fill="currentColor" />
+                        </svg>
+                        <span className="footer-google-stars" aria-hidden="true">★★★★★</span>
+                      </span>
                     </a>
                   ) : (
                     <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.platform}>
@@ -58,7 +64,11 @@ export function Footer({ nav, settings }: { nav?: any; settings?: any }) {
           <div className="footer-col">
             <h3 className="footer-col-title">We can&apos;t wait to connect</h3>
             {phone ? <a className="footer-contact-line" href={`tel:${phone.replace(/[^0-9.]/g, '')}`}>{phone} (Call or Text)</a> : null}
-            {address ? <p className="footer-contact-line" style={{ whiteSpace: 'pre-line' }}>{address}</p> : null}
+            {address ? (
+              <span className="footer-address">
+                {address.split('\n').map((line: string, i: number) => <span key={i} className="footer-contact-line">{line}</span>)}
+              </span>
+            ) : null}
           </div>
 
           <div className="footer-col footer-newsletter">
