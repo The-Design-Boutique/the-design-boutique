@@ -11,6 +11,7 @@ export const richText = defineType({
       type: 'array',
       of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' })],
     }),
+    defineField({ name: 'wideWithLeaf', title: 'Wide with side leaf', type: 'boolean', description: 'Full-width content on the left with the redwood leaf motif on the right (e.g. the About bio).' }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
   ],
   preview: {

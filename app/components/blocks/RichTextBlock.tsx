@@ -14,9 +14,10 @@ const components: PortableTextComponents = {
 
 export function RichTextBlock({ block }: { block: any }) {
   if (!block.content) return null
+  const wide = !!block.wideWithLeaf
   return (
-    <Section settings={block.settings} container="narrow">
-      <div className="prose">
+    <Section settings={block.settings} container={wide ? 'default' : 'narrow'} className={wide ? 'rt-leaf-right' : undefined}>
+      <div className={`prose${wide ? ' prose--about' : ''}`}>
         <PortableText value={block.content} components={components} />
       </div>
     </Section>
