@@ -299,10 +299,11 @@ a.service-card:hover .service-text { color: #fff; }
 /* FAQ accordion */
 .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
 .faq-item { background: #2b2b2b; }
-.faq-item summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 1rem; padding: 1.15rem 1.5rem; font-weight: 700; font-size: 1.05rem; }
+.faq-item summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 1rem; padding: 1.15rem 1.5rem; font-weight: 700; font-size: 1.05rem; color: var(--tdb-white); transition: color 0.15s ease; }
 .faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::before { content: '+'; color: var(--tdb-accent); font-size: 1.6rem; font-weight: 700; line-height: 1; flex: 0 0 auto; width: 1rem; text-align: center; }
+.faq-item summary::before { content: '+'; color: var(--tdb-white); font-size: 1.6rem; font-weight: 700; line-height: 1; flex: 0 0 auto; width: 1rem; text-align: center; transition: color 0.15s ease; }
 .faq-item[open] summary::before { content: '\2013'; }
+.faq-item:hover summary, .faq-item:hover summary::before { color: var(--tdb-accent); }
 .faq-answer { padding: 0 1.5rem 1.25rem 3.5rem; color: var(--tdb-offwhite); }
 
 /* Contact + algorithms (two-column) */
@@ -335,14 +336,14 @@ a.service-card:hover .service-text { color: #fff; }
   .flip-box-inner { transition: none; }
 }
 
-/* Back-to-top button */
+/* Back-to-top button (matches the live #scroll-to-top styling) */
 .back-to-top {
-  position: fixed; right: 24px; bottom: 24px; z-index: 60;
-  width: 52px; height: 52px; display: grid; place-items: center;
-  background: #8a8a8a; color: #ffffff; border: 0; cursor: pointer;
-  transition: background 0.2s ease;
+  position: fixed; right: 0; bottom: 100px; z-index: 90;
+  width: 50px; height: 50px; display: grid; place-items: center;
+  background: #666; color: #ffffff; border: 0; cursor: pointer;
+  box-shadow: 5px 5px 10px #00000030;
 }
-.back-to-top:hover { background: var(--tdb-accent); }
+.back-to-top svg { width: 25px; height: 25px; }
 
 /* Portable text spacing */
 .prose p { margin: 0 0 1rem; }
