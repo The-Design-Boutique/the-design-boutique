@@ -9,6 +9,7 @@ export const subpageBanner = defineType({
     defineField({ name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() }),
     defineField({ name: 'subtitle', title: 'Subtitle', type: 'text', rows: 2 }),
     defineField({ name: 'backgroundImage', title: 'Background image', type: 'imageWithAlt' }),
+    defineField({ name: 'cta', title: 'Button', type: 'link' }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
   ],
   preview: { select: { title: 'title' }, prepare: ({ title }) => ({ title: title || 'Banner', subtitle: 'Subpage banner' }) },
