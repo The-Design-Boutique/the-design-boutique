@@ -51,7 +51,7 @@ Note: the page's simple `body` was replaced by `pageBuilder`. The `/[slug]` rout
 
 - [x] Design-system CSS (containers, sections + background variants incl. forest, grids, buttons, cards, prose) on top of the tokens.
 - [x] BlockRenderer (`_type` -> component).
-- [~] Block components: homepage/common set built and rendering (heroHome, subpageBanner, richText, servicesGrid, iconGrid, ctaBand, statsCounters, faqAccordion, logoWall, videoEmbed, testimonialSingle, contactForm, htmlEmbed). Remaining: solutionsRow, portfolioMosaic/Loop, clientInfo/Solution, testimonialCarousel, imageGallery, flipBoxGrid, newsletterSignup.
+- [x] Block components: all 22 built and wired into the BlockRenderer (hero, subpage banner, rich text, services grid, icon grid, solutions row, CTA band, stats, FAQ, logo wall, video, testimonial single + carousel, portfolio mosaic + auto loop, client info + solution, image gallery, flip boxes, contact form, newsletter, HTML). Flip boxes and mobile nav respect prefers-reduced-motion / responsive.
 - [x] Global header (logo, menu, "Hire Us!" CTA, responsive mobile toggle) + footer, driven by the navigation singleton. Studio kept chrome-free via an `app/(site)` route group.
 - [x] Home page renders end to end from the CMS via `pageBuilder`; verified against the reference design (dark/Signika/orange, services grid, forest CTA, stat counters, Joe Montana testimonial, FAQ, contact form, footer).
 - [x] Functional contact form: client form -> `/api/contact` -> stored as `formSubmission` docs (visible in the WP-style desk). Email notification is a later add.
