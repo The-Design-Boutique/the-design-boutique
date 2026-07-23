@@ -2,8 +2,8 @@
 
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
-Last updated: July 22, 2026.
-Current phase: Phase 2 (frontend rendering & design system) IN PROGRESS. Home page renders from the CMS and matches the reference design; remaining block components + nested routing + signature motion to go. Phase 0/1 live; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
+Last updated: July 23, 2026.
+Current phase: Phase 2 (frontend rendering & design system) CLOSING OUT. The full homepage now matches the live site section by section at desktop AND mobile (hero, services, about, logo wall, forest CTA, industries, work, testimonial, FAQ, algorithms/contact, header with dual logo + phone, full footer, back-to-top). Mobile responsive pass done (no horizontal overflow at phone/tablet). Last Phase 2 item is nested routing (in progress now), the prerequisite for the interior pages. Then Phase 3 (pages + migration). Phase 0/1 live; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
 
 ## Status at a glance
 
@@ -57,10 +57,18 @@ Note: the page's simple `body` was replaced by `pageBuilder`. The `/[slug]` rout
 - [x] Functional contact form: client form -> `/api/contact` -> stored as `formSubmission` docs (visible in the WP-style desk). Email notification is a later add.
 - [~] Media migration (started, per Angelo's feedback that the render lacked imagery): migrated the key homepage assets from the live site into Sanity (logo, hero background IMG_2104, Big-Leafe + tree-cutout forest artwork, Laney preview). Wired the logo into the header and the hero background + Laney video into the home hero. More media (client logos, section imagery) to follow.
 - [x] Signature "Laney Said" video ring: real Laney YouTube video in a circular frame with the spinning "PLAY VIDEO" text ring, matched to the live hero (verified desktop + mobile).
-- [ ] Nested routing (parent-chain URLs preserved) — flat `/[slug]` for now.
-- [ ] Remaining fidelity: forest artwork into the CTA/contact sections, the About/Clients/Work sections the live home has, exact spacing, full reference-diff pass at all breakpoints, next/image optimization.
+- [x] Full homepage exact-match against the live site, section by section, iterated with Angelo: hero (real sunset bg + rectangular video + Laney play badge), services grid (real line-art icons, outlined cards, photo hover, redwood leaf), About (tree-cutout composite, Vision/Mission + squiggle), logo wall (real client logos, single row), forest CTA (Madron Canyon), Industries (two-column stats + cards, corrected 58/93/8.5B/68), Work (portrait boxes + overlaid labels), testimonial (quote-mark layout + squiggle), FAQ (leaf + filled bars, white/orange hover), algorithms + contact (two-column, orange-placeholder form). New blocks: `aboutSection`, `industriesSection`, `workShowcase`.
+- [x] Header rebuilt: dual logo (The Design Boutique + TDB Digital), Programs/Blog nav, "Hire Us! +", phone, transparent over hero + solid on scroll.
+- [x] Footer rebuilt: logo + social icons (real Google-reviews SVG), Solutions two-column links, About/Vision groups, "We can't wait to connect", "Stay in the know." newsletter, legal bar. Per-column link weights match live.
+- [x] Back-to-top button matching the live `#scroll-to-top` styling.
+- [x] Media migration completed for the homepage: all real assets pulled from the live site into Sanity (hero images, icons, client logos, portfolio images, forest/leaf artwork, logos, Google badge).
+- [x] Mobile responsive pass: hamburger menu, all sections stack, no horizontal overflow at 390 (phone) / 768 (tablet); hero clears the fixed header.
+- [x] Nested routing: catch-all `app/(site)/[...slug]` resolves pages by full-path slug (e.g. `solutions/seo-services`). Verified: a 2-segment nested page returns 200 and renders; unknown paths 404. Interior pages set `slug.current` to the full path.
+- [ ] next/image optimization (still using plain `<img>`) — deferred to Phase 5 (performance).
 
-Reset on approach (Angelo feedback): the earlier homepage was a media-less approximation. Now working reference-driven with real migrated media, verified against the live site at desktop AND mobile.
+Phase 2 is functionally complete: the homepage matches live at all breakpoints and nested routing is in place. Moving to Phase 3.
+
+Reset on approach (Angelo feedback): the earlier homepage was a media-less approximation. Rebuilt reference-driven with real migrated media, verified against the live site section by section at desktop AND mobile.
 
 ## Phase 3 — Pages & migration
 
