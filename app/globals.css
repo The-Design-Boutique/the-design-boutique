@@ -240,6 +240,19 @@ a.service-card:hover .service-text { color: #fff; }
 .logo-row .logo-item:nth-child(5) { height: 48px; }
 @media (max-width: 991px) { .logo-row { flex-wrap: wrap; gap: 2rem 3rem; } }
 
+/* Logo grid (4 across with divider rules) */
+.logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.logo-cell { display: grid; place-items: center; padding: 2.5rem 1.75rem; border-right: 1px solid var(--tdb-accent); border-bottom: 1px solid var(--tdb-accent); }
+.logo-cell img { max-width: 100%; max-height: 92px; width: auto; height: auto; }
+.logo-grid .logo-cell:nth-child(4n) { border-right: 0; }
+.logo-grid .logo-cell:nth-last-child(-n+4) { border-bottom: 0; }
+@media (max-width: 991px) {
+  .logo-grid { grid-template-columns: repeat(2, 1fr); }
+  .logo-grid .logo-cell { border-right: 1px solid var(--tdb-accent); border-bottom: 1px solid var(--tdb-accent); }
+  .logo-grid .logo-cell:nth-child(2n) { border-right: 0; }
+  .logo-grid .logo-cell:nth-last-child(-n+2) { border-bottom: 0; }
+}
+
 /* About section (We love what we do) */
 .about-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 3.5rem; align-items: center; }
 @media (max-width: 991px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
