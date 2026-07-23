@@ -25,7 +25,7 @@ export function HeroHome({ block }: { block: any }) {
         <div className="hero-copy">
           {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
           <h1 className="h1">{block.headline}</h1>
-          {block.subhead ? <p className="lead" style={{ marginTop: '1.25rem' }}>{block.subhead}</p> : null}
+          {block.subhead ? <p className="lead" style={{ marginTop: '1.25rem', whiteSpace: 'pre-line' }}>{block.subhead}</p> : null}
           {Array.isArray(block.ctas) && block.ctas.length ? (
             <div className="btn-row" style={{ marginTop: '1.75rem' }}>
               {block.ctas.map((c: any, i: number) => <CtaLink key={i} cta={c} variant={i === 0 ? 'accent' : 'outline'} />)}
