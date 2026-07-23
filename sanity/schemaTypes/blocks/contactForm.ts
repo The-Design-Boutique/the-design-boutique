@@ -1,10 +1,14 @@
-import { defineField, defineType } from 'sanity'
+import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export const contactForm = defineType({
   name: 'contactForm',
   title: 'Contact Form',
   type: 'object',
   fields: [
+    defineField({ name: 'leftHeading', title: 'Left heading', type: 'string', description: 'Heading for the left column (e.g. "We know what the algorithms want...").' }),
+    defineField({ name: 'leftBody', title: 'Left body', type: 'text', rows: 2 }),
+    defineField({ name: 'bullets', title: 'Left bullets', type: 'array', of: [defineArrayMember({ type: 'string' })] }),
+    defineField({ name: 'address', title: 'Address / contact line', type: 'text', rows: 2 }),
     defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),

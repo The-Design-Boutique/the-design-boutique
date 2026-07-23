@@ -5,11 +5,12 @@ import { Section } from '../Section'
 export function FaqAccordion({ block }: { block: any }) {
   const faqs: any[] = Array.isArray(block.faqs) ? block.faqs : []
   return (
-    <Section settings={block.settings} container="narrow">
-      {(block.eyebrow || block.heading) && (
-        <div className="section-heading">
+    <Section settings={block.settings} container="wide" className="with-leaf">
+      {(block.eyebrow || block.heading || block.intro) && (
+        <div className="section-heading section-heading--wide">
           {block.eyebrow ? <p className="eyebrow" style={{ textAlign: 'center' }}>{block.eyebrow}</p> : null}
           {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
+          {block.intro ? <p className="lead" style={{ marginInline: 'auto' }}>{block.intro}</p> : null}
         </div>
       )}
       <div className="faq-list">

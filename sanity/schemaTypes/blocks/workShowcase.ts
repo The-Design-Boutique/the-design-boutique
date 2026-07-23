@@ -18,10 +18,11 @@ export const workShowcase = defineType({
           name: 'workItem',
           fields: [
             defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }),
-            defineField({ name: 'label', title: 'Label', type: 'string' }),
+            defineField({ name: 'category', title: 'Category', type: 'string', description: 'Small orange label above the title (e.g. "Winery").' }),
+            defineField({ name: 'label', title: 'Title', type: 'string' }),
             defineField({ name: 'link', title: 'Link', type: 'link' }),
           ],
-          preview: { select: { title: 'label', media: 'image' } },
+          preview: { select: { title: 'label', subtitle: 'category', media: 'image' } },
         }),
       ],
     }),

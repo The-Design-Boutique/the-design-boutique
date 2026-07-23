@@ -60,15 +60,28 @@ export function ContactForm({ block }: { block: any }) {
     }
   }
 
+  const bullets: string[] = Array.isArray(block.bullets) ? block.bullets : []
   return (
-    <Section settings={block.settings}>
+    <Section settings={block.settings} className="with-leaf">
       <div className="contact-grid">
         <div className="contact-intro">
-          {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
-          {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
-          {block.intro ? <p className="lead">{block.intro}</p> : null}
+          {block.leftHeading ? <h2 className="h2">{block.leftHeading}</h2> : null}
+          {block.leftBody ? <p className="lead">{block.leftBody}</p> : null}
+          {bullets.length ? (
+            <ul className="contact-bullets">
+              {bullets.map((b, i) => <li key={i}>{b}</li>)}
+            </ul>
+          ) : null}
+          {block.address ? <p className="contact-address">{block.address}</p> : null}
         </div>
         <div className="contact-form-col">
+          {(block.eyebrow || block.heading) && (
+            <div className="contact-form-heading">
+              {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
+              {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
+              {block.intro ? <p className="lead">{block.intro}</p> : null}
+            </div>
+          )}
       {status === 'sent' ? (
         <p role="status" style={{ color: 'var(--tdb-accent)', fontWeight: 700 }}>
           {block.successMessage || 'Thanks, we will be in touch shortly.'}

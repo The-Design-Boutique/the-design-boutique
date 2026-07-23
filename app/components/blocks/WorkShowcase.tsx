@@ -7,7 +7,7 @@ export function WorkShowcase({ block }: { block: any }) {
   return (
     <Section settings={block.settings}>
       {(block.eyebrow || block.heading || block.intro) && (
-        <div className="section-heading">
+        <div className="section-heading section-heading--wide">
           {block.eyebrow ? <p className="eyebrow" style={{ textAlign: 'center' }}>{block.eyebrow}</p> : null}
           {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
           {block.intro ? <p className="lead">{block.intro}</p> : null}
@@ -15,12 +15,15 @@ export function WorkShowcase({ block }: { block: any }) {
       )}
       <div className="work-grid">
         {items.map((it, i) => {
-          const img = it.image?.asset ? urlFor(it.image).width(700).quality(80).url() : undefined
+          const img = it.image?.asset ? urlFor(it.image).width(700).height(880).fit('crop').quality(80).url() : undefined
           const inner = (
-            <>
-              {img ? <span className="work-thumb"><img src={img} alt={it.label || ''} loading="lazy" /></span> : null}
-              {it.label ? <span className="work-label">{it.label}</span> : null}
-            </>
+            <span className="work-thumb">
+              {img ? <img src={img} alt={it.label || ''} loading="lazy" /> : null}
+              <span className="work-overlay">
+                {it.category ? <span className="work-cat">{it.category}</span> : null}
+                {it.label ? <span className="work-label">{it.label}</span> : null}
+              </span>
+            </span>
           )
           return it.link?.href ? (
             <a key={i} className="work-card" href={it.link.href}>{inner}</a>
