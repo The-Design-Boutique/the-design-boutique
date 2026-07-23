@@ -423,6 +423,19 @@ a.service-card:hover .service-text { color: #fff; }
 /* Rich text images */
 .prose-img { display: block; max-width: 600px; width: 100%; height: auto; margin: 0 0 1.75rem; }
 
+/* Rich text: wide with side leaf (About bio) */
+.rt-leaf-right { position: relative; overflow: hidden; }
+.rt-leaf-right::before {
+  content: ''; position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+  width: 660px; height: 840px; max-width: 48%;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png') no-repeat center / contain;
+  opacity: 0.5; z-index: 0; pointer-events: none;
+}
+.rt-leaf-right > .container { position: relative; z-index: 1; }
+.prose--about { max-width: 620px; }
+.prose--about .prose-img { max-width: 340px; }
+@media (max-width: 991px) { .rt-leaf-right::before { display: none; } }
+
 /* Portable text spacing */
 .prose p { margin: 0 0 1rem; }
 .prose h2 { margin: 2rem 0 0.75rem; }
