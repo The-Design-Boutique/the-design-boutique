@@ -3,10 +3,11 @@ import { Section } from '../Section'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function IconGrid({ block }: { block: any }) {
   const items: any[] = Array.isArray(block.items) ? block.items : []
+  const cols = items.length === 4 ? '4' : items.length === 2 ? '2' : '3'
   return (
     <Section settings={block.settings}>
       {block.heading ? <div className="section-heading"><h2 className="h2">{block.heading}</h2></div> : null}
-      <div className="grid grid--3">
+      <div className={`grid grid--${cols}`}>
         {items.map((item, i) => (
           <div key={i} className="card">
             {item.icon ? <div style={{ color: 'var(--tdb-accent)', fontWeight: 700, marginBottom: '0.75rem' }}>{item.icon}</div> : null}
