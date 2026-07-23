@@ -6,11 +6,11 @@ export function ImageGallery({ block }: { block: any }) {
   const images: any[] = Array.isArray(block.images) ? block.images : []
   return (
     <Section settings={block.settings}>
-      {block.heading ? <div className="section-heading"><h2 className="h2">{block.heading}</h2></div> : null}
-      <div className="grid grid--3">
+      {block.heading ? <div className="section-heading section-heading--wide"><h2 className="h2">{block.heading}</h2></div> : null}
+      <div className={`gallery-grid gallery-grid--${images.length === 1 ? '1' : images.length === 2 ? '2' : '3'}`}>
         {images.map((img, i) =>
           img?.asset ? (
-            <img key={i} src={urlFor(img).width(600).height(450).fit('crop').url()} alt={img.alt || ''} style={{ width: '100%', height: 'auto', display: 'block' }} loading="lazy" />
+            <img key={i} src={urlFor(img).width(900).url()} alt={img.alt || ''} loading="lazy" />
           ) : null,
         )}
       </div>
