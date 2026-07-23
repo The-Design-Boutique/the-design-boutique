@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { CtaLink } from './CtaLink'
+import { urlFor } from '@/sanity/lib/image'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function Header({ nav, settings }: { nav?: any; settings?: any }) {
@@ -9,6 +10,7 @@ export function Header({ nav, settings }: { nav?: any; settings?: any }) {
   const menu: any[] = Array.isArray(nav?.headerMenu) ? nav.headerMenu : []
   const cta = nav?.headerCta
   const siteName = settings?.siteName || 'The Design Boutique'
+  const logoUrl = settings?.logo?.asset ? urlFor(settings.logo).width(120).url() : undefined
 
   return (
     <header
@@ -22,7 +24,9 @@ export function Header({ nav, settings }: { nav?: any; settings?: any }) {
       }}
     >
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 72 }}>
-        <a href="/" style={{ fontWeight: 700, color: 'var(--tdb-white)', fontSize: '1.05rem' }}>{siteName}</a>
+        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--tdb-white)', fontWeight: 700, fontSize: '1.05rem' }}>
+          {logoUrl ? <img src={logoUrl} alt={settings?.logo?.alt || siteName} style={{ height: 44, width: 'auto' }} /> : siteName}
+        </a>
 
         <nav className="site-nav" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           {menu.map((item, i) => (

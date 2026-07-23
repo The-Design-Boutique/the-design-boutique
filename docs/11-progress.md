@@ -55,9 +55,12 @@ Note: the page's simple `body` was replaced by `pageBuilder`. The `/[slug]` rout
 - [x] Global header (logo, menu, "Hire Us!" CTA, responsive mobile toggle) + footer, driven by the navigation singleton. Studio kept chrome-free via an `app/(site)` route group.
 - [x] Home page renders end to end from the CMS via `pageBuilder`; verified against the reference design (dark/Signika/orange, services grid, forest CTA, stat counters, Joe Montana testimonial, FAQ, contact form, footer).
 - [x] Functional contact form: client form -> `/api/contact` -> stored as `formSubmission` docs (visible in the WP-style desk). Email notification is a later add.
+- [~] Media migration (started, per Angelo's feedback that the render lacked imagery): migrated the key homepage assets from the live site into Sanity (logo, hero background IMG_2104, Big-Leafe + tree-cutout forest artwork, Laney preview). Wired the logo into the header and the hero background + Laney video into the home hero. More media (client logos, section imagery) to follow.
+- [x] Signature "Laney Said" video ring: real Laney YouTube video in a circular frame with the spinning "PLAY VIDEO" text ring, matched to the live hero (verified desktop + mobile).
 - [ ] Nested routing (parent-chain URLs preserved) — flat `/[slug]` for now.
-- [ ] Signature elements: forest artwork + "Laney Said" video ring (forest is CSS-approximated pending media migration).
-- [ ] Remaining block components + full reference-diff pass + Phase 2 QC.
+- [ ] Remaining fidelity: forest artwork into the CTA/contact sections, the About/Clients/Work sections the live home has, exact spacing, full reference-diff pass at all breakpoints, next/image optimization.
+
+Reset on approach (Angelo feedback): the earlier homepage was a media-less approximation. Now working reference-driven with real migrated media, verified against the live site at desktop AND mobile.
 
 ## Phase 3 — Pages & migration
 
