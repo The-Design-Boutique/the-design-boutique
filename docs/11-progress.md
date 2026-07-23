@@ -3,7 +3,7 @@
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
 Last updated: July 22, 2026.
-Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Angelo's call).
+Current phase: Phase 1 (Content model & blocks). Phase 0 complete and live on staging, except CI (see below). Sequencing: strictly linear by phase (Angelo's call).
 
 ## Status at a glance
 
@@ -29,7 +29,7 @@ Current phase: Phase 0 (Foundations). Sequencing: strictly linear by phase (Ange
 - [x] Design tokens as code (colors, Signika via next/font, spacing, breakpoints, square buttons) in `app/globals.css`
 - [x] Repo scaffold: Next.js 16 (App Router, TS) + embedded Sanity Studio v6. Verified end to end: clean production build; home renders on-brand; Studio embeds AND connects to project inapmf9l (CORS added for localhost:3009; login screen shows the project).
 - [x] Shared schema objects: `seoFields` (full SOW 2.4 stack + char/pixel counter inputs), `link`, `sectionSettings`, `imageWithAlt`. Verified: clean build; `page` type using them created + read back via the API.
-- [ ] CI: build + type-check + lint on push
+- [~] CI: workflow written and build-verified, but pushing `.github/workflows/` is blocked until Angelo runs `gh auth refresh -h github.com -s workflow` (the GitHub token lacks the `workflow` scope). Add the moment that's granted.
 - [x] Walking skeleton: complete end to end. `/[slug]` route renders a page from Sanity (title + Portable Text body) with SEO metadata (title/description/canonical/OG) from the shared `seoFields`. Verified locally at `/home` from the seed page; deployed to staging.
 - SEO editor UX: flattened the SEO tab (no nested collapsibles; only "Advanced" tucked away) per Angelo's feedback. Full Rank-Math-style SERP-preview panel is Phase 4 (SOW 2.5).
 
@@ -40,9 +40,9 @@ Known items to revisit:
 
 ## Phase 1 — Content model & blocks
 
-- [ ] Document types: page, post, client, goldEvent, testimonial, category, clientCategory, navigation, siteSettings, officeLocation, redirect, notFoundEntry, operational docs
+- [~] Document types: `page` + singletons `siteSettings`, `navigation` done. Remaining: post (Laney Said), client, goldEvent, testimonial, category, clientCategory, officeLocation, redirect, notFoundEntry, operational docs.
+- [x] WP-familiar desk structure (`sanity/structure.ts`, emoji icons): Pages, then pinned Navigation + Site Settings singletons. Singletons cannot be created/duplicated/deleted (WP-settings behavior). New content types get added here as built.
 - [ ] The ~21 blocks with fields, previews, icons, initial values
-- [ ] WP-familiar desk structure (mirrors WP admin nav)
 - [ ] Phase 1 QC + review gate
 
 ## Phase 2 — Frontend & design system
