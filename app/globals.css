@@ -104,13 +104,14 @@ img {
 .bg-dark { background: var(--tdb-dark); color: var(--tdb-white); }
 .bg-white { background: var(--tdb-white); color: var(--tdb-black); }
 .bg-white a { color: var(--tdb-accent); }
-/* Forest motif: dark base with a soft radial depth. Real forest artwork is
-   swapped in with media migration (Phase 3); this keeps the brand feel now. */
+/* Forest motif: the migrated forest photo under a dark overlay (brand signature). */
 .bg-forest {
   color: var(--tdb-white);
   background:
-    radial-gradient(120% 120% at 50% 0%, rgba(20, 32, 22, 0.55), rgba(7, 7, 7, 0.95) 60%),
-    var(--tdb-black);
+    linear-gradient(rgba(7, 7, 7, 0.78), rgba(7, 7, 7, 0.9)),
+    url('https://cdn.sanity.io/images/inapmf9l/production/5409792715b6c85959f34abe784ae0a7f69c561c-2560x1920.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 /* Typography */
