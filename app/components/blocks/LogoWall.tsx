@@ -7,13 +7,25 @@ export function LogoWall({ block }: { block: any }) {
   return (
     <Section settings={block.settings}>
       {block.heading ? <div className="section-heading logowall-heading"><h2 className="h2">{block.heading}</h2></div> : null}
-      <div className="logo-row">
-        {logos.map((logo, i) =>
-          logo?.asset ? (
-            <img key={i} className="logo-item" src={urlFor(logo).height(240).url()} alt={logo.alt || ''} loading="lazy" />
-          ) : null,
-        )}
-      </div>
+      {block.layout === 'grid' ? (
+        <div className="logo-grid">
+          {logos.map((logo, i) =>
+            logo?.asset ? (
+              <div key={i} className="logo-cell">
+                <img src={urlFor(logo).width(460).url()} alt={logo.alt || ''} loading="lazy" />
+              </div>
+            ) : null,
+          )}
+        </div>
+      ) : (
+        <div className="logo-row">
+          {logos.map((logo, i) =>
+            logo?.asset ? (
+              <img key={i} className="logo-item" src={urlFor(logo).height(240).url()} alt={logo.alt || ''} loading="lazy" />
+            ) : null,
+          )}
+        </div>
+      )}
     </Section>
   )
 }
