@@ -7,9 +7,11 @@ import { buildMetadata } from '@/app/lib/pageMeta'
 
 export const dynamic = 'force-dynamic'
 
-type PageParams = { params: Promise<{ slug: string }> }
+type PageParams = { params: Promise<{ slug: string[] }> }
 
-async function getPage(slug: string) {
+/** Resolves a page by its full path slug (e.g. "solutions/seo-services"). */
+async function getPage(slugParts: string[]) {
+  const slug = (slugParts || []).join('/')
   return client.fetch(PAGE_BY_SLUG_QUERY, { slug })
 }
 
