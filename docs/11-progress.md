@@ -107,6 +107,10 @@ Reset on approach (Angelo feedback): the earlier homepage was a media-less appro
 - [ ] Ownership transfer + admin access to client
 - [ ] Phase 6 QC + review gate
 
+## Backlog — suggestions to raise with Laney
+
+- **Dynamic Google reviews on /more-testimonials.** The live page hardcodes 12 client reviews (individual Elementor blockquote widgets); the rating badge is a static TrustIndex Google Reviews widget. We currently mirror this by hardcoding the same 12 quotes in a `quoteGrid` block. Worth proposing: pull reviews live from the Google Business Profile / Places API (or keep the TrustIndex embed) so the wall and the 5.0 / review-count badge stay current automatically, styled the same as now. Out of current scope; confirm with Laney before building.
+
 ## Risk register
 
 | Risk | Impact | Mitigation |
