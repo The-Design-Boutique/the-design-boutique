@@ -534,3 +534,19 @@ a.service-card:hover .service-text { color: #fff; }
 .video-grid-name { margin: 0.75rem 0 0; color: var(--tdb-white); font-weight: 600; }
 @media (max-width: 991px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .video-grid { grid-template-columns: 1fr; } }
+
+/* Rich text: wide left-aligned variant (no leaf) — e.g. Our Vision */
+.prose--wide { max-width: none; margin-left: 0; margin-right: 0; text-align: left; }
+.prose--wide p { max-width: 60rem; }
+
+/* Values grid (Vision & Values — giants of the forest) */
+.values-intro { margin-bottom: 2.5rem; }
+.values-lead { max-width: 46rem; color: var(--tdb-offwhite); margin-top: 0.5rem; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.value-card { border: 1px solid rgba(255,255,255,0.28); background: var(--tdb-dark); padding: 2.25rem 2rem 2.5rem; display: flex; flex-direction: column; }
+.value-icon { width: auto; height: 96px; margin-bottom: 1.5rem; align-self: flex-start; }
+.value-name { font-weight: 700; font-size: 0.95rem; color: var(--tdb-white); margin: 0 0 0.4rem; }
+.value-equation { font-size: 1.35rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.9rem; text-wrap: balance; }
+.value-desc { margin: 0; color: var(--tdb-offwhite); line-height: 1.6; }
+@media (max-width: 991px) { .values-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .values-grid { grid-template-columns: 1fr; } }

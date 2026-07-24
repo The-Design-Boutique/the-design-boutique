@@ -25,6 +25,7 @@ import { imageGallery } from './imageGallery'
 import { flipBoxGrid } from './flipBoxGrid'
 import { teamGrid } from './teamGrid'
 import { videoGrid } from './videoGrid'
+import { valuesGrid } from './valuesGrid'
 
 /** All page-builder blocks, in a sensible insert-menu order. */
 export const blocks = [
@@ -46,6 +47,7 @@ export const blocks = [
   logoWall,
   teamGrid,
   videoGrid,
+  valuesGrid,
   // portfolio / clients
   portfolioMosaic,
   portfolioLoop,

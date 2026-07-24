@@ -14,10 +14,16 @@ const components: PortableTextComponents = {
 
 export function RichTextBlock({ block }: { block: any }) {
   if (!block.content) return null
-  const wide = !!block.wideWithLeaf
+  const withLeaf = !!block.wideWithLeaf
+  const wide = !!block.wide
+  const isDefault = !withLeaf && !wide
   return (
-    <Section settings={block.settings} container={wide ? 'default' : 'narrow'} className={wide ? 'rt-leaf-right' : undefined}>
-      <div className={`prose${wide ? ' prose--about' : ''}`}>
+    <Section
+      settings={block.settings}
+      container={isDefault ? 'narrow' : 'default'}
+      className={withLeaf ? 'rt-leaf-right' : undefined}
+    >
+      <div className={`prose${withLeaf ? ' prose--about' : ''}${wide ? ' prose--wide' : ''}`}>
         <PortableText value={block.content} components={components} />
       </div>
     </Section>
