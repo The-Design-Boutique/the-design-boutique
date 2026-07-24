@@ -3,12 +3,20 @@ import { Section } from '../Section'
 import { urlFor } from '@/sanity/lib/image'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+const img = ({ value }: any) =>
+  value?.asset ? (
+    <img
+      className={`prose-img${value.align === 'right' ? ' prose-img--right' : ''}`}
+      src={urlFor(value).width(1200).url()}
+      alt={value.alt || ''}
+      loading="lazy"
+    />
+  ) : null
+
 const components: PortableTextComponents = {
-  types: {
-    imageWithAlt: ({ value }: any) =>
-      value?.asset ? <img className="prose-img" src={urlFor(value).width(1200).url()} alt={value.alt || ''} loading="lazy" /> : null,
-    image: ({ value }: any) =>
-      value?.asset ? <img className="prose-img" src={urlFor(value).width(1200).url()} alt={value.alt || ''} loading="lazy" /> : null,
+  types: { imageWithAlt: img, image: img },
+  block: {
+    eyebrow: ({ children }: any) => <p className="eyebrow">{children}</p>,
   },
 }
 
