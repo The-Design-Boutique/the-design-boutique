@@ -14,5 +14,12 @@ export const imageWithAlt = defineType({
       description: 'Describes the image for screen readers and search engines.',
       validation: (Rule) => Rule.required().warning('Add alt text for accessibility and SEO.'),
     }),
+    defineField({
+      name: 'align',
+      title: 'Alignment',
+      type: 'string',
+      description: 'In rich text, "Float right" wraps the surrounding copy around the image.',
+      options: { list: [{ title: 'Default (full width)', value: 'default' }, { title: 'Float right', value: 'right' }] },
+    }),
   ],
 })
