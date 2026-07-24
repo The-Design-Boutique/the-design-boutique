@@ -7,7 +7,17 @@ export function LogoWall({ block }: { block: any }) {
   return (
     <Section settings={block.settings}>
       {block.heading ? <div className="section-heading logowall-heading"><h2 className="h2">{block.heading}</h2></div> : null}
-      {block.layout === 'grid' ? (
+      {block.layout === 'cards' ? (
+        <div className="logo-cards">
+          {logos.map((logo, i) =>
+            logo?.asset ? (
+              <div key={i} className="logo-card">
+                <img src={urlFor(logo).width(460).url()} alt={logo.alt || ''} loading="lazy" />
+              </div>
+            ) : null,
+          )}
+        </div>
+      ) : block.layout === 'grid' ? (
         <div className="logo-grid">
           {logos.map((logo, i) =>
             logo?.asset ? (

@@ -623,3 +623,16 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .tier-subitem { margin: 0.1rem 0 0.1rem 1rem; color: var(--tdb-offwhite); }
 .tier-cta { margin-top: auto; align-self: flex-start; }
 @media (max-width: 991px) { .tier-grid { grid-template-columns: 1fr; max-width: 560px; margin-inline: auto; } }
+
+/* Logo cards (Trusted) — gray tiles, no dividers */
+.logo-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.logo-card { background: var(--tdb-dark); display: grid; place-items: center; padding: 3rem 2rem; min-height: 210px; }
+.logo-card img { max-width: 100%; max-height: 120px; width: auto; height: auto; }
+@media (max-width: 991px) { .logo-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .logo-cards { grid-template-columns: 1fr; } }
+
+/* Plain hero variant (Trusted): black + leaf on the right, left-aligned title */
+.subpage-banner--plain { min-height: 460px; display: flex; align-items: flex-end; padding: 170px 0 56px; }
+.subpage-banner--plain .container { width: 100%; }
+.with-leaf--right::before { left: auto; right: -60px; }
+@media (max-width: 991px) { .subpage-banner--plain { min-height: 320px; padding: 130px 0 48px; } }
