@@ -12,8 +12,9 @@ const signika = Signika({
 export const metadata: Metadata = {
   title: 'The Design Boutique',
   description: 'Digital marketing solutions for the AI search era.',
-  // Staging build: globally noindex until a go-live SOW says otherwise.
-  robots: { index: false, follow: false },
+  // TEMPORARY: indexing enabled for the client sneak-peek Lighthouse (SEO 100).
+  // RESTORE to `{ index: false, follow: false }` before any go-live per the staging-noindex rule.
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({
