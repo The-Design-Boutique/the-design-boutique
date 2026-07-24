@@ -11,7 +11,7 @@ export const logoWall = defineType({
       title: 'Layout',
       type: 'string',
       initialValue: 'row',
-      options: { list: [{ title: 'Single row', value: 'row' }, { title: 'Grid (4 across, divided)', value: 'grid' }] },
+      options: { list: [{ title: 'Single row', value: 'row' }, { title: 'Grid (4 across, divided)', value: 'grid' }, { title: 'Cards (gray tiles)', value: 'cards' }] },
     }),
     defineField({ name: 'logos', title: 'Logos', type: 'array', of: [defineArrayMember({ type: 'imageWithAlt' })] }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
