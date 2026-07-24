@@ -637,6 +637,22 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .with-leaf--right::before { left: auto; right: -60px; }
 @media (max-width: 991px) { .subpage-banner--plain { min-height: 320px; padding: 130px 0 48px; } }
 
+/* Google rating badge (More Testimonials hero) */
+.google-rating { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.6rem; color: var(--tdb-white); }
+.google-rating--left { justify-content: flex-start; }
+.google-rating-logo { height: 26px; width: auto; display: block; }
+.google-rating-label { font-size: 1.05rem; letter-spacing: 0.02em; }
+.google-rating-score { font-size: 1.25rem; font-weight: 700; }
+.google-rating-stars { color: #fbbf24; font-size: 1.2rem; letter-spacing: 0.05em; }
+.google-rating-count { font-size: 0.95rem; opacity: 0.8; }
+
+/* Quote grid (More Testimonials wall) */
+.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; }
+.quote-card { background: #f4f4f4; border-radius: 6px; padding: 2.25rem 2.25rem 2rem; margin: 0; display: flex; flex-direction: column; gap: 1.1rem; }
+.quote-card blockquote { margin: 0; font-size: 1.05rem; line-height: 1.65; color: #2b2b2b; }
+.quote-card figcaption { font-weight: 700; color: var(--tdb-ink, #111); font-size: 0.95rem; letter-spacing: 0.01em; }
+@media (max-width: 767px) { .quote-grid { grid-template-columns: 1fr; gap: 1.25rem; } }
+
 /* Testimonial slider arrows (What Our Clients Say) */
 .testimonial-nav { display: flex; gap: 0.75rem; margin-top: 2.5rem; margin-left: 11.5rem; }
 .testimonial-nav button, .testimonial-nav span { background: none; border: 0; color: var(--tdb-white); font-size: 1.9rem; line-height: 1; padding: 0.1rem 0.4rem; opacity: 0.85; transition: color 0.2s ease, opacity 0.2s ease; }
