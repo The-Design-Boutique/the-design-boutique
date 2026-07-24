@@ -4,7 +4,8 @@ import { Section } from '../Section'
 function Feature({ line }: { line: string }) {
   const t = String(line || '')
   if (t.trim().startsWith('–') || t.trim().startsWith('-')) {
-    return <li className="tier-subitem">{t.replace(/^\s*[–-]\s*/, '')}</li>
+    // keep the dash visible (e.g. "– Google Assistant"), normalize spacing
+    return <li className="tier-subitem">{t.trim().replace(/^[–-]\s*/, '– ')}</li>
   }
   const idx = t.indexOf(':')
   if (idx > 0 && idx < 40) {
