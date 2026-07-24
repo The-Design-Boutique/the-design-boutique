@@ -3,7 +3,15 @@
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
 Last updated: July 23, 2026.
-Current phase: Phase 2 (frontend rendering & design system) CLOSING OUT. The full homepage now matches the live site section by section at desktop AND mobile (hero, services, about, logo wall, forest CTA, industries, work, testimonial, FAQ, algorithms/contact, header with dual logo + phone, full footer, back-to-top). Mobile responsive pass done (no horizontal overflow at phone/tablet). Last Phase 2 item is nested routing (in progress now), the prerequisite for the interior pages. Then Phase 3 (pages + migration). Phase 0/1 live; CI pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
+Current phase: **Phase 3 (pages & migration) IN PROGRESS.** Phases 0, 1 and 2 are complete: the homepage matches the live site section by section at desktop and mobile, and nested routing is live.
+
+Phase 3 status:
+- Pages built and deployed (5): `/` (home, 10 blocks), `/about` (4), `/contact` (3), `/solutions` (6), `/solutions/seo-services` (6).
+- Pages remaining (~25): 8 more service pages under /solutions, the About children (Vision & Values, Team, Case Study), Work, Programs, Testimonials, Blog, the portfolio pages, Trusted, Gold, and the legal pages.
+- Content migration NOT started: 0 of 53 posts, 0 of 14 clients, 0 of 18 gold events. (3 testimonials created by hand so far: Joe Montana, Michelle Hoover, Red Hale.)
+- Block library still 25 types: every interior page has been built by reusing existing blocks and adding optional fields/variants, not by creating page-specific blocks.
+
+CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
 
 ## Status at a glance
 
