@@ -521,7 +521,7 @@ a.service-card:hover .service-text { color: #fff; }
 /* Brand list: orange square markers with breathing room */
 .prose ul { list-style: none; margin: 0 0 1.75rem; padding-left: 1.6rem; }
 .prose ul li { position: relative; padding-left: 0.4rem; margin-bottom: 0.85rem; }
-.prose ul li::before { content: ''; position: absolute; left: -1.15rem; top: 0.5em; width: 9px; height: 9px; background: var(--tdb-accent); }
+.prose ul li::before { content: ''; position: absolute; left: -1.2rem; top: 0.45em; width: 10px; height: 10px; border: 2px solid var(--tdb-accent); background: transparent; box-sizing: border-box; }
 .prose a { color: var(--tdb-accent); }
 
 
