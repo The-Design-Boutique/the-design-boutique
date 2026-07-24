@@ -353,7 +353,7 @@ a.service-card:hover .service-text { color: #fff; }
 .contact-intro .lead { margin-bottom: 1.5rem; }
 .contact-bullets { list-style: none; padding: 0; margin: 0 0 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
 .contact-bullets li { position: relative; padding-left: 1.6rem; color: var(--tdb-white); }
-.contact-bullets li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 9px; height: 9px; background: var(--tdb-accent); }
+.contact-bullets li::before { content: ''; position: absolute; left: 0; top: 0.45em; width: 10px; height: 10px; border: 2px solid var(--tdb-accent); background: transparent; box-sizing: border-box; }
 .contact-address { margin: 2rem 0 0; }
 .contact-address-heading { font-weight: 700; margin: 0 0 0.85rem; }
 .contact-address-line { display: flex; align-items: flex-start; gap: 0.6rem; margin: 0 0 0.75rem; color: var(--tdb-offwhite); }
