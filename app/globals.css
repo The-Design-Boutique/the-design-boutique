@@ -579,3 +579,19 @@ a.service-card:hover .service-text { color: #fff; }
 @media (max-width: 767px) { .prose-img--right { float: none; width: 100%; max-width: none; margin: 1.25rem 0; } }
 /* Case-study hero: footnote + CTA left-aligned */
 .subpage-banner--hero .subpage-banner-cta { text-align: left; }
+
+/* CTA underlined line is a link — keep it white (not the default orange link color) */
+.cta-underline--link { color: inherit; text-decoration: underline; }
+.cta-underline--link:hover { color: inherit; opacity: 0.85; }
+
+/* Work grid (portfolio cards: image + category + title, hover, linked) */
+.work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.work-card { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 4; color: var(--tdb-white); text-decoration: none; background: var(--tdb-dark); }
+.work-card-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.work-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(7,7,7,0) 45%, rgba(7,7,7,0.85)); z-index: 1; }
+.work-card-overlay { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 1.5rem; }
+.work-card-cat { margin: 0 0 0.2rem; color: var(--tdb-accent); font-weight: 700; font-size: 0.95rem; }
+.work-card-title { margin: 0; color: var(--tdb-white); font-size: 1.3rem; font-weight: 700; }
+.work-card:hover .work-card-img { transform: scale(1.06); }
+@media (max-width: 991px) { .work-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .work-grid { grid-template-columns: 1fr; } }
