@@ -25,6 +25,7 @@ import { TeamGrid } from './blocks/TeamGrid'
 import { VideoGrid } from './blocks/VideoGrid'
 import { ValuesGrid } from './blocks/ValuesGrid'
 import { ProcessSteps } from './blocks/ProcessSteps'
+import { WorkGrid } from './blocks/WorkGrid'
 import { ContactForm } from './blocks/ContactForm'
 import { NewsletterSignup } from './blocks/NewsletterSignup'
 import { HtmlEmbed } from './blocks/HtmlEmbed'
@@ -58,6 +59,7 @@ const registry: Record<string, BlockComponent> = {
   videoGrid: VideoGrid,
   valuesGrid: ValuesGrid,
   processSteps: ProcessSteps,
+  workGrid: WorkGrid,
   flipBoxGrid: FlipBoxGrid,
   contactForm: ContactForm,
   newsletterSignup: NewsletterSignup,

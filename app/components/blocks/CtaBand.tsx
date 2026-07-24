@@ -6,6 +6,8 @@ export function CtaBand({ block }: { block: any }) {
   const settings = block.settings || { background: 'forest' }
   const lines: string[] = String(block.headline || '').split('\n')
   const lastIndex = lines.length - 1
+  // The underlined last line is the click target (links to /contact on the live site).
+  const linkHref = block.linkHref || (Array.isArray(block.ctas) && block.ctas[0]?.href) || '/contact'
   return (
     <Section settings={{ ...settings, background: settings.background || 'forest' }}>
       <div style={{ textAlign: 'center', maxWidth: '46rem', margin: '0 auto' }}>
@@ -13,7 +15,11 @@ export function CtaBand({ block }: { block: any }) {
           {lines.map((ln, i) => (
             <span key={i}>
               {i > 0 ? <br /> : null}
-              {i === lastIndex && block.underlineLastLine ? <span className="cta-underline">{ln}</span> : ln}
+              {i === lastIndex && block.underlineLastLine ? (
+                <a href={linkHref} className="cta-underline cta-underline--link">{ln}</a>
+              ) : (
+                ln
+              )}
             </span>
           ))}
         </h2>

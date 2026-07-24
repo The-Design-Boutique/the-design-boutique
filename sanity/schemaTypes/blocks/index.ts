@@ -27,6 +27,7 @@ import { teamGrid } from './teamGrid'
 import { videoGrid } from './videoGrid'
 import { valuesGrid } from './valuesGrid'
 import { processSteps } from './processSteps'
+import { workGrid } from './workGrid'
 
 /** All page-builder blocks, in a sensible insert-menu order. */
 export const blocks = [
@@ -50,6 +51,7 @@ export const blocks = [
   videoGrid,
   valuesGrid,
   processSteps,
+  workGrid,
   // portfolio / clients
   portfolioMosaic,
   portfolioLoop,
