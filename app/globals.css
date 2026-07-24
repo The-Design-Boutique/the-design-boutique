@@ -440,9 +440,9 @@ a.service-card:hover .service-text { color: #fff; }
 .subpage-banner { padding: 150px 0 90px; }
 @media (max-width: 991px) { .subpage-banner { padding: 120px 0 64px; } }
 /* Full-width hero variant (no side image): tall, content weighted to the lower third */
-.subpage-banner--hero { min-height: 620px; display: flex; align-items: flex-end; padding: 200px 0 72px; }
+.subpage-banner--hero { min-height: 540px; display: flex; align-items: flex-end; padding: 190px 0 48px; }
 .subpage-banner--hero .container { width: 100%; }
-@media (max-width: 991px) { .subpage-banner--hero { min-height: 460px; padding: 140px 0 56px; } }
+@media (max-width: 991px) { .subpage-banner--hero { min-height: 420px; padding: 130px 0 44px; } }
 .subpage-banner-footnote { text-align: left; max-width: 62rem; margin: 2.25rem 0 0; color: var(--tdb-offwhite); }
 .subpage-banner-title { text-align: center; }
 .subpage-banner-title--left { text-align: left; }
@@ -511,11 +511,17 @@ a.service-card:hover .service-text { color: #fff; }
 .cta-underline { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px; }
 @media (max-width: 991px) { .rt-leaf-right::before { display: none; } }
 
-/* Portable text spacing */
+/* Portable text spacing + heading scale (brand-sized, not browser defaults) */
 .prose p { margin: 0 0 1rem; }
-.prose h2 { margin: 2rem 0 0.75rem; }
-.prose h3 { margin: 1.5rem 0 0.5rem; }
-.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
+.prose h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); font-weight: 700; margin: 2.25rem 0 0.85rem; line-height: 1.1; }
+.prose h3 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.15; }
+.prose h4 { font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.2; }
+.prose h2:first-child, .prose h3:first-child, .prose h4:first-child { margin-top: 0; }
+.prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
+/* Brand list: orange square markers with breathing room */
+.prose ul { list-style: none; margin: 0 0 1.75rem; padding-left: 1.6rem; }
+.prose ul li { position: relative; padding-left: 0.4rem; margin-bottom: 0.85rem; }
+.prose ul li::before { content: ''; position: absolute; left: -1.15rem; top: 0.5em; width: 9px; height: 9px; background: var(--tdb-accent); }
 .prose a { color: var(--tdb-accent); }
 
 
