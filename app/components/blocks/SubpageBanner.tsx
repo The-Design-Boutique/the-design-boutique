@@ -21,7 +21,11 @@ export function SubpageBanner({ block }: { block: any }) {
       ) : block.subtitle ? (
         <p className="lead subpage-banner-subtitle">{block.subtitle}</p>
       ) : null}
-      {block.footnote ? <p className="subpage-banner-footnote">{block.footnote}</p> : null}
+      {block.footnote ? (
+        <div className="subpage-banner-footnote">
+          {String(block.footnote).split('\n').filter((p: string) => p.trim()).map((p: string, i: number) => <p key={i}>{p}</p>)}
+        </div>
+      ) : null}
       {block.cta?.href ? (
         <div className="subpage-banner-cta">
           <CtaLink cta={block.cta} variant="accent" />
