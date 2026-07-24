@@ -31,6 +31,15 @@ export function SubpageBanner({ block }: { block: any }) {
           {String(block.footnote).split('\n').filter((p: string) => p.trim()).map((p: string, i: number) => <p key={i}>{p}</p>)}
         </div>
       ) : null}
+      {block.googleRating?.rating ? (
+        <div className={`google-rating${leftAligned ? ' google-rating--left' : ''}`}>
+          <img className="google-rating-logo" src="/google-logo.svg" alt="Google" />
+          <span className="google-rating-label">Ratings</span>
+          <span className="google-rating-score">{block.googleRating.rating}</span>
+          <span className="google-rating-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          {block.googleRating.reviewCount ? <span className="google-rating-count">{block.googleRating.reviewCount}</span> : null}
+        </div>
+      ) : null}
       {block.cta?.href ? (
         <div className="subpage-banner-cta">
           <CtaLink cta={block.cta} variant="accent" />

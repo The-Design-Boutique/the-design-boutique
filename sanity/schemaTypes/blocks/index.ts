@@ -29,6 +29,7 @@ import { valuesGrid } from './valuesGrid'
 import { processSteps } from './processSteps'
 import { workGrid } from './workGrid'
 import { pricingTiers } from './pricingTiers'
+import { quoteGrid } from './quoteGrid'
 
 /** All page-builder blocks, in a sensible insert-menu order. */
 export const blocks = [
@@ -54,6 +55,7 @@ export const blocks = [
   processSteps,
   workGrid,
   pricingTiers,
+  quoteGrid,
   // portfolio / clients
   portfolioMosaic,
   portfolioLoop,
