@@ -8,7 +8,7 @@ export function SubpageBanner({ block }: { block: any }) {
   // backgroundImage may still override it.
   const override = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2400).quality(80).url() : undefined
   const bg = override || '/subpage-banner.jpg'
-  const style = { backgroundImage: `linear-gradient(rgba(7,7,7,0.15), rgba(7,7,7,0.6)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  const style = { backgroundImage: `linear-gradient(rgba(7,7,7,0.15), rgba(7,7,7,0.55)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center top' }
   const side = block.sideImage?.asset ? urlFor(block.sideImage).width(900).url() : undefined
   const copy = (
     <>
