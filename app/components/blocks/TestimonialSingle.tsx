@@ -19,6 +19,10 @@ export function TestimonialSingle({ block }: { block: any }) {
             </figcaption>
           </figure>
         </div>
+        <div className="testimonial-nav" aria-hidden="true">
+          <span>&#8249;</span>
+          <span>&#8250;</span>
+        </div>
       </div>
     </Section>
   )

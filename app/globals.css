@@ -636,3 +636,10 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .subpage-banner--plain .container { width: 100%; }
 .with-leaf--right::before { left: auto; right: -60px; }
 @media (max-width: 991px) { .subpage-banner--plain { min-height: 320px; padding: 130px 0 48px; } }
+
+/* Testimonial slider arrows (What Our Clients Say) */
+.testimonial-nav { display: flex; gap: 0.75rem; margin-top: 2.5rem; margin-left: 11.5rem; }
+.testimonial-nav button, .testimonial-nav span { background: none; border: 0; color: var(--tdb-white); font-size: 1.9rem; line-height: 1; padding: 0.1rem 0.4rem; opacity: 0.85; transition: color 0.2s ease, opacity 0.2s ease; }
+.testimonial-nav button { cursor: pointer; }
+.testimonial-nav button:hover { color: var(--tdb-accent); opacity: 1; }
+@media (max-width: 991px) { .testimonial-nav { margin-left: 0; } }
