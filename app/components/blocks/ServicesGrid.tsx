@@ -30,6 +30,12 @@ export function ServicesGrid({ block }: { block: any }) {
                 {icon ? <img className="service-icon" src={icon} alt="" width={48} height={48} loading="lazy" /> : null}
                 <span className="h3 service-title">{s.title}</span>
                 {s.description ? <span className="service-text">{s.description}</span> : null}
+                {s.cta?.href ? (
+                  <a className="btn service-card-cta" href={s.cta.href}>
+                    <span>{s.cta.label || 'Learn more'}</span>
+                    <span className="btn-plus">+</span>
+                  </a>
+                ) : null}
               </span>
             </>
           )

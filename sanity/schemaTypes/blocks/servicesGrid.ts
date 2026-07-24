@@ -30,6 +30,7 @@ export const servicesGrid = defineType({
             defineField({ name: 'hoverImage', title: 'Hover background', type: 'image', description: 'Photo revealed behind the card on hover.' }),
             defineField({ name: 'icon', title: 'Icon key (legacy)', type: 'string', hidden: true }),
             defineField({ name: 'link', title: 'Link', type: 'link' }),
+            defineField({ name: 'cta', title: 'Card button', type: 'link', description: 'Optional button at the bottom of the card, e.g. a Lets do This button.' }),
           ],
           preview: { select: { title: 'title', subtitle: 'description', media: 'iconImage' } },
         }),
