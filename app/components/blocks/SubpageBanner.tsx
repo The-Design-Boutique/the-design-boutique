@@ -4,10 +4,11 @@ import { CtaLink } from '../CtaLink'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function SubpageBanner({ block }: { block: any }) {
-  const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2400).quality(80).url() : undefined
-  const style = bg
-    ? { backgroundImage: `linear-gradient(rgba(7,7,7,0.5), rgba(7,7,7,0.8)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : undefined
+  // The subpage hero background is a site constant (the night-bridge photo); a per-page
+  // backgroundImage may still override it.
+  const override = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2400).quality(80).url() : undefined
+  const bg = override || '/subpage-banner.jpg'
+  const style = { backgroundImage: `linear-gradient(rgba(7,7,7,0.45), rgba(7,7,7,0.82)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }
   const side = block.sideImage?.asset ? urlFor(block.sideImage).width(900).url() : undefined
   const copy = (
     <>
@@ -20,6 +21,7 @@ export function SubpageBanner({ block }: { block: any }) {
       ) : block.subtitle ? (
         <p className="lead subpage-banner-subtitle">{block.subtitle}</p>
       ) : null}
+      {block.footnote ? <p className="subpage-banner-footnote">{block.footnote}</p> : null}
       {block.cta?.href ? (
         <div className="subpage-banner-cta">
           <CtaLink cta={block.cta} variant="accent" />
@@ -28,7 +30,7 @@ export function SubpageBanner({ block }: { block: any }) {
     </>
   )
   return (
-    <section className="section subpage-banner bg-black" style={style}>
+    <section className={`section subpage-banner bg-black${side ? '' : ' subpage-banner--hero'}`} style={style}>
       <div className="container">
         {side ? (
           <div className="subpage-banner-grid">
