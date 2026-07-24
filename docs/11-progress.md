@@ -2,14 +2,14 @@
 
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
-Last updated: July 23, 2026.
+Last updated: July 24, 2026.
 Current phase: **Phase 3 (pages & migration) IN PROGRESS.** Phases 0, 1 and 2 are complete: the homepage matches the live site section by section at desktop and mobile, and nested routing is live.
 
 Phase 3 status:
-- Pages built and deployed (5): `/` (home, 10 blocks), `/about` (4), `/contact` (3), `/solutions` (6), `/solutions/seo-services` (6).
-- Pages remaining (~25): 8 more service pages under /solutions, the About children (Vision & Values, Team, Case Study), Work, Programs, Testimonials, Blog, the portfolio pages, Trusted, Gold, and the legal pages.
-- Content migration NOT started: 0 of 53 posts, 0 of 14 clients, 0 of 18 gold events. (3 testimonials created by hand so far: Joe Montana, Michelle Hoover, Red Hale.)
-- Block library still 25 types: every interior page has been built by reusing existing blocks and adding optional fields/variants, not by creating page-specific blocks.
+- Pages built and deployed (14): `/` (home), `/about`, `/contact`, `/solutions` (parent), and all 10 service pages under `/solutions`: `seo-services`, `geo-services`, `ai-search-optimization`, `cro-services`, `content-marketing-services`, `website-design-services`, `brand-identity-services`, `brand-naming-services`, `email-marketing-services`, `ad-campaign-services`. The full service-page set is complete; each matches its live counterpart section by section (banner, services grid, optional client-logo grid / showcase gallery, testimonial, CTA, video, contact).
+- Pages remaining (~16): the About children (Vision & Values, Team, Case Study), Work, Programs, Testimonials, Blog, the portfolio pages (logos / carlin / gloria), Trusted, Gold, and the legal pages (Privacy Policy, ADA Compliance).
+- Content migration NOT started: 0 of 53 posts, 0 of 14 clients, 0 of 18 gold events. (Testimonials created by hand as pages needed them: Joe Montana, Michelle Hoover, Red Hale, Virg C, Bimo O, Emit O, David L.)
+- Block library still 25 types: every interior page has been built by reusing existing blocks and adding optional fields/variants, not by creating page-specific blocks. The whole service-page batch (Brand Identity, Brand Naming, Email Marketing, Ad Campaign) shipped as pure reuse: zero new blocks, zero code deploy. Brand Naming reused the imageGallery heading variant; Brand Identity reused the logoWall grid variant.
 
 CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by phase (Angelo's call).
 
