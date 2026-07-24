@@ -23,6 +23,7 @@ import { ImageGallery } from './blocks/ImageGallery'
 import { FlipBoxGrid } from './blocks/FlipBoxGrid'
 import { TeamGrid } from './blocks/TeamGrid'
 import { VideoGrid } from './blocks/VideoGrid'
+import { ValuesGrid } from './blocks/ValuesGrid'
 import { ContactForm } from './blocks/ContactForm'
 import { NewsletterSignup } from './blocks/NewsletterSignup'
 import { HtmlEmbed } from './blocks/HtmlEmbed'
@@ -54,6 +55,7 @@ const registry: Record<string, BlockComponent> = {
   imageGallery: ImageGallery,
   teamGrid: TeamGrid,
   videoGrid: VideoGrid,
+  valuesGrid: ValuesGrid,
   flipBoxGrid: FlipBoxGrid,
   contactForm: ContactForm,
   newsletterSignup: NewsletterSignup,
