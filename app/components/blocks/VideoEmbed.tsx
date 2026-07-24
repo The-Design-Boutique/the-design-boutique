@@ -33,7 +33,7 @@ export function VideoEmbed({ block }: { block: any }) {
         <div className="section-heading section-heading--wide"><h2 className="h2">{block.heading}</h2></div>
       ) : null}
       {embed ? (
-        <div className="video-frame">
+        <div className={`video-frame${block.large ? " video-frame--large" : ""}`}>
           {playing || !poster ? (
             <iframe
               src={`${embed}?autoplay=1&rel=0&modestbranding=1`}
