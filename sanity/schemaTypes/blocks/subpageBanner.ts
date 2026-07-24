@@ -9,6 +9,7 @@ export const subpageBanner = defineType({
     defineField({ name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() }),
     defineField({ name: 'subtitle', title: 'Subtitle', type: 'text', rows: 2 }),
     defineField({ name: 'subtitleRich', title: 'Subtitle (rich text)', type: 'array', of: [{ type: 'block' }], description: 'Use instead of Subtitle when the intro needs bold or multiple paragraphs.' }),
+    defineField({ name: 'footnote', title: 'Footnote', type: 'text', rows: 3, description: 'Left-aligned intro paragraph shown at the bottom of the hero (e.g. the saliXus intro).' }),
     defineField({ name: 'backgroundImage', title: 'Background image', type: 'imageWithAlt' }),
     defineField({ name: 'sideImage', title: 'Side image', type: 'imageWithAlt', description: 'Shown to the right of the copy (service pages). When set, the banner becomes two-column and left-aligned.' }),
     defineField({ name: 'cta', title: 'Button', type: 'link' }),

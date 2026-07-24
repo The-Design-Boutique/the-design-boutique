@@ -439,6 +439,11 @@ a.service-card:hover .service-text { color: #fff; }
 /* Subpage banner (first section under the fixed header) */
 .subpage-banner { padding: 150px 0 90px; }
 @media (max-width: 991px) { .subpage-banner { padding: 120px 0 64px; } }
+/* Full-width hero variant (no side image): tall, content weighted to the lower third */
+.subpage-banner--hero { min-height: 620px; display: flex; align-items: flex-end; padding: 200px 0 72px; }
+.subpage-banner--hero .container { width: 100%; }
+@media (max-width: 991px) { .subpage-banner--hero { min-height: 460px; padding: 140px 0 56px; } }
+.subpage-banner-footnote { text-align: left; max-width: 62rem; margin: 2.25rem 0 0; color: var(--tdb-offwhite); }
 .subpage-banner-title { text-align: center; }
 .subpage-banner-title--left { text-align: left; }
 .subpage-banner-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: center; }
