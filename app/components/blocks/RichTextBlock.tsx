@@ -24,12 +24,14 @@ export function RichTextBlock({ block }: { block: any }) {
   if (!block.content) return null
   const withLeaf = !!block.wideWithLeaf
   const wide = !!block.wide
+  // The leaf motif can also ride along with the wide variant (long legal pages).
+  const leaf = withLeaf || !!block.leaf
   const isDefault = !withLeaf && !wide
   return (
     <Section
       settings={block.settings}
       container={isDefault ? 'narrow' : 'default'}
-      className={withLeaf ? 'rt-leaf-right' : undefined}
+      className={leaf ? `rt-leaf-right${wide ? ' rt-leaf-right--top' : ''}` : undefined}
     >
       <div className={`prose${withLeaf ? ' prose--about' : ''}${wide ? ' prose--wide' : ''}`}>
         <PortableText value={block.content} components={components} />
