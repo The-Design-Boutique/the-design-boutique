@@ -102,6 +102,14 @@ img {
 .section[data-pb='small'] { padding-bottom: 40px; }
 .section[data-pb='medium'] { padding-bottom: 64px; }
 @media (max-width: 991px) { .section { padding-block: 64px; } }
+/* Pages that open with a content section instead of a hero must clear the fixed header. */
+main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 225px; }
+/* The long legal pages sit a little lower still, matching the live site. */
+main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 300px; }
+@media (max-width: 991px) {
+  main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 160px; }
+  main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 190px; }
+}
 
 /* Backgrounds */
 .bg-black { background: var(--tdb-black); color: var(--tdb-white); }
@@ -505,6 +513,8 @@ a.service-card:hover .service-text { color: #fff; }
   opacity: 0.5; z-index: 0; pointer-events: none;
 }
 .rt-leaf-right > .container { position: relative; z-index: 1; }
+/* On long legal pages the leaf is anchored to the top, not centred down the page. */
+.rt-leaf-right--top::before { top: 0; transform: none; }
 .prose--about { max-width: 620px; }
 .prose--about .prose-img { max-width: 600px; }
 /* CTA band underlined action line (e.g. "Let's Go!") */

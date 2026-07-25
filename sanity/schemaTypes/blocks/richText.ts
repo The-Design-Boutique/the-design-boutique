@@ -26,6 +26,7 @@ export const richText = defineType({
     }),
     defineField({ name: 'wideWithLeaf', title: 'Wide with side leaf', type: 'boolean', description: 'Full-width content on the left with the redwood leaf motif on the right (e.g. the About bio).' }),
     defineField({ name: 'wide', title: 'Wide (left-aligned, no leaf)', type: 'boolean', description: 'Full-width, left-aligned prose with no side motif (e.g. Our Vision).' }),
+    defineField({ name: 'leaf', title: 'Add the side leaf motif', type: 'boolean', description: 'Adds the redwood leaf motif on the right. Combine with Wide for long legal pages (e.g. Privacy Policy).' }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
   ],
   preview: {
