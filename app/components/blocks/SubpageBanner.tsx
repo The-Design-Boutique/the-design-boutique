@@ -4,21 +4,27 @@ import { CtaLink } from '../CtaLink'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function SubpageBanner({ block }: { block: any }) {
-  // Plain variant: black background with the redwood-leaf motif and a left-aligned title (no photo).
+  // Plain variants: black background with the redwood-leaf motif and no photo.
+  // 'plain' is left-aligned (Trusted, More Testimonials); 'plainCenter' is centered (Thank You).
   const plain = block.variant === 'plain'
+  const plainCenter = block.variant === 'plainCenter'
+  const blackLeaf = plain || plainCenter
   const leftAligned = !!(block.sideImage?.asset || plain)
   // The subpage hero background is a site constant (the night-bridge photo); a per-page
   // backgroundImage may still override it.
   const override = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2400).quality(80).url() : undefined
   const bg = override || '/subpage-banner.jpg'
-  const style = plain
+  const style = blackLeaf
     ? undefined
     : { backgroundImage: `linear-gradient(rgba(7,7,7,0.15), rgba(7,7,7,0.55)), url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center top' }
   const side = block.sideImage?.asset ? urlFor(block.sideImage).width(900).url() : undefined
+  const titleLines = String(block.title).split('\n')
   const copy = (
     <>
       {block.eyebrow ? <p className="eyebrow" style={{ textAlign: leftAligned ? 'left' : 'center' }}>{block.eyebrow}</p> : null}
-      <h1 className={`h1 subpage-banner-title${leftAligned ? ' subpage-banner-title--left' : ''}`}>{block.title}</h1>
+      <h1 className={`h1 subpage-banner-title${leftAligned ? ' subpage-banner-title--left' : ''}`}>
+        {titleLines.map((l, i) => <span key={i}>{l}{i < titleLines.length - 1 ? <br /> : null}</span>)}
+      </h1>
       {Array.isArray(block.subtitleRich) && block.subtitleRich.length ? (
         <div className="lead subpage-banner-subtitle prose">
           <PortableText value={block.subtitleRich} />
@@ -49,7 +55,7 @@ export function SubpageBanner({ block }: { block: any }) {
   )
   return (
     <section
-      className={`section subpage-banner bg-black${side || plain ? '' : ' subpage-banner--hero'}${plain ? ' subpage-banner--plain with-leaf with-leaf--right' : ''}`}
+      className={`section subpage-banner bg-black${side || blackLeaf ? '' : ' subpage-banner--hero'}${blackLeaf ? ' subpage-banner--plain with-leaf with-leaf--right' : ''}${plainCenter ? ' subpage-banner--plain-center' : ''}`}
       style={style}
     >
       <div className="container">
