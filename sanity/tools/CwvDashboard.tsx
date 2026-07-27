@@ -98,7 +98,7 @@ export function CwvDashboard() {
     )
     setSnaps(rows)
     const labRow = await client.fetch(
-      `*[_type == "cwvSnapshot" && source == "lab" && formFactor == $ff]
+      `*[_type == "cwvSnapshot" && source == "lab" && formFactor == $ff && hasData == true]
         | order(fetchedAt desc)[0]{ performanceScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
       { ff: formFactor },
     )

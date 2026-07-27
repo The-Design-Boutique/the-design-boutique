@@ -32,8 +32,18 @@ const FORM_FACTORS = ['PHONE', 'DESKTOP'] as const
  * site does not have enough yet, so a lab test is the only reading available
  * today. It is stored and displayed separately and never sets the pass/fail
  * bands, which remain field-data only.
+ *
+ * Defaults to whatever this deployment is serving, so the lab test always
+ * measures *this* site rather than needing a separate variable kept in sync.
+ * After go-live that becomes the production domain automatically.
  */
-const LAB_URL = process.env.CWV_LAB_URL || process.env.NEXT_PUBLIC_SITE_URL || ORIGIN
+function labTarget(): string {
+  if (process.env.CWV_LAB_URL) return process.env.CWV_LAB_URL
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+  if (vercelUrl) return `https://${vercelUrl}`
+  return process.env.NEXT_PUBLIC_SITE_URL || ORIGIN
+}
+const LAB_URL = labTarget()
 
 const writeClient = createClient({
   projectId, dataset, apiVersion,
