@@ -877,3 +877,7 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
   .client-gallery img { margin-bottom: 10px; }
   .client-cover-name { font-size: 26px; }
 }
+
+/* Category archive */
+.category-label { margin: 0.6rem 0 0; font-size: 19.2px; font-weight: 700; color: var(--tdb-accent); text-align: center; }
+.category-empty { color: var(--tdb-offwhite); text-align: center; }

@@ -99,6 +99,18 @@ export const CLIENT_BY_SLUG_QUERY = defineQuery(`
   }
 `)
 
+export const CATEGORY_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "category" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc){
+      _id, title, "slug": slug.current, publishedAt, featuredImage
+    }
+  }
+`)
+
 export const BLOG_SETTINGS_QUERY = defineQuery(`
   *[_id == "siteSettings"][0]{
     blogEyebrow,

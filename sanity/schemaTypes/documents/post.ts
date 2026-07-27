@@ -14,7 +14,7 @@ export const post = defineType({
     defineField({ name: 'slug', title: 'URL slug', type: 'slug', group: 'content', options: { source: 'title', maxLength: 96 }, validation: (Rule) => Rule.required() }),
     defineField({ name: 'publishedAt', title: 'Published at', type: 'datetime', group: 'content', initialValue: () => new Date().toISOString() }),
     defineField({ name: 'author', title: 'Author', type: 'reference', to: [{ type: 'author' }], group: 'content' }),
-    defineField({ name: 'category', title: 'Category', type: 'reference', to: [{ type: 'category' }], group: 'content' }),
+    defineField({ name: 'categories', title: 'Categories', type: 'array', of: [{ type: 'reference', to: [{ type: 'category' }] }], group: 'content', description: 'Posts on the live site carry several categories.' }),
     defineField({ name: 'featuredImage', title: 'Featured image', type: 'imageWithAlt', group: 'content' }),
     defineField({ name: 'excerpt', title: 'Excerpt', type: 'text', rows: 3, group: 'content', description: 'Short summary for listings and social sharing.' }),
     defineField({

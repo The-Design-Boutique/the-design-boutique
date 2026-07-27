@@ -6,12 +6,14 @@ import {
   POST_BY_SLUG_QUERY,
   GOLD_EVENT_BY_SLUG_QUERY,
   CLIENT_BY_SLUG_QUERY,
+  CATEGORY_BY_SLUG_QUERY,
   BLOG_SETTINGS_QUERY,
 } from '@/sanity/lib/queries'
 import { BlockRenderer } from '@/app/components/BlockRenderer'
 import { PostTemplate } from '@/app/components/PostTemplate'
 import { GoldEventTemplate } from '@/app/components/GoldEventTemplate'
 import { ClientTemplate } from '@/app/components/ClientTemplate'
+import { CategoryTemplate } from '@/app/components/CategoryTemplate'
 import { buildMetadata } from '@/app/lib/pageMeta'
 
 export const dynamic = 'force-dynamic'
@@ -29,6 +31,7 @@ async function getPage(slugParts: string[]) {
  *   /{slug}            -> blog post (root-level, as on the live site)
  *   /gold/{slug}       -> gold event
  *   /portfolio/{slug}  -> client case study
+ *   /category/{slug}   -> blog category archive
  */
 async function getDocument(parts: string[]) {
   if (!parts?.length) return null
@@ -43,6 +46,10 @@ async function getDocument(parts: string[]) {
   if (parts.length === 2 && parts[0] === 'portfolio') {
     const c = await client.fetch(CLIENT_BY_SLUG_QUERY, { slug: parts[1] })
     return c ? { kind: 'client' as const, doc: c } : null
+  }
+  if (parts.length === 2 && parts[0] === 'category') {
+    const cat = await client.fetch(CATEGORY_BY_SLUG_QUERY, { slug: parts[1] })
+    return cat ? { kind: 'category' as const, doc: cat } : null
   }
   return null
 }
@@ -66,6 +73,9 @@ export default async function Page({ params }: PageParams) {
   if (found.kind === 'client') return <ClientTemplate client={found.doc} />
 
   const settings = await client.fetch(BLOG_SETTINGS_QUERY)
+  if (found.kind === 'category') {
+    return <CategoryTemplate category={found.doc} posts={found.doc.posts || []} settings={settings} />
+  }
   if (found.kind === 'gold') return <GoldEventTemplate event={found.doc} settings={settings} />
   return <PostTemplate post={found.doc} settings={settings} />
 }
