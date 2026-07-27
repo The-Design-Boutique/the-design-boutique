@@ -96,9 +96,11 @@ type LabResult =
 
 async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'): Promise<LabResult> {
   const qs = new URLSearchParams({ url, strategy, category: 'performance', key })
-  // Lighthouse can take a while. Cap it so a slow run cannot exhaust the
-  // function budget and take the whole collection down with it.
-  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store', signal: AbortSignal.timeout(38_000) })
+  // Lighthouse can take a while, and the mobile run is the slower of the two
+  // because of the CPU throttling it simulates. Both run concurrently, so each
+  // gets most of the 60 second budget. A run that still overshoots is recorded
+  // as a problem and the dashboard falls back to the last successful result.
+  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store', signal: AbortSignal.timeout(50_000) })
   if (!res.ok) return { ok: false, error: `PSI ${res.status}` }
   const json = await res.json()
   const lh = json?.lighthouseResult
