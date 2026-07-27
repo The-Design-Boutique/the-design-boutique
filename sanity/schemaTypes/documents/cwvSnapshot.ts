@@ -12,6 +12,11 @@ export const cwvSnapshot = defineType({
   type: 'document',
   readOnly: true,
   fields: [
+    defineField({
+      name: 'source', title: 'Source', type: 'string', initialValue: 'field',
+      description: 'Field = real visitors via the Chrome UX Report. Lab = a simulated test via PageSpeed Insights.',
+      options: { list: [{ title: 'Real visitors (field)', value: 'field' }, { title: 'Lab test', value: 'lab' }] },
+    }),
     defineField({ name: 'target', title: 'Target', type: 'string', description: 'The origin or page URL this reading is for.' }),
     defineField({
       name: 'scope', title: 'Scope', type: 'string',
@@ -34,13 +39,16 @@ export const cwvSnapshot = defineType({
     defineField({ name: 'fetchedAt', title: 'Fetched at', type: 'datetime' }),
     defineField({ name: 'hasData', title: 'Had data', type: 'boolean', description: 'False when CrUX has no reading for this target yet.' }),
     defineField({ name: 'seeded', title: 'Seeded from history', type: 'boolean', description: 'True for the backfilled weekly points from the CrUX History API.' }),
+    // Lab-only. Never used for the pass/fail bands, which are field data only.
+    defineField({ name: 'performanceScore', title: 'Lighthouse performance score', type: 'number', description: 'Lab runs only, 0 to 100.' }),
+    defineField({ name: 'tbt', title: 'Total Blocking Time (ms)', type: 'number', description: 'Lab stand-in for responsiveness; INP cannot be measured in a lab.' }),
     defineField({ name: 'error', title: 'Error', type: 'string' }),
   ],
   preview: {
-    select: { target: 'target', ff: 'formFactor', when: 'periodEnd', has: 'hasData' },
-    prepare: ({ target, ff, when, has }) => ({
-      title: `${target} (${ff === 'DESKTOP' ? 'desktop' : 'phone'})`,
-      subtitle: has === false ? `${when} — no data` : `${when}`,
+    select: { target: 'target', ff: 'formFactor', when: 'periodEnd', has: 'hasData', source: 'source', fetched: 'fetchedAt' },
+    prepare: ({ target, ff, when, has, source, fetched }) => ({
+      title: `${source === 'lab' ? 'Lab' : 'Real visitors'}: ${target} (${ff === 'DESKTOP' ? 'desktop' : 'phone'})`,
+      subtitle: has === false ? 'no data' : when || (fetched || '').slice(0, 10),
     }),
   },
 })
