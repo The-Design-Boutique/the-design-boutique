@@ -80,10 +80,30 @@ Reset on approach (Angelo feedback): the earlier homepage was a media-less appro
 
 ## Phase 3 — Pages & migration
 
-- [ ] 30 pages rebuilt in the block builder, each matched to reference
-- [ ] Migrate 53 posts, 14 clients, 18 gold events, referenced media
+- [x] 30 pages rebuilt in the block builder, each matched to reference
+- [x] Migrate 53 posts (blog template, root-level URLs, index grid). 8 posts are
+      hand-built HTML and keep their own markup with scoped CSS; the other 45 are
+      Portable Text. Verified against live for text, tables, rows, list items,
+      images and headings.
+- [ ] Migrate 14 clients (portfolio detail pages) — **/portfolio/{slug} 404s, linked from /work and the homepage**
+- [ ] Migrate 18 gold events (event detail pages) — **/gold/{slug} 404s, linked from /gold**
+- [ ] Redirect map for the live URLs that redirect (4 known):
+      `/connect` → `/contact`, `/vision-values` → `/about/vision-values`,
+      `/solutions/geo-ai-services` → `/solutions/geo-services`,
+      `/solutions/content-marekting-services` → `/solutions/content-marketing-services`
+      (the last is a live typo that resolves; all four targets already exist here)
 - [ ] Content parity crawl vs live (URLs + visual)
 - [ ] Phase 3 QC + review gate
+
+### Known broken internal links (staging crawl, 84 pages / 116 links)
+
+| Group | Count | Cause |
+|---|---|---|
+| `/portfolio/{slug}` | 14 | client detail pages not built |
+| `/gold/{slug}` | 18 | gold event detail pages not built |
+| redirects | 4 | live redirects not yet mapped |
+
+Re-run the crawl after those land; the target is zero.
 
 ## Phase 4 — SEO tooling
 
