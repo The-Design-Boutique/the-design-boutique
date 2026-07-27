@@ -22,7 +22,7 @@ export const post = defineType({
       title: 'Body',
       type: 'array',
       group: 'content',
-      of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' })],
+      of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' }), defineArrayMember({ type: 'bodyHtml' })],
     }),
     defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo' }),
   ],

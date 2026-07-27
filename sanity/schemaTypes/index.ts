@@ -21,6 +21,7 @@ import { link } from './objects/link'
 import { sectionSettings } from './objects/sectionSettings'
 import { imageWithAlt } from './objects/imageWithAlt'
 import { bodyVideo } from './objects/bodyVideo'
+import { bodyHtml } from './objects/bodyHtml'
 
 // Page-builder blocks
 import { blocks } from './blocks'
@@ -51,6 +52,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     sectionSettings,
     imageWithAlt,
   bodyVideo,
+  bodyHtml,
     // page-builder blocks
     ...blocks,
   ],
