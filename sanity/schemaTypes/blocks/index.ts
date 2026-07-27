@@ -31,6 +31,7 @@ import { workGrid } from './workGrid'
 import { pricingTiers } from './pricingTiers'
 import { quoteGrid } from './quoteGrid'
 import { eventGrid } from './eventGrid'
+import { postGrid } from './postGrid'
 
 /** All page-builder blocks, in a sensible insert-menu order. */
 export const blocks = [
@@ -58,6 +59,7 @@ export const blocks = [
   pricingTiers,
   quoteGrid,
   eventGrid,
+  postGrid,
   // portfolio / clients
   portfolioMosaic,
   portfolioLoop,

@@ -20,6 +20,7 @@ import { seoFields } from './objects/seoFields'
 import { link } from './objects/link'
 import { sectionSettings } from './objects/sectionSettings'
 import { imageWithAlt } from './objects/imageWithAlt'
+import { bodyVideo } from './objects/bodyVideo'
 
 // Page-builder blocks
 import { blocks } from './blocks'
@@ -49,6 +50,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     link,
     sectionSettings,
     imageWithAlt,
+  bodyVideo,
     // page-builder blocks
     ...blocks,
   ],

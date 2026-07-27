@@ -25,8 +25,57 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
       services[]{ title, description, icon, iconImage, hoverImage, link${linkProjection}, cta${linkProjection} },
       testimonial->{ name, roleCompany, quote, videoUrl, featured, image },
       testimonials[]->{ name, roleCompany, quote, image, videoUrl },
-      clients[]->{ title, "slug": slug.current, logo }
+      clients[]->{ title, "slug": slug.current, logo },
+      _type == "postGrid" => {
+        "posts": *[_type == "post" && defined(slug.current)] | order(publishedAt desc){
+          _id, title, "slug": slug.current, publishedAt, featuredImage
+        }
+      }
     }
+  }
+`)
+
+// Blog posts live at the site root (e.g. /5-mistakes) to match the live site.
+const postCardProjection = `{
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  featuredImage
+}`
+
+export const POST_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "post" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    excerpt,
+    featuredImage,
+    body[]{ ... },
+    seo,
+    "authorName": coalesce(author->name, "Laney Silverman"),
+    "previous": *[_type == "post" && publishedAt < ^.publishedAt] | order(publishedAt desc)[0]{ title, "slug": slug.current },
+    "next": *[_type == "post" && publishedAt > ^.publishedAt] | order(publishedAt asc)[0]{ title, "slug": slug.current },
+    "related": *[_type == "post" && _id != ^._id] | order(publishedAt desc)[0...3]${postCardProjection}
+  }
+`)
+
+export const POST_LIST_QUERY = defineQuery(`
+  *[_type == "post"] | order(publishedAt desc)${postCardProjection}
+`)
+
+export const POST_SLUGS_QUERY = defineQuery(`*[_type == "post" && defined(slug.current)].slug.current`)
+
+export const BLOG_SETTINGS_QUERY = defineQuery(`
+  *[_id == "siteSettings"][0]{
+    blogEyebrow,
+    blogName,
+    postSidebarHeading,
+    postSidebarItems,
+    postSidebarCta${linkProjection},
+    relatedHeading,
+    socialLinks[]{ platform, url }
   }
 `)
 
