@@ -36,7 +36,9 @@ export const post = defineType({
         ],
       }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' }), defineArrayMember({ type: 'bodyHtml' })],
     }),
-    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo' }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo',
+      // Blog posts are articles.
+      initialValue: { schemaType: 'Article' } }),
   ],
   preview: {
     select: { title: 'title', slug: 'slug.current', media: 'featuredImage' },

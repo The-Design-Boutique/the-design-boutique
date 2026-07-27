@@ -17,7 +17,9 @@ export const goldEvent = defineType({
     defineField({ name: 'videoUrl', title: 'Video URL', type: 'url', group: 'content' }),
     defineField({ name: 'coverImage', title: 'Cover image', type: 'imageWithAlt', group: 'content' }),
     defineField({ name: 'description', title: 'Description', type: 'array', group: 'content', of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' }), defineArrayMember({ type: 'bodyHtml' })] }),
-    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo' }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo',
+      // Event write-ups are articles.
+      initialValue: { schemaType: 'Article' } }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'presenter', media: 'coverImage' },

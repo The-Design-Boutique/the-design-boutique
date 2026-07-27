@@ -27,7 +27,9 @@ export const client = defineType({
       group: 'content',
       of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' }), defineArrayMember({ type: 'bodyHtml' })],
     }),
-    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo' }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo',
+      // Case studies read as articles.
+      initialValue: { schemaType: 'Article' } }),
   ],
   preview: {
     select: { title: 'title', category: 'category.title', media: 'logo' },

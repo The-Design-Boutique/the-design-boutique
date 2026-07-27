@@ -1,19 +1,178 @@
 import type { Metadata } from 'next'
+import { urlFor } from '@/sanity/lib/image'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/** Builds Next metadata from a page's shared seoFields, with fallbacks. */
-export function buildMetadata(page: any): Metadata {
-  if (!page) return {}
-  const title: string = page.seo?.title || page.title
-  const description: string | undefined = page.seo?.metaDescription
+
+/**
+ * Turns a document's shared `seoFields` into page metadata (SOW 2.4).
+ *
+ * Fallback order is deliberate and documented in ruleset 05:
+ *   title        SEO title -> document title
+ *   description  meta description -> excerpt
+ *   share title  share title -> SEO title -> document title
+ *   share text   share description -> meta description
+ *   share image  share image -> the document's own image -> site default
+ *   X/Twitter    its own value -> the share (Open Graph) value
+ *
+ * The site is noindex-wide while on staging (set in the root layout); the
+ * per-page robots values below still record the intended production setting.
+ */
+
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '') ||
+  'https://thedesignboutique.com'
+
+function imageUrl(source: any, width = 1200, height = 630): string | undefined {
+  if (!source?.asset) return undefined
+  try {
+    return urlFor(source).width(width).height(height).fit('crop').url()
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Absolute URL for a document path, which social platforms require.
+ * An empty path is the homepage, not a missing value.
+ */
+export function absoluteUrl(path?: string): string | undefined {
+  if (path === undefined || path === null) return undefined
+  const base = SITE_URL.replace(/\/$/, '')
+  const clean = path.replace(/^\//, '')
+  if (!clean) return base
+  if (clean.startsWith('http')) return clean
+  return `${base}/${clean}`
+}
+
+export function buildMetadata(doc: any, opts: { path?: string; siteDefaults?: any } = {}): Metadata {
+  if (!doc) return {}
+  const seo = doc.seo || {}
+  const { path, siteDefaults } = opts
+
+  const title: string = seo.title || doc.title
+  const description: string | undefined = seo.metaDescription || doc.excerpt || undefined
+
+  const shareTitle = seo.ogTitle || title
+  const shareDescription = seo.ogDescription || description
+  const shareImage =
+    imageUrl(seo.ogImage) ||
+    imageUrl(doc.featuredImage) ||
+    imageUrl(doc.coverImage) ||
+    imageUrl(siteDefaults?.defaultShareImage)
+
+  const twitterImage = imageUrl(seo.twitterImage) || shareImage
+
+  // Empty canonical means "this page is its own canonical", the normal case.
+  const canonical = seo.canonicalUrl || absoluteUrl(path)
+
   return {
     title,
     description,
-    alternates: page.seo?.canonicalUrl ? { canonical: page.seo.canonicalUrl } : undefined,
+    alternates: canonical ? { canonical } : undefined,
+    robots:
+      seo.robots && (seo.robots.index === false || seo.robots.follow === false)
+        ? { index: seo.robots.index !== false, follow: seo.robots.follow !== false }
+        : undefined,
     openGraph: {
-      title: page.seo?.ogTitle || title,
-      description: page.seo?.ogDescription || description,
+      title: shareTitle,
+      description: shareDescription,
+      url: canonical,
+      siteName: siteDefaults?.siteName || 'The Design Boutique',
+      type: seo.schemaType === 'Article' ? 'article' : 'website',
+      images: shareImage ? [{ url: shareImage, width: 1200, height: 630 }] : undefined,
     },
-    // Staging-wide noindex stays (set in the root layout).
+    twitter: {
+      card: (seo.twitterCardType as any) || 'summary_large_image',
+      title: seo.twitterTitle || shareTitle,
+      description: seo.twitterDescription || shareDescription,
+      images: twitterImage ? [twitterImage] : undefined,
+    },
   }
+}
+
+/**
+ * Builds the JSON-LD block for a document, based on its structured data type.
+ * Returning null means the page emits nothing rather than an empty shell.
+ */
+export function buildJsonLd(doc: any, opts: { path?: string; siteDefaults?: any } = {}): object | null {
+  if (!doc) return null
+  const seo = doc.seo || {}
+  const { path, siteDefaults } = opts
+  const url = seo.canonicalUrl || absoluteUrl(path)
+  const name = seo.title || doc.title
+  const description = seo.metaDescription || doc.excerpt || undefined
+  const image =
+    imageUrl(seo.ogImage) || imageUrl(doc.featuredImage) || imageUrl(doc.coverImage) || undefined
+  const org = siteDefaults?.siteName || 'The Design Boutique'
+
+  const base = { '@context': 'https://schema.org', url, name, description }
+
+  switch (seo.schemaType) {
+    case 'Article':
+      return {
+        ...base,
+        '@type': 'Article',
+        headline: name,
+        image: image ? [image] : undefined,
+        datePublished: doc.publishedAt || doc.date || undefined,
+        author: doc.authorName ? { '@type': 'Person', name: doc.authorName } : undefined,
+        publisher: { '@type': 'Organization', name: org },
+      }
+
+    case 'FAQPage': {
+      const faqs: any[] = Array.isArray(seo.faqs) ? seo.faqs : []
+      // No questions means no FAQ markup: an empty FAQPage is worse than none.
+      if (!faqs.length) return null
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer },
+        })),
+      }
+    }
+
+    case 'LocalBusiness':
+      return {
+        ...base,
+        '@type': 'LocalBusiness',
+        name: org,
+        telephone: siteDefaults?.phone || undefined,
+        email: siteDefaults?.email || undefined,
+        address: siteDefaults?.address
+          ? { '@type': 'PostalAddress', streetAddress: siteDefaults.address }
+          : undefined,
+        image: image ? [image] : undefined,
+      }
+
+    case 'Organization':
+      return {
+        ...base,
+        '@type': 'Organization',
+        name: org,
+        telephone: siteDefaults?.phone || undefined,
+        email: siteDefaults?.email || undefined,
+      }
+
+    case 'Service':
+      return {
+        ...base,
+        '@type': 'Service',
+        serviceType: name,
+        provider: { '@type': 'Organization', name: org },
+      }
+
+    case 'WebPage':
+    default:
+      return { ...base, '@type': 'WebPage' }
+  }
+}
+
+/** Strips undefined values so the emitted JSON-LD has no empty keys. */
+export function jsonLdString(data: object | null): string | null {
+  if (!data) return null
+  return JSON.stringify(data, (_k, v) => (v === undefined ? undefined : v))
 }

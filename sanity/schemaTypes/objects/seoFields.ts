@@ -24,7 +24,7 @@ export const seoFields = defineType({
       type: 'string',
       description: 'Shown in search results and browser tabs. Falls back to the page title if left empty.',
       components: { input: SeoTitleInput },
-      validation: (Rule) => Rule.max(70).warning('Longer than ~70 characters may be truncated in search results.'),
+      validation: (Rule) => Rule.max(60).warning('Longer than about 60 characters may be cut off in search results.'),
     }),
     defineField({
       name: 'metaDescription',
@@ -33,7 +33,7 @@ export const seoFields = defineType({
       rows: 3,
       description: 'The summary shown under the title in search results.',
       components: { input: MetaDescriptionInput },
-      validation: (Rule) => Rule.max(180).warning('Longer than ~160 characters may be truncated.'),
+      validation: (Rule) => Rule.min(50).warning('Shorter than 50 characters is usually too brief to be useful.').max(160).warning('Longer than about 160 characters may be cut off.'),
     }),
     defineField({
       name: 'focusKeyword',
@@ -75,6 +75,25 @@ export const seoFields = defineType({
           { title: 'Local business', value: 'LocalBusiness' },
         ],
       },
+    }),
+    defineField({
+      name: 'faqs',
+      title: 'Questions and answers',
+      type: 'array',
+      fieldset: 'advanced',
+      description: 'Only used when the structured data type is set to FAQ page. Each question can then show directly in Google results.',
+      hidden: ({ parent }) => parent?.schemaType !== 'FAQPage',
+      of: [
+        {
+          type: 'object',
+          name: 'faq',
+          fields: [
+            defineField({ name: 'question', title: 'Question', type: 'string', validation: (Rule) => Rule.required() }),
+            defineField({ name: 'answer', title: 'Answer', type: 'text', rows: 3, validation: (Rule) => Rule.required() }),
+          ],
+          preview: { select: { title: 'question', subtitle: 'answer' } },
+        },
+      ],
     }),
     defineField({
       name: 'breadcrumbTitle',
