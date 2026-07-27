@@ -21,6 +21,9 @@ function Feature({ line }: { line: string }) {
 
 export function PricingTiers({ block }: { block: any }) {
   const tiers: any[] = Array.isArray(block.tiers) ? block.tiers : []
+  // 'packages' renders a large tier name, a plain description and an underlined
+  // text link instead of the programs layout's meta lines and button.
+  const packages = block.variant === 'packages'
   return (
     <Section settings={block.settings}>
       {block.eyebrow || block.heading ? (
@@ -29,9 +32,9 @@ export function PricingTiers({ block }: { block: any }) {
           {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
         </div>
       ) : null}
-      <div className="tier-grid">
+      <div className={`tier-grid${packages ? ' tier-grid--packages' : ''}`}>
         {tiers.map((t, i) => (
-          <div key={i} className="tier-card">
+          <div key={i} className={`tier-card${packages ? ' tier-card--packages' : ''}`}>
             <h3 className={`tier-name tier-name--${t.metal || 'silver'}`}>{t.name}</h3>
             {t.goal ? <p className="tier-meta"><strong>Goal:</strong> {t.goal}</p> : null}
             {t.who ? <p className="tier-meta"><strong>Who:</strong> {t.who}</p> : null}
@@ -48,11 +51,16 @@ export function PricingTiers({ block }: { block: any }) {
                 {t.features.map((f: string, j: number) => <Feature key={j} line={f} />)}
               </ul>
             ) : null}
+            {t.description ? <p className="tier-desc">{t.description}</p> : null}
             {t.cta?.href ? (
-              <a className="btn tier-cta" href={t.cta.href}>
-                <span>{t.cta.label || 'Get started'}</span>
-                <span className="btn-plus">+</span>
-              </a>
+              packages ? (
+                <h2 className="tier-cta-link"><a href={t.cta.href}>{t.cta.label || 'Get started'}</a></h2>
+              ) : (
+                <a className="btn tier-cta" href={t.cta.href}>
+                  <span>{t.cta.label || 'Get started'}</span>
+                  <span className="btn-plus">+</span>
+                </a>
+              )
             ) : null}
           </div>
         ))}
