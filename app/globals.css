@@ -815,3 +815,21 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .post-raw img { max-width: 100%; height: auto; }
 .post-raw table { width: 100%; border-collapse: collapse; }
 .post-raw > div { overflow-x: auto; }
+
+/* Post bodies follow the live site's Elementor kit heading scale, which is
+   deliberately different from the marketing prose scale (h3 is small there). */
+.post-body h1, .post-body h2, .post-body h3,
+.post-body h4, .post-body h5, .post-body h6 { font-weight: 700; margin: 19.2px 0 8px; }
+.post-body h1 { font-size: 54.4px; line-height: 1.232; }
+.post-body h2 { font-size: 48px; line-height: 1.232; }
+.post-body h3 { font-size: 19.2px; line-height: 1; }
+.post-body h4 { font-size: 35.2px; line-height: 1.232; }
+.post-body h5 { font-size: 16px; line-height: 1.7; }
+.post-body h6 { font-size: 19.2px; line-height: 1.232; }
+.post-body > :first-child, .post-raw > div > :first-child { margin-top: 0; }
+.post-raw table td, .post-raw table th { padding: 0; }
+@media (max-width: 767px) {
+  .post-body h1 { font-size: 38px; }
+  .post-body h2 { font-size: 32px; }
+  .post-body h4 { font-size: 26px; }
+}
