@@ -28,6 +28,7 @@ import { ProcessSteps } from './blocks/ProcessSteps'
 import { WorkGrid } from './blocks/WorkGrid'
 import { PricingTiers } from './blocks/PricingTiers'
 import { QuoteGrid } from './blocks/QuoteGrid'
+import { EventGrid } from './blocks/EventGrid'
 import { ContactForm } from './blocks/ContactForm'
 import { NewsletterSignup } from './blocks/NewsletterSignup'
 import { HtmlEmbed } from './blocks/HtmlEmbed'
@@ -64,6 +65,7 @@ const registry: Record<string, BlockComponent> = {
   workGrid: WorkGrid,
   pricingTiers: PricingTiers,
   quoteGrid: QuoteGrid,
+  eventGrid: EventGrid,
   flipBoxGrid: FlipBoxGrid,
   contactForm: ContactForm,
   newsletterSignup: NewsletterSignup,
