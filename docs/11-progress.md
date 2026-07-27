@@ -29,7 +29,12 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 2. Vercel (blocking for deploy): import the (now public) GitHub repo into the TDB Vercel account. Add `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and the Sanity token as Vercel env vars (I will give the exact values). Add the resulting Vercel URL to Sanity CORS.
 3. GitHub: DONE. Repo public, `main` default.
 4. Sanity project + token: DONE (project inapmf9l, Editor token stored locally).
-5. Google Search Console: confirm the `gsc-tdb` connection covers the thedesignboutique.com property (likely already does).
+5. **Google Search Console access for thedesignboutique.com — BLOCKING 2.3.** Verified July 27, 2026:
+   the `gsc-tdb` connection authenticates fine but only exposes `ferglawgroup.com` (a TDB client),
+   not thedesignboutique.com. The SEO Health panel needs the site's own Search Console data.
+   Laney (or whoever owns the property) needs to add our Google account as a user at
+   search.google.com/search-console → Settings → Users and permissions. Full or Restricted both work
+   for reading. This is SOW section 7 access.
 
 ## Phase 0 — Foundations & walking skeleton
 
@@ -132,7 +137,14 @@ Output location and naming (fixed, do not change):
     2.5 SEO Toolset.pdf
 ```
 
-- [ ] 2.2 CWV dashboard + snapshot cron  →  PDF: `2.2 Core Web Vitals Dashboard.pdf`
+- [x] 2.2 CWV dashboard + snapshot cron  →  PDF: `2.2 Core Web Vitals Dashboard.pdf` DONE
+      Live in production, daily cron at 06:00 UTC, both field and lab collecting.
+      Note: the live origin has **no CrUX data** (below Google's publishing threshold,
+      verified across every origin variant and at page level). The field panel shows the
+      honest empty state and will populate on its own if traffic grows. A lab section via
+      PageSpeed Insights (permitted by rule 5, never sets the pass/fail bands) gives the
+      client something actionable today. The lab test measures whatever the deployment
+      serves, so it needs no config change at go-live.
 - [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**  →  PDF: `2.3 SEO Health Panel.pdf`
 - [ ] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf`
 - [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending  →  PDF: `2.5 SEO Toolset.pdf`
