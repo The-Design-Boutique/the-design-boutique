@@ -5,6 +5,7 @@ import { page } from './documents/page'
 import { post } from './documents/post'
 import { client } from './documents/client'
 import { goldEvent } from './documents/goldEvent'
+import { cwvSnapshot } from './documents/cwvSnapshot'
 import { testimonial } from './documents/testimonial'
 import { author } from './documents/author'
 import { category } from './documents/category'
@@ -36,6 +37,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     post,
     client,
     goldEvent,
+  cwvSnapshot,
     testimonial,
     // taxonomies
     author,

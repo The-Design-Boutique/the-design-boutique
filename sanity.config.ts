@@ -6,6 +6,7 @@ import { visionTool } from '@sanity/vision'
 import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema, SINGLETONS } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
+import { CwvDashboard } from './sanity/tools/CwvDashboard'
 
 const singletonSet: readonly string[] = SINGLETONS
 
@@ -16,6 +17,15 @@ export default defineConfig({
   dataset,
   schema,
   plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: apiVersion })],
+  // The Core Web Vitals dashboard is the first thing the team sees on login.
+  tools: (prev) => [
+    {
+      name: 'core-web-vitals',
+      title: 'Site Speed',
+      component: CwvDashboard,
+    },
+    ...prev,
+  ],
   document: {
     // Singletons cannot be created from the global "new document" menu...
     newDocumentOptions: (prev, { creationContext }) =>
