@@ -8,6 +8,7 @@ export const pricingTiers = defineType({
   fields: [
     defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
+    defineField({ name: 'variant', title: 'Variant', type: 'string', initialValue: 'programs', options: { list: [{ title: 'Programs (goal / who / pace)', value: 'programs' }, { title: 'Packages (large name, description, text link)', value: 'packages' }] } }),
     defineField({
       name: 'tiers',
       title: 'Tiers',
@@ -18,6 +19,7 @@ export const pricingTiers = defineType({
           name: 'tier',
           fields: [
             defineField({ name: 'name', title: 'Name', type: 'string' }),
+            defineField({ name: 'description', title: 'Description', type: 'text', rows: 4, description: 'Plain paragraph under the label lines (Packages variant).' }),
             defineField({ name: 'metal', title: 'Metal color', type: 'string', options: { list: ['silver', 'bronze', 'gold'] } }),
             defineField({ name: 'goal', title: 'Goal', type: 'string' }),
             defineField({ name: 'who', title: 'Who', type: 'string' }),
