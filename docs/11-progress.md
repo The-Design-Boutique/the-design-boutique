@@ -21,7 +21,7 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 - Git repo: PUBLIC at github.com/The-Design-Boutique/the-design-boutique, default branch `main`. Working via `phaseN/*` branches and draft PRs at review gates.
 - Sanity: project `inapmf9l` ("the-design-boutique"), dataset `production` (public). Access via an Editor API token in `.env.local` (gitignored). Note: the claude.ai Sanity connector is stale (cannot manage this project), so project-admin actions (CORS, etc.) need Angelo via the UI or an admin-scoped token.
 - Blocked on Angelo for: add CORS origins to the Sanity project (localhost + Vercel URLs); Vercel link. See "Needed from Angelo".
-- Blocked on Laney for: sign-off on the free 2.3 SEO Health panel (does not block Phases 0 to 2).
+- Blocked on Laney for: real ADA Compliance copy (she has it, promised before production). 2.3 SEO Health panel is SIGNED OFF as of July 27, 2026.
 
 ## Needed from Angelo to unblock (you provide access)
 
@@ -108,7 +108,7 @@ live redirects return 308 to a 200. Re-run
 ## Phase 4 — SEO tooling
 
 - [ ] 2.2 CWV dashboard + snapshot cron
-- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) [pending Laney sign-off]
+- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**
 - [ ] 2.4 SEO field stack verified across all content types
 - [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending
 - [ ] Phase 4 QC + review gate
@@ -129,7 +129,21 @@ live redirects return 308 to a 200. Re-run
 
 ## Backlog — suggestions to raise with Laney
 
-- **Dynamic Google reviews on /more-testimonials.** The live page hardcodes 12 client reviews (individual Elementor blockquote widgets); the rating badge is a static TrustIndex Google Reviews widget. We currently mirror this by hardcoding the same 12 quotes in a `quoteGrid` block. Worth proposing: pull reviews live from the Google Business Profile / Places API (or keep the TrustIndex embed) so the wall and the 5.0 / review-count badge stay current automatically, styled the same as now. Out of current scope; confirm with Laney before building.
+- **Dynamic Google reviews on /more-testimonials.** Researched and documented July 27, 2026;
+  written up for Laney as `Google-Reviews-Integration-Options.pdf`. Summary:
+  - The Places API is the wrong tool: capped at 5 reviews, and Google's terms forbid storing
+    review text at all (Maps ToS 3.2.3(a); the only Places caching allowance is lat/lng for 30 days).
+    So no scheduled sync into Sanity via that route.
+  - **Recommended: Google Business Profile API.** Returns every review, allows replies, is free, and
+    uniquely permits caching review content for up to 30 days. Needs a verified profile 60+ days old,
+    manager access granted to an account we control, and an access request submitted by an owner or
+    manager. Google's published review time is 14 days and is the long pole, so file early.
+  - Fallback needing nothing from the client: **Places UI Kit** web component, $1 per 1,000 with
+    10,000 free per month, but only 5 reviews and Google-controlled markup.
+  - Staying on TrustIndex costs $65 to $349/yr; the free tier withholds review schema and lazy
+    loading, both of which matter to this project's SEO and CWV scope.
+  - Either way Google requires reviewer attribution, a link to the original review, disclosure of any
+    ordering or filtering, the Maps logo, and verbatim review text.
 
 ## Risk register
 
