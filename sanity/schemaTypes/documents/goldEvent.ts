@@ -16,7 +16,7 @@ export const goldEvent = defineType({
     defineField({ name: 'date', title: 'Date', type: 'date', group: 'content' }),
     defineField({ name: 'videoUrl', title: 'Video URL', type: 'url', group: 'content' }),
     defineField({ name: 'coverImage', title: 'Cover image', type: 'imageWithAlt', group: 'content' }),
-    defineField({ name: 'description', title: 'Description', type: 'array', group: 'content', of: [defineArrayMember({ type: 'block' })] }),
+    defineField({ name: 'description', title: 'Description', type: 'array', group: 'content', of: [defineArrayMember({ type: 'block' }), defineArrayMember({ type: 'imageWithAlt' }), defineArrayMember({ type: 'bodyVideo' }), defineArrayMember({ type: 'bodyHtml' })] }),
     defineField({ name: 'seo', title: 'SEO', type: 'seoFields', group: 'seo' }),
   ],
   preview: {

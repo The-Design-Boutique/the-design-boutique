@@ -67,6 +67,38 @@ export const POST_LIST_QUERY = defineQuery(`
 
 export const POST_SLUGS_QUERY = defineQuery(`*[_type == "post" && defined(slug.current)].slug.current`)
 
+export const GOLD_EVENT_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "goldEvent" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    date,
+    presenter,
+    videoUrl,
+    description[]{ ... },
+    seo,
+    "related": *[_type == "goldEvent" && _id != ^._id] | order(date desc)[0...3]{
+      _id, title, "slug": slug.current, date
+    }
+  }
+`)
+
+export const CLIENT_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "client" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    intro,
+    industry,
+    services,
+    websiteUrl,
+    featuredImage,
+    gallery[]{ ..., asset },
+    body[]{ ... },
+    seo
+  }
+`)
+
 export const BLOG_SETTINGS_QUERY = defineQuery(`
   *[_id == "siteSettings"][0]{
     blogEyebrow,

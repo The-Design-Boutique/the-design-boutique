@@ -5,7 +5,7 @@ import { CtaBand } from './blocks/CtaBand'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /** "March 1, 2024" — the format the live site uses for post dates. */
-function formatDate(iso?: string): string | null {
+export function formatDate(iso?: string): string | null {
   if (!iso) return null
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return null
@@ -29,7 +29,7 @@ function toEmbed(url: string): string | null {
   }
 }
 
-const bodyComponents: PortableTextComponents = {
+export const bodyComponents: PortableTextComponents = {
   types: {
     imageWithAlt: ({ value }: any) =>
       value?.asset ? <img className="post-body-img" src={urlFor(value).width(1200).url()} alt={value.alt || ''} loading="lazy" /> : null,
@@ -62,7 +62,7 @@ const bodyComponents: PortableTextComponents = {
   },
 }
 
-function PostSidebar({ settings }: { settings: any }) {
+export function PostSidebar({ settings }: { settings: any }) {
   const items: string[] = Array.isArray(settings?.postSidebarItems) ? settings.postSidebarItems : []
   const heading: string = settings?.postSidebarHeading || ''
   const cta = settings?.postSidebarCta
@@ -98,7 +98,7 @@ function PostSidebar({ settings }: { settings: any }) {
   )
 }
 
-function ShareRow({ title, slug }: { title: string; slug: string }) {
+export function ShareRow({ title, slug }: { title: string; slug: string }) {
   const url = `https://thedesignboutique.com/${slug}/`
   const enc = encodeURIComponent(url)
   const links = [

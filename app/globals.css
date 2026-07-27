@@ -833,3 +833,47 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
   .post-body h2 { font-size: 32px; }
   .post-body h4 { font-size: 26px; }
 }
+
+/* Gold event detail page */
+.gold-presenter { margin: 0 0 1.75rem; font-size: 16px; font-weight: 100; color: var(--tdb-white); }
+.gold-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.gold-related-grid .event-card { margin: 0; }
+@media (max-width: 991px) { .gold-related-grid { grid-template-columns: 1fr; } }
+
+/* Client case study: Industry / Services rail on the left, case study right. */
+.client-main { padding-top: 225px; }
+.client-layout { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 3rem; align-items: start; }
+.client-rail-group { margin-bottom: 2.25rem; }
+.client-rail-label { font-size: 16px; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.35rem; }
+.client-rail-value { font-size: 19.2px; font-weight: 100; color: var(--tdb-white); margin: 0; }
+.client-rail-list { list-style: none; margin: 0; padding: 0; }
+.client-rail-list li { font-size: 19.2px; font-weight: 100; color: var(--tdb-white); margin: 0 0 0.15rem; }
+.client-tier { color: var(--tdb-accent); font-weight: 700; }
+.client-title { font-size: 54.4px; font-weight: 700; line-height: 1.23; margin: 0 0 1rem; }
+.client-intro { font-size: 19.2px; font-weight: 100; line-height: 1.55; color: var(--tdb-white); margin: 0 0 2rem; max-width: 62rem; }
+.client-body .post-body-img, .client-body img { margin: 0 0 1.75rem; }
+@media (max-width: 991px) {
+  .client-main { padding-top: 160px; }
+  .client-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .client-title { font-size: 38px; }
+}
+
+/* Case study cover: the live site flips to reveal the client's site link. */
+.client-cover { position: relative; display: block; overflow: hidden; margin-bottom: 2rem; }
+.client-cover img { display: block; width: 100%; height: auto; }
+.client-cover-hover {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1rem; text-align: center;
+  background: rgba(7, 7, 7, 0.82); opacity: 0; transition: opacity 0.35s ease;
+}
+a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-cover-hover { opacity: 1; }
+.client-cover-name { font-size: 35.2px; font-weight: 700; color: var(--tdb-white); line-height: 1.2; }
+.client-cover-btn { background: var(--tdb-accent); color: var(--tdb-white); font-weight: 700; padding: 0.7rem 1.4rem; }
+/* Gallery: two-column masonry, 30px gutters, as on the live case studies. */
+.client-gallery { column-count: 2; column-gap: 30px; }
+.client-gallery img { display: block; width: 100%; height: auto; margin-bottom: 30px; break-inside: avoid; }
+@media (max-width: 767px) {
+  .client-gallery { column-count: 1; column-gap: 10px; }
+  .client-gallery img { margin-bottom: 10px; }
+  .client-cover-name { font-size: 26px; }
+}
