@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { SeoTitleInput, MetaDescriptionInput } from '../../components/seoInputs'
+import { SchemaTypeInput } from '../../components/SchemaTypeInput'
 
 /**
  * The single, shared SEO field stack (SOW 2.4). Every page-type document
@@ -64,6 +65,8 @@ export const seoFields = defineType({
       title: 'Structured data type',
       type: 'string',
       fieldset: 'advanced',
+      description: 'Tells search engines what kind of thing this page is. A preview of exactly what gets sent is shown below.',
+      components: { input: SchemaTypeInput },
       initialValue: 'WebPage',
       options: {
         list: [
