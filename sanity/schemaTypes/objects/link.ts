@@ -32,7 +32,9 @@ export const link = defineType({
       title: 'URL',
       type: 'url',
       hidden: ({ parent }) => (parent as { type?: string })?.type !== 'external',
-      validation: (Rule) => Rule.uri({ scheme: ['http', 'https', 'mailto', 'tel'] }),
+      description: 'A full address like https://example.com, or a path on this site like /contact.',
+      // Relative paths are the normal case for links within this site.
+      validation: (Rule) => Rule.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
     }),
     defineField({ name: 'openInNewTab', title: 'Open in a new tab', type: 'boolean', initialValue: false }),
   ],
