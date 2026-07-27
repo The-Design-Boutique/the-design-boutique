@@ -88,7 +88,7 @@ async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'
   const qs = new URLSearchParams({ url, strategy, category: 'performance', key })
   // Lighthouse can take a while. Cap it so a slow run cannot exhaust the
   // function budget and take the whole collection down with it.
-  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store', signal: AbortSignal.timeout(22_000) })
+  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store', signal: AbortSignal.timeout(38_000) })
   if (!res.ok) return { ok: false, error: `PSI ${res.status}` }
   const json = await res.json()
   const lh = json?.lighthouseResult
@@ -166,21 +166,22 @@ export async function GET(request: Request) {
   }
 
   // Lab test. Runs after the field query so a slow Lighthouse run can never
-  // delay or block the field data, which is the primary source.
-  for (const strategy of ['mobile', 'desktop'] as const) {
+  // delay the primary source, and both form factors run concurrently: two
+  // sequential Lighthouse runs do not fit inside the function budget.
+  const labRuns = (['mobile', 'desktop'] as const).map(async (strategy) => {
     const formFactor = strategy === 'mobile' ? 'PHONE' : 'DESKTOP'
     const day = fetchedAt.slice(0, 10)
     const _id = `cwvSnapshot.lab.${LAB_URL.replace(/[^a-z0-9]+/gi, '-')}.${formFactor}.${day}`
+    const base = {
+      _type: 'cwvSnapshot' as const,
+      source: 'lab' as const,
+      target: LAB_URL,
+      scope: 'url' as const,
+      formFactor,
+      fetchedAt,
+    }
     try {
       const lab = await queryPsi(key, LAB_URL, strategy)
-      const base = {
-        _type: 'cwvSnapshot' as const,
-        source: 'lab' as const,
-        target: LAB_URL,
-        scope: 'url' as const,
-        formFactor,
-        fetchedAt,
-      }
       const doc = lab.ok
         ? {
             ...base,
@@ -193,9 +194,12 @@ export async function GET(request: Request) {
       await writeClient.createOrReplace({ _id, ...doc } as never)
       written.push(_id)
     } catch (err) {
+      // A failed lab run must never fail the whole collection: the field data
+      // is the primary source and has already been written by this point.
       problems.push(`lab ${strategy}: ${(err as Error).message}`)
     }
-  }
+  })
+  await Promise.allSettled(labRuns)
 
   return NextResponse.json({ ok: true, fetchedAt, written: written.length, problems })
 }
