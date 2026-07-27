@@ -10,6 +10,7 @@ export const siteSettings = defineType({
     { name: 'contact', title: 'Contact' },
     { name: 'social', title: 'Social' },
     { name: 'seo', title: 'SEO & Analytics' },
+    { name: 'blog', title: 'Blog' },
   ],
   fields: [
     defineField({ name: 'siteName', title: 'Site name', type: 'string', group: 'general', initialValue: 'The Design Boutique' }),
@@ -46,6 +47,13 @@ export const siteSettings = defineType({
       description: 'Used when a page has no share image of its own. Recommended 1200 x 630.',
     }),
     defineField({ name: 'gtmId', title: 'Google Tag Manager ID', type: 'string', group: 'seo', description: 'For example GTM-XXXXXX.' }),
+    // The promo card shown in the sidebar of every blog post.
+    defineField({ name: 'blogEyebrow', title: 'Blog eyebrow', type: 'string', group: 'blog', initialValue: 'The Design Boutique', description: 'Small line above the blog name on post pages.' }),
+    defineField({ name: 'blogName', title: 'Blog name', type: 'string', group: 'blog', initialValue: 'Laney Said' }),
+    defineField({ name: 'postSidebarHeading', title: 'Post sidebar heading', type: 'text', rows: 2, group: 'blog', description: 'Shown at the top of the promo card on every post. Line breaks are kept.' }),
+    defineField({ name: 'postSidebarItems', title: 'Post sidebar items', type: 'array', of: [{ type: 'text', rows: 2 }], group: 'blog', description: 'One line per service, e.g. "SEO: Drive Explosive Traffic & Real Results."' }),
+    defineField({ name: 'postSidebarCta', title: 'Post sidebar button', type: 'link', group: 'blog' }),
+    defineField({ name: 'relatedHeading', title: 'Related posts heading', type: 'string', group: 'blog', initialValue: 'More from The Design Boutique Blog' }),
   ],
   preview: { prepare: () => ({ title: 'Site Settings' }) },
 })

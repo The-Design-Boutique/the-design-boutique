@@ -29,6 +29,7 @@ import { WorkGrid } from './blocks/WorkGrid'
 import { PricingTiers } from './blocks/PricingTiers'
 import { QuoteGrid } from './blocks/QuoteGrid'
 import { EventGrid } from './blocks/EventGrid'
+import { PostGrid } from './blocks/PostGrid'
 import { ContactForm } from './blocks/ContactForm'
 import { NewsletterSignup } from './blocks/NewsletterSignup'
 import { HtmlEmbed } from './blocks/HtmlEmbed'
@@ -66,6 +67,7 @@ const registry: Record<string, BlockComponent> = {
   pricingTiers: PricingTiers,
   quoteGrid: QuoteGrid,
   eventGrid: EventGrid,
+  postGrid: PostGrid,
   flipBoxGrid: FlipBoxGrid,
   contactForm: ContactForm,
   newsletterSignup: NewsletterSignup,
