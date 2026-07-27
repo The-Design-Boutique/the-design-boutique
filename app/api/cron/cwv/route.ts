@@ -15,13 +15,22 @@ import { METRICS, bandFor, type MetricKey } from '@/app/lib/cwv'
  */
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+export const maxDuration = 300
 
 const CRUX = 'https://chromeuxreport.googleapis.com/v1/records:queryRecord'
+const PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
 
 /** The live origin is the only place with enough real users to have CrUX data. */
 const ORIGIN = process.env.CWV_ORIGIN || 'https://thedesignboutique.com'
 const FORM_FACTORS = ['PHONE', 'DESKTOP'] as const
+
+/**
+ * The page the lab test measures. Field data (CrUX) needs real traffic and this
+ * site does not have enough yet, so a lab test is the only reading available
+ * today. It is stored and displayed separately and never sets the pass/fail
+ * bands, which remain field-data only.
+ */
+const LAB_URL = process.env.CWV_LAB_URL || process.env.NEXT_PUBLIC_SITE_URL || ORIGIN
 
 const writeClient = createClient({
   projectId, dataset, apiVersion,
@@ -68,6 +77,30 @@ async function queryCrux(key: string, target: string, formFactor: string, isUrl:
   return { ok: true, metrics, periodStart: asDate(p?.firstDate), periodEnd: asDate(p?.lastDate) }
 }
 
+type LabResult =
+  | { ok: true; score: number | null; lcp: number | null; cls: number | null; tbt: number | null }
+  | { ok: false; error: string }
+
+async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'): Promise<LabResult> {
+  const qs = new URLSearchParams({ url, strategy, category: 'performance', key })
+  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store' })
+  if (!res.ok) return { ok: false, error: `PSI ${res.status}` }
+  const json = await res.json()
+  const lh = json?.lighthouseResult
+  const audit = (id: string) => {
+    const v = lh?.audits?.[id]?.numericValue
+    return v === undefined || v === null ? null : Number(v)
+  }
+  const score = lh?.categories?.performance?.score
+  return {
+    ok: true,
+    score: score === undefined || score === null ? null : Math.round(Number(score) * 100),
+    lcp: audit('largest-contentful-paint'),
+    cls: audit('cumulative-layout-shift'),
+    tbt: audit('total-blocking-time'),
+  }
+}
+
 export async function GET(request: Request) {
   // Vercel signs cron calls; a shared secret covers manual runs from the Studio.
   const auth = request.headers.get('authorization')
@@ -93,6 +126,7 @@ export async function GET(request: Request) {
     const result = await queryCrux(key, ORIGIN, formFactor, false)
     const base = {
       _type: 'cwvSnapshot' as const,
+      source: 'field' as const,
       target: ORIGIN,
       scope: 'origin' as const,
       formFactor,
@@ -124,6 +158,38 @@ export async function GET(request: Request) {
     const _id = `cwvSnapshot.${ORIGIN.replace(/[^a-z0-9]+/gi, '-')}.${formFactor}.${idSuffix}`
     await writeClient.createOrReplace({ _id, ...doc } as never)
     written.push(_id)
+  }
+
+  // Lab test. Runs after the field query so a slow Lighthouse run can never
+  // delay or block the field data, which is the primary source.
+  for (const strategy of ['mobile', 'desktop'] as const) {
+    const formFactor = strategy === 'mobile' ? 'PHONE' : 'DESKTOP'
+    const day = fetchedAt.slice(0, 10)
+    const _id = `cwvSnapshot.lab.${LAB_URL.replace(/[^a-z0-9]+/gi, '-')}.${formFactor}.${day}`
+    try {
+      const lab = await queryPsi(key, LAB_URL, strategy)
+      const base = {
+        _type: 'cwvSnapshot' as const,
+        source: 'lab' as const,
+        target: LAB_URL,
+        scope: 'url' as const,
+        formFactor,
+        fetchedAt,
+      }
+      const doc = lab.ok
+        ? {
+            ...base,
+            performanceScore: lab.score, lcp: lab.lcp, cls: lab.cls, tbt: lab.tbt,
+            lcpBand: bandFor('lcp', lab.lcp), clsBand: bandFor('cls', lab.cls),
+            hasData: true,
+          }
+        : { ...base, hasData: false, error: lab.error }
+      if (!lab.ok) problems.push(`lab ${strategy}: ${lab.error}`)
+      await writeClient.createOrReplace({ _id, ...doc } as never)
+      written.push(_id)
+    } catch (err) {
+      problems.push(`lab ${strategy}: ${(err as Error).message}`)
+    }
   }
 
   return NextResponse.json({ ok: true, fetchedAt, written: written.length, problems })

@@ -21,6 +21,8 @@ const S: Record<string, any> = {
   wrap: { padding: '28px 32px', maxWidth: 1100, margin: '0 auto', fontFamily: 'inherit' },
   h1: { fontSize: 24, fontWeight: 700, margin: '0 0 4px' },
   sub: { color: '#8a8a8a', fontSize: 14, margin: '0 0 22px' },
+  h2: { fontSize: 17, fontWeight: 700, margin: '0 0 4px' },
+  sectionNote: { color: '#8a8a8a', fontSize: 13, margin: '0 0 16px', maxWidth: 760, lineHeight: 1.55 },
   bar: { display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 20 },
   toggle: { display: 'inline-flex', border: '1px solid #333', borderRadius: 4, overflow: 'hidden' },
   tab: (on: boolean): CSSProperties => ({
@@ -51,6 +53,13 @@ const S: Record<string, any> = {
   spark: { display: 'block', marginTop: 14 },
 }
 
+function scoreColor(score: number | null | undefined): string {
+  if (score === null || score === undefined) return '#666'
+  if (score >= 90) return BAND_COLOR.good
+  if (score >= 50) return BAND_COLOR['needs-improvement']
+  return BAND_COLOR.poor
+}
+
 function Sparkline({ points, band }: { points: number[]; band: Band | null }) {
   if (points.length < 2) return null
   const w = 200, h = 34
@@ -75,6 +84,7 @@ export function CwvDashboard() {
   const client = useClient({ apiVersion: '2025-02-19' })
   const [formFactor, setFormFactor] = useState<'PHONE' | 'DESKTOP'>('PHONE')
   const [snaps, setSnaps] = useState<any[] | null>(null)
+  const [lab, setLab] = useState<any | null>(null)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
 
@@ -87,6 +97,12 @@ export function CwvDashboard() {
       { ff: formFactor },
     )
     setSnaps(rows)
+    const labRow = await client.fetch(
+      `*[_type == "cwvSnapshot" && source == "lab" && formFactor == $ff]
+        | order(fetchedAt desc)[0]{ performanceScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
+      { ff: formFactor },
+    )
+    setLab(labRow || null)
   }, [client, formFactor])
 
   useEffect(() => { load() }, [load])
@@ -124,9 +140,9 @@ export function CwvDashboard() {
 
   return (
     <div style={S.wrap}>
-      <h1 style={S.h1}>Core Web Vitals</h1>
+      <h1 style={S.h1}>Site Speed</h1>
       <p style={S.sub}>
-        How real visitors experience the site, measured by Google over the last 28 days.
+        Two views: how real visitors experience the site, and a lab test you can run any time.
       </p>
 
       <div style={S.bar}>
@@ -148,6 +164,12 @@ export function CwvDashboard() {
       </div>
 
       {msg ? <div style={S.notice('info')}>{msg}</div> : null}
+
+      <h2 style={S.h2}>From real visitors</h2>
+      <p style={S.sectionNote}>
+        Google&rsquo;s measurements of people who actually visited, over the last 28 days.
+        These are the numbers that count towards search rankings.
+      </p>
 
       {snaps === null ? (
         <p style={{ color: '#8a8a8a' }}>Loading…</p>
@@ -212,6 +234,51 @@ export function CwvDashboard() {
               Based on visits up to {latest.periodEnd}. Google refreshes this once a day.
             </p>
           ) : null}
+        </>
+      )}
+
+      <h2 style={{ ...S.h2, marginTop: 38 }}>Lab test</h2>
+      <p style={S.sectionNote}>
+        A single test run on Google&rsquo;s own equipment. It works even when there are not
+        enough visitors yet for the numbers above, and it is the best way to check whether a
+        change made the site faster. It does not count towards search rankings.
+      </p>
+
+      {!lab ? (
+        <div style={S.notice('info')}>No lab test has run yet. It runs with the daily check.</div>
+      ) : lab.hasData === false ? (
+        <div style={S.notice('warn')}>The last lab test did not complete. It will try again on the next daily run.</div>
+      ) : (
+        <>
+          <div style={S.grid}>
+            <div style={S.card}>
+              <p style={S.metricLabel}>OVERALL</p>
+              <p style={S.metricName}>Performance score</p>
+              <p style={{ ...S.value, color: scoreColor(lab.performanceScore) }}>
+                {lab.performanceScore ?? '—'}<span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>
+              </p>
+              <p style={S.blurb}>Google&rsquo;s overall speed rating for this page. 90 and above is good, below 50 is poor.</p>
+            </div>
+            <div style={S.card}>
+              <p style={S.metricLabel}>LCP</p>
+              <p style={S.metricName}>Largest Contentful Paint</p>
+              <p style={{ ...S.value, color: BAND_COLOR[bandFor('lcp', lab.lcp) || 'poor'] }}>
+                {formatMetric('lcp', lab.lcp)}
+              </p>
+              <p style={S.blurb}>How long the main content took to appear in the test.</p>
+            </div>
+            <div style={S.card}>
+              <p style={S.metricLabel}>TBT</p>
+              <p style={S.metricName}>Total Blocking Time</p>
+              <p style={{ ...S.value, color: lab.tbt == null ? '#666' : lab.tbt <= 200 ? BAND_COLOR.good : lab.tbt <= 600 ? BAND_COLOR['needs-improvement'] : BAND_COLOR.poor }}>
+                {lab.tbt == null ? 'No data' : `${Math.round(lab.tbt)} ms`}
+              </p>
+              <p style={S.blurb}>How long the page was busy and unable to respond. A lab stand-in for responsiveness.</p>
+            </div>
+          </div>
+          <p style={{ ...S.sub, marginTop: 14, marginBottom: 0 }}>
+            Tested: {lab.target}
+          </p>
         </>
       )}
     </div>
