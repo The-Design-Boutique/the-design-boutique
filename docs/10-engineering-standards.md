@@ -14,6 +14,9 @@ A task is done only when every box is true. No exceptions, no "come back to it l
 - [ ] Clean build: `next build` and type-check pass with zero errors; zero console errors/warnings at runtime.
 - [ ] Tested: logic has unit tests; editor/user flows have an E2E check where applicable (see Testing).
 - [ ] SOW cross-referenced: the matching row(s) in `09-sow-compliance.md` are updated to Built, then Verified after QC.
+- [ ] Client guide (SOW 2.2 to 2.5 only): the feature's PDF exists in `~/Desktop/TDB SEO Tooling/`,
+      written in plain language for content and SEO people, with screenshots. See the Phase 4
+      section of `11-progress.md` for the naming and the writing rules.
 - [ ] Committed: one logical commit with a clear message; progress board updated.
 
 QC is done in depth, visually and functionally, before a task is marked Verified. "It probably works" is not Verified.

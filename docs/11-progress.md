@@ -107,10 +107,35 @@ live redirects return 308 to a 200. Re-run
 
 ## Phase 4 — SEO tooling
 
-- [ ] 2.2 CWV dashboard + snapshot cron
-- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**
-- [ ] 2.4 SEO field stack verified across all content types
-- [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending
+### Client documentation is part of Done for every 2.x deliverable
+
+**Every one of 2.2, 2.3, 2.4 and 2.5 ships with its own PDF guide. A feature is not
+done until its PDF exists.** Angelo hands these to the client, so they are written
+for content and SEO people, not developers.
+
+Rules for these guides:
+- Plain language. No jargon, no code, no API names, no file paths. If a technical
+  term is unavoidable, explain it in one short sentence the first time it appears.
+- Explain **what it does, why it matters, and how to use it**, in that order.
+- **Include screenshots** of the actual panel wherever a step is easier to see than
+  to describe. Annotate them if it helps.
+- Written so the client can follow it with no one sitting next to them.
+- No emdashes. No mention of the tooling used to build it.
+
+Output location and naming (fixed, do not change):
+
+```
+~/Desktop/TDB SEO Tooling/
+    2.2 Core Web Vitals Dashboard.pdf
+    2.3 SEO Health Panel.pdf
+    2.4 SEO Fields.pdf
+    2.5 SEO Toolset.pdf
+```
+
+- [ ] 2.2 CWV dashboard + snapshot cron  →  PDF: `2.2 Core Web Vitals Dashboard.pdf`
+- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**  →  PDF: `2.3 SEO Health Panel.pdf`
+- [ ] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf`
+- [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending  →  PDF: `2.5 SEO Toolset.pdf`
 - [ ] Phase 4 QC + review gate
 
 ## Phase 5 — Parity, accessibility, performance QA
