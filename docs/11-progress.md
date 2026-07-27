@@ -85,25 +85,23 @@ Reset on approach (Angelo feedback): the earlier homepage was a media-less appro
       hand-built HTML and keep their own markup with scoped CSS; the other 45 are
       Portable Text. Verified against live for text, tables, rows, list items,
       images and headings.
-- [ ] Migrate 14 clients (portfolio detail pages) — **/portfolio/{slug} 404s, linked from /work and the homepage**
-- [ ] Migrate 18 gold events (event detail pages) — **/gold/{slug} 404s, linked from /gold**
-- [ ] Redirect map for the live URLs that redirect (4 known):
+- [x] Migrate 14 clients (portfolio case studies at /portfolio/{slug}: Industry /
+      Services rail, cover image revealing the client site on hover, masonry gallery)
+- [x] Migrate 18 gold events (event pages at /gold/{slug}: presenter, video,
+      share row, promo sidebar, More from Gold Events)
+- [x] Redirect map for the live URLs that redirect (4):
       `/connect` → `/contact`, `/vision-values` → `/about/vision-values`,
       `/solutions/geo-ai-services` → `/solutions/geo-services`,
       `/solutions/content-marekting-services` → `/solutions/content-marketing-services`
-      (the last is a live typo that resolves; all four targets already exist here)
+      (the last is a live typo that resolves). Mirrored as 308s in next.config.ts.
 - [ ] Content parity crawl vs live (URLs + visual)
 - [ ] Phase 3 QC + review gate
 
-### Known broken internal links (staging crawl, 84 pages / 116 links)
+### Internal link crawl (84 pages / 116 links)
 
-| Group | Count | Cause |
-|---|---|---|
-| `/portfolio/{slug}` | 14 | client detail pages not built |
-| `/gold/{slug}` | 18 | gold event detail pages not built |
-| redirects | 4 | live redirects not yet mapped |
-
-Re-run the crawl after those land; the target is zero.
+Zero broken. The 32 detail pages resolve (18 gold, 14 portfolio) and the four
+live redirects return 308 to a 200. Re-run
+`python3 linkcheck.py` after any content change; treat 3xx to a live target as a pass.
 
 ## Phase 4 — SEO tooling
 
