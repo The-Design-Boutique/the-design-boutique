@@ -556,6 +556,23 @@ a.service-card:hover .service-text { color: #fff; }
 @media (max-width: 991px) { .video-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .video-grid { grid-template-columns: 1fr; } }
 
+/* Video testimonial rows: video left, details right (Testimonials page) */
+.video-rows { display: flex; flex-direction: column; gap: 2.5rem; }
+.video-row { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #e3e3e3; }
+.video-grid-frame--wide { aspect-ratio: 16 / 9; border-radius: 0; }
+.video-row-details {
+  padding: 40px 60px 40px 40px; display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+  background: url('/leaf2.png') no-repeat calc(100% - 40px) calc(100% - 40px);
+}
+.video-row-name { font-size: 35.2px; font-weight: 100; line-height: 1.23; color: var(--tdb-white); margin: 0; }
+.video-row-role { font-size: 19.2px; font-weight: 100; line-height: 1.23; color: var(--tdb-white); margin: 0; }
+.video-row-category { font-size: 16px; font-weight: 100; color: var(--tdb-white); margin: 0; }
+@media (max-width: 767px) {
+  .video-row { grid-template-columns: 1fr; }
+  .video-row-details { padding: 28px; }
+  .video-row-name { font-size: 28px; }
+}
+
 /* Rich text: wide left-aligned variant (no leaf) — e.g. Our Vision */
 .prose--wide { max-width: none; margin-left: 0; margin-right: 0; text-align: left; }
 .prose--wide p { max-width: 60rem; }

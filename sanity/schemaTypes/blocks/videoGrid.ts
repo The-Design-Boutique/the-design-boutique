@@ -8,6 +8,7 @@ export const videoGrid = defineType({
   fields: [
     defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
+    defineField({ name: 'layout', title: 'Layout', type: 'string', initialValue: 'grid', options: { list: [{ title: 'Grid of posters', value: 'grid' }, { title: 'Rows (video left, details right)', value: 'rows' }] } }),
     defineField({
       name: 'videos',
       title: 'Videos',
@@ -20,6 +21,8 @@ export const videoGrid = defineType({
             defineField({ name: 'name', title: 'Name / caption', type: 'string' }),
             defineField({ name: 'videoUrl', title: 'Video URL', type: 'url' }),
             defineField({ name: 'poster', title: 'Poster image', type: 'imageWithAlt' }),
+            defineField({ name: 'role', title: 'Role / company', type: 'string' }),
+            defineField({ name: 'category', title: 'Category', type: 'string', description: 'Third line, e.g. "Family Law Attorneys".' }),
           ],
           preview: { select: { title: 'name', media: 'poster' } },
         }),
