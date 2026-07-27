@@ -15,7 +15,10 @@ import { METRICS, bandFor, type MetricKey } from '@/app/lib/cwv'
  */
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300
+// Vercel's Hobby plan caps function duration at 60 seconds; anything higher is
+// a build error. The two PageSpeed calls are the slow part, so they are guarded
+// with their own timeout below rather than relying on a long function budget.
+export const maxDuration = 60
 
 const CRUX = 'https://chromeuxreport.googleapis.com/v1/records:queryRecord'
 const PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
@@ -83,7 +86,9 @@ type LabResult =
 
 async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'): Promise<LabResult> {
   const qs = new URLSearchParams({ url, strategy, category: 'performance', key })
-  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store' })
+  // Lighthouse can take a while. Cap it so a slow run cannot exhaust the
+  // function budget and take the whole collection down with it.
+  const res = await fetch(`${PSI}?${qs}`, { cache: 'no-store', signal: AbortSignal.timeout(22_000) })
   if (!res.ok) return { ok: false, error: `PSI ${res.status}` }
   const json = await res.json()
   const lh = json?.lighthouseResult
