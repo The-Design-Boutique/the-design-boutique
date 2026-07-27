@@ -35,6 +35,14 @@ const bodyComponents: PortableTextComponents = {
       value?.asset ? <img className="post-body-img" src={urlFor(value).width(1200).url()} alt={value.alt || ''} loading="lazy" /> : null,
     image: ({ value }: any) =>
       value?.asset ? <img className="post-body-img" src={urlFor(value).width(1200).url()} alt={value.alt || ''} loading="lazy" /> : null,
+    // Bespoke article layouts keep their own markup and scoped stylesheet.
+    bodyHtml: ({ value }: any) =>
+      value?.html ? (
+        <div className="post-raw">
+          {value.css ? <style dangerouslySetInnerHTML={{ __html: value.css }} /> : null}
+          <div dangerouslySetInnerHTML={{ __html: value.html }} />
+        </div>
+      ) : null,
     bodyVideo: ({ value }: any) => {
       const src = value?.url ? toEmbed(value.url) : null
       if (!src) return null

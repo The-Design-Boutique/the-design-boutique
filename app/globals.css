@@ -808,3 +808,10 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 @media (max-width: 991px) { .post-grid { grid-template-columns: 1fr; column-gap: 0; row-gap: 28px; } }
 /* Post bodies carry <br> line breaks from WordPress as newlines. */
 .post-body p, .post-body li { white-space: pre-line; }
+
+/* Bespoke post layouts keep their own markup; give them sane defaults and make
+   sure their tables and wide content can never break the page. */
+.post-raw { color: var(--tdb-white); }
+.post-raw img { max-width: 100%; height: auto; }
+.post-raw table { width: 100%; border-collapse: collapse; }
+.post-raw > div { overflow-x: auto; }
