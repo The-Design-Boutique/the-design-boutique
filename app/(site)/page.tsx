@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { client } from '@/sanity/lib/client'
-import { PAGE_BY_SLUG_QUERY } from '@/sanity/lib/queries'
+import { PAGE_BY_SLUG_QUERY, SITE_DEFAULTS_QUERY } from '@/sanity/lib/queries'
 import { BlockRenderer } from '@/app/components/BlockRenderer'
-import { buildMetadata } from '@/app/lib/pageMeta'
+import { buildMetadata, buildJsonLd, jsonLdString } from '@/app/lib/pageMeta'
 
 // Always reflect the latest CMS content. Proper ISR / tag revalidation is a
 // Phase 4/5 performance task.
@@ -13,11 +13,18 @@ async function getHome() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata(await getHome())
+  const [page, siteDefaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  return buildMetadata(page, { path: '', siteDefaults })
 }
 
 export default async function HomePage() {
-  const page = await getHome()
+  const [page, siteDefaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
   if (!page) return null
-  return <BlockRenderer blocks={page.pageBuilder} />
+  const json = jsonLdString(buildJsonLd(page, { path: '', siteDefaults }))
+  return (
+    <>
+      {json ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} /> : null}
+      <BlockRenderer blocks={page.pageBuilder} />
+    </>
+  )
 }

@@ -105,6 +105,7 @@ export const CATEGORY_BY_SLUG_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
+    seo,
     "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc){
       _id, title, "slug": slug.current, publishedAt, featuredImage
     }
@@ -123,11 +124,15 @@ export const BLOG_SETTINGS_QUERY = defineQuery(`
   }
 `)
 
+export const SITE_DEFAULTS_QUERY = defineQuery(`
+  *[_id == "siteSettings"][0]{ siteName, email, phone, address, defaultShareImage }
+`)
+
 export const LAYOUT_QUERY = defineQuery(`{
   "nav": *[_id == "navigation"][0]{
     headerMenu[]{ label, link${linkProjection}, submenu[]{ label, link${linkProjection} } },
     headerCta{ label, link${linkProjection} },
     footerColumns[]{ title, links[]${linkProjection} }
   },
-  "settings": *[_id == "siteSettings"][0]{ siteName, logo, logoSecondary, footerLogo, googleBadgeUrl, email, phone, address, socialLinks[]{ platform, url } }
+  "settings": *[_id == "siteSettings"][0]{ siteName, logo, logoSecondary, footerLogo, googleBadgeUrl, email, phone, address, defaultShareImage, socialLinks[]{ platform, url } }
 }`)
