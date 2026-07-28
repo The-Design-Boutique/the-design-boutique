@@ -459,6 +459,10 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaT
                       {q.query} ({q.clicks} click{q.clicks === 1 ? '' : 's'}, position {q.position.toFixed(1)})
                     </Text>
                   ))}
+                  <Text size={1} muted>
+                    These will not add up to the totals above. Google keeps rare searches private, so
+                    it counts them in the totals but will not tell anyone the words that were typed.
+                  </Text>
                 </Stack>
               ) : null}
             </Stack>

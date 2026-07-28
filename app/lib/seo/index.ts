@@ -22,4 +22,6 @@ export type { ReadabilityBand, ReadabilityFlag, ReadabilityFlagType, Readability
 export { extractContent } from './extract'
 export type { ExtractedContent, ExtractedHeading, ExtractedImage, ExtractedLink, HeadingLevel } from './extract'
 
+export { liveUrlCandidates, liveSearchUrl, isUnknownToGoogle } from './liveUrl'
+
 export * from './thresholds'
