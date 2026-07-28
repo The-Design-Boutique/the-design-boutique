@@ -8,6 +8,14 @@ import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
 import { IssueRow, Section, pathForDoc, useSeoAudit } from './seoShared'
 import { SuggestControls } from './SuggestControls'
+import { SerpPreview } from './SerpPreview'
+
+/**
+ * The domain a search result would show. The staging build is hidden from
+ * Google, so the address anybody would ever see for this page is the live one.
+ */
+const LIVE_HOST = 'thedesignboutique.com'
+const SITE_NAME = 'The Design Boutique'
 
 type Tone = 'default' | 'primary' | 'positive' | 'caution' | 'critical'
 
@@ -184,6 +192,18 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
             </Text>
           </Flex>
         </Card>
+
+        {/* The same fallbacks the page itself uses (app/lib/pageMeta.ts), so this
+            shows what would actually appear rather than what is typed into the
+            two boxes. A preview that ignored the fallbacks would show an empty
+            title on every page that relies on its heading. */}
+        <SerpPreview
+          host={LIVE_HOST}
+          path={path || '/'}
+          siteName={SITE_NAME}
+          title={(doc as any)?.seo?.title || (doc as any)?.title || ''}
+          description={(doc as any)?.seo?.metaDescription || (doc as any)?.excerpt || ''}
+        />
 
         {needsAttention.length > 0 ? (
           <Section
