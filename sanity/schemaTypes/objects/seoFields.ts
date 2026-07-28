@@ -40,14 +40,32 @@ export const seoFields = defineType({
       name: 'focusKeyword',
       title: 'Focus keyword',
       type: 'string',
-      description: 'The main search term this page targets. Drives the on-page SEO checks.',
+      description:
+        'The one search term you want this page to win, for example "brand design san francisco". ' +
+        'This is a target for you, not something sent to Google. It is never added to the page and ' +
+        'search engines never see it, so filling it in does not affect your ranking on its own. ' +
+        '(Google stopped reading keyword tags in 2009.) What it does is switch on the keyword checks ' +
+        'in the SEO tab: whether your phrase appears in the title, in the opening of the page, in the ' +
+        'meta description, in a section heading, and often enough in the body. Those things are real ' +
+        'SEO. The keyword is simply what they get measured against. Leaving it empty skips those ' +
+        'checks rather than counting them against the page, but setting one is still worth doing: ' +
+        'deciding what a page is actually about is most of the work.',
     }),
     defineField({
       name: 'canonicalUrl',
       title: 'Canonical URL',
       type: 'url',
       fieldset: 'advanced',
-      description: 'Leave empty for this page to be its own canonical (the normal case).',
+      description:
+        'Which address search engines should treat as the real home of this content, for when the ' +
+        'same content can be reached at more than one address. Leave it empty on almost every page. ' +
+        'Empty means "this page is the original", which is correct nearly always, and the site fills ' +
+        'in the page\'s own address for you automatically. Fill it in only when this content genuinely ' +
+        'lives somewhere else and this copy should not compete with it: an article republished from ' +
+        'another site, or the same page reachable at two addresses where you want one of them to be ' +
+        'the winner. Take care with this one. Pointing it at the wrong address tells Google to rank ' +
+        'that page instead of this one, and can remove this page from search results altogether. ' +
+        'If you are unsure, leave it empty.',
     }),
     defineField({
       name: 'robots',
