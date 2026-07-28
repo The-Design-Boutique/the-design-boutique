@@ -146,7 +146,16 @@ Output location and naming (fixed, do not change):
       client something actionable today. The lab test measures whatever the deployment
       serves, so it needs no config change at go-live.
 - [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**  →  PDF: `2.3 SEO Health Panel.pdf`
-- [ ] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf`
+- [x] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf` DONE
+      The stack existed but most of it never reached the page. Now renders canonical,
+      robots, full Open Graph with image, the complete X/Twitter card, and per-type
+      JSON-LD on every route. Category archives gained the SEO group. Added a live
+      preview of the structured data output (Laney's request).
+      Migration note: 122 documents had no SEO title or description because the
+      original import brought page bodies but not the Rank Math metadata; migrated
+      from live. Description coverage 111/115, the rest have none on live either.
+      Also removed an orphaned `seo.metaTitle` field my import scripts had written
+      to 114 documents; the schema field is `seo.title`.
 - [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending  →  PDF: `2.5 SEO Toolset.pdf`
 - [ ] Phase 4 QC + review gate
 
