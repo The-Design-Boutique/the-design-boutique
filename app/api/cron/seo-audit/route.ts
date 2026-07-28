@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 import { projectId, dataset, apiVersion } from '@/sanity/env'
+import { liveUrlCandidates, isUnknownToGoogle } from '@/app/lib/seo/liveUrl'
 
 /**
  * Daily collection of the Google-sourced half of the SEO Health panel
@@ -162,18 +163,31 @@ interface SearchResult {
   error?: string
 }
 
-async function runSearchConsole(url: string, token: string): Promise<SearchResult> {
+async function runSearchConsole(path: string, token: string): Promise<SearchResult> {
   const out: SearchResult = {}
 
-  // Indexing status for this exact URL.
-  try {
-    const res = await fetch(GSC, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inspectionUrl: url, siteUrl: GSC_SITE }),
-      signal: AbortSignal.timeout(15_000),
-    })
-    if (res.ok) {
+  // Search Console compares URLs as exact strings, so the live site's trailing
+  // slash convention decides whether we get real answers or a confident
+  // "unknown to Google" for every page. liveUrlCandidates puts the most likely
+  // form first; the second is only tried when the first draws a blank.
+  const candidates = liveUrlCandidates(GSC_SITE, path)
+
+  // Indexing status. Whichever candidate Google recognises is also the URL the
+  // search performance query below must filter on, so it is remembered here.
+  let matchedUrl = candidates[0]
+  for (const candidate of candidates) {
+    try {
+      const res = await fetch(GSC, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inspectionUrl: candidate, siteUrl: GSC_SITE }),
+        signal: AbortSignal.timeout(15_000),
+      })
+      if (!res.ok) {
+        out.error = `URL inspection returned ${res.status}`
+        break
+      }
+
       const json = await res.json()
       const idx = json?.inspectionResult?.indexStatusResult
       out.indexVerdict = idx?.verdict
@@ -181,48 +195,79 @@ async function runSearchConsole(url: string, token: string): Promise<SearchResul
       out.robotsState = idx?.robotsTxtState
       out.canonicalGoogle = idx?.googleCanonical
       out.lastCrawledAt = idx?.lastCrawlTime
-    } else {
-      out.error = `URL inspection returned ${res.status}`
+      out.error = undefined
+      matchedUrl = candidate
+
+      // A page Google knows about, indexed or not, is a real answer. Only a URL
+      // it has never seen justifies asking about the other form.
+      if (!isUnknownToGoogle(idx?.coverageState)) break
+    } catch {
+      out.error = 'URL inspection did not respond'
+      break
     }
-  } catch {
-    out.error = 'URL inspection did not respond'
   }
 
+  const url = matchedUrl
+
   // How the page performs in search, over the last 28 days.
-  try {
-    const end = new Date()
-    const start = new Date(end.getTime() - 28 * 86_400_000)
-    const iso = (d: Date) => d.toISOString().slice(0, 10)
+  //
+  // This is deliberately two calls rather than one. Google withholds rare
+  // queries from any query-level breakdown to protect the privacy of the people
+  // who typed them, but it still counts them in a page's totals. So adding up
+  // the query rows does not give you the page's real numbers, it gives you the
+  // part Google is willing to itemise. On this site that understated /about/ by
+  // two thirds of its clicks. Reporting a number lower than the one Laney can
+  // read in her own Search Console is worse than reporting nothing.
+  //
+  // Totals therefore come from the page row, which is authoritative. The query
+  // breakdown is only ever used for the list of top queries.
+  const end = new Date()
+  const start = new Date(end.getTime() - 28 * 86_400_000)
+  const iso = (d: Date) => d.toISOString().slice(0, 10)
+
+  const searchAnalytics = async (dimension: 'page' | 'query', rowLimit: number) => {
     const res = await fetch(`${GSC_ANALYTICS}/${encodeURIComponent(GSC_SITE)}/searchAnalytics/query`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         startDate: iso(start),
         endDate: iso(end),
-        dimensions: ['query'],
+        dimensions: [dimension],
         dimensionFilterGroups: [{ filters: [{ dimension: 'page', operator: 'equals', expression: url }] }],
-        rowLimit: 10,
+        rowLimit,
       }),
       signal: AbortSignal.timeout(15_000),
     })
-    if (res.ok) {
-      const json = await res.json()
-      const rows = json?.rows || []
-      out.topQueries = rows.map((r: any) => ({
-        query: r.keys?.[0] || '',
-        clicks: r.clicks || 0,
-        impressions: r.impressions || 0,
-        position: r.position || 0,
-      }))
-      out.clicks = rows.reduce((s: number, r: any) => s + (r.clicks || 0), 0)
-      out.impressions = rows.reduce((s: number, r: any) => s + (r.impressions || 0), 0)
-      const withPos = rows.filter((r: any) => r.position)
-      out.position = withPos.length
-        ? withPos.reduce((s: number, r: any) => s + r.position, 0) / withPos.length
-        : undefined
+    if (!res.ok) return []
+    return (await res.json())?.rows || []
+  }
+
+  try {
+    // The page's own totals, matching what Search Console shows.
+    const [pageRow] = await searchAnalytics('page', 1)
+    if (pageRow) {
+      out.clicks = pageRow.clicks || 0
+      out.impressions = pageRow.impressions || 0
+      // Google's own average position for the page, already weighted by
+      // impressions. Averaging the per-query positions would treat a term with
+      // one impression as equal to one with a thousand.
+      out.position = pageRow.position || undefined
     }
   } catch {
     // Search performance is a nicety next to indexing status.
+  }
+
+  try {
+    const rows = await searchAnalytics('query', 10)
+    out.topQueries = rows.map((r: any) => ({
+      query: r.keys?.[0] || '',
+      clicks: r.clicks || 0,
+      impressions: r.impressions || 0,
+      position: r.position || 0,
+    }))
+  } catch {
+    // A page can have totals but no itemised queries. That is a real state, not
+    // a failure, and the panel shows the totals regardless.
   }
 
   return out
@@ -284,7 +329,7 @@ export async function GET(request: Request) {
       const url = `${SITE.replace(/\/$/, '')}${path}`
       const [lighthouse, search] = await Promise.all([
         runLighthouse(url, key),
-        token ? runSearchConsole(`${GSC_SITE.replace(/\/$/, '')}${path}`, token) : Promise.resolve(null),
+        token ? runSearchConsole(path, token) : Promise.resolve(null),
       ])
 
       await client.createOrReplace({
