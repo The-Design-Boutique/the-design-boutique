@@ -257,7 +257,39 @@ in-scope work.
 
 - [ ] Full visual diff pass, all pages/breakpoints
 - [ ] WCAG 2.1 AA audit, findings recorded, **fixes deliberately out of scope** (see above)
-- [ ] Core Web Vitals / Lighthouse pass on staging
+- [x] Core Web Vitals / Lighthouse pass on staging (July 28, 2026)
+      Measured before changing anything, which mattered: the assumed culprit was
+      unoptimised images, and the biggest single cause was actually YouTube. The
+      hero embeds an autoplaying background video, which pulled 840KB of Google
+      JavaScript onto the critical path before the page rendered.
+
+      | Page | Device | Performance | Best practices |
+      |---|---|---|---|
+      | Home | mobile | 57 to 91 | 77 to 96 |
+      | Home | desktop | 76 to 96 | 77 to 96 |
+      | Services | mobile | 80 to 90 | 100 |
+      | Services | desktop | to 99 | 100 |
+      | About | mobile | 89 to 90 | 100 |
+      | About | desktop | to 95 | 100 |
+
+      Mobile LCP on the homepage went from 10.3s to 3.2s and homepage image weight
+      from about 2.2MB to under 400KB. Four changes: the hero video now loads once
+      the browser is idle behind a poster that holds the frame, so the design is
+      unchanged; every YouTube embed moved to the no-cookie host, which is the
+      third-party cookie failure in best practices; the shared image helper now
+      negotiates WebP or AVIF and applies a default quality, which affects every
+      image on the site; and the decorative backgrounds hardcoded in the
+      stylesheet, which had no transform parameters at all and were arriving at
+      full resolution, now request a sensible size.
+
+      **SEO sits at 69 on every page and cannot be improved before go live.** The
+      single failing audit is "page is blocked from indexing", which is the
+      deliberate staging noindex required by the SOW. Expect roughly 100 once the
+      site is live; nothing else in that category fails.
+
+      Remaining, all small: the homepage keeps one best-practices point off 100 for
+      console messages originating in the YouTube player, and `public/subpage-banner.jpg`
+      is a 166KB static file that does not pass through the image pipeline.
 - [ ] Phase 5 QC + review gate
 
 ## Phase 6 — Training & handoff (SOW 2.6)
