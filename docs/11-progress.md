@@ -2,8 +2,14 @@
 
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
-Last updated: July 24, 2026.
-Current phase: **Phase 3 (pages & migration) IN PROGRESS.** Phases 0, 1 and 2 are complete: the homepage matches the live site section by section at desktop and mobile, and nested routing is live.
+Last updated: July 28, 2026.
+Current phase: **Phase 4 (SEO tooling) IN PROGRESS.** Phases 0 to 3 are complete: the full site is
+rebuilt on staging, all content is migrated, and category archives are live.
+
+Phase 4 at a glance: 2.2 and 2.4 are delivered and documented. 2.5 is code-complete apart from the
+AI suggest route, which ships dark by rule 21. **2.3 is the only SOW deliverable not started, and it
+is still blocked on Search Console access** (verified again July 28: the property is now visible to
+our account but returns 403, "user does not have sufficient permission").
 
 Phase 3 status:
 - **All 30 top-level pages built and live on staging.** The full site map (from the live WP sitemaps) is rebuilt: home, about (+ Vision & Values, saliXus Process Advantage, Team, Case Study Oro, Case Study Argenti), solutions (parent) + all 10 service pages, Work, Programs, Video Content Expansion Packages, Gold, Trusted, Testimonials, More Testimonials, Contact (+ Thank You), Blog (hero), Privacy Policy, ADA Compliance. A live tracking sheet (Page Title / Staging URL / Live URL / Status) is maintained in TDB's Google Drive.
@@ -20,18 +26,26 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 - Docs and management system: in place.
 - Git repo: PUBLIC at github.com/The-Design-Boutique/the-design-boutique, default branch `main`. Working via `phaseN/*` branches and draft PRs at review gates.
 - Sanity: project `inapmf9l` ("the-design-boutique"), dataset `production` (public). Access via an Editor API token in `.env.local` (gitignored). Note: the claude.ai Sanity connector is stale (cannot manage this project), so project-admin actions (CORS, etc.) need Angelo via the UI or an admin-scoped token.
-- Blocked on Angelo for: add CORS origins to the Sanity project (localhost + Vercel URLs); Vercel link. See "Needed from Angelo".
+- Blocked on Angelo for: `SEO_AI_SECRET` on Vercel (generated, sent), and the rule 21 decision on
+  whose key and whose budget before the AI layer can be switched on. Vercel is deployed and building.
+- Blocked on Laney for: Search Console access (blocking 2.3, the last unstarted deliverable).
 - Blocked on Laney for: real ADA Compliance copy (she has it, promised before production). 2.3 SEO Health panel is SIGNED OFF as of July 27, 2026.
 
 ## Needed from Angelo to unblock (you provide access)
 
-1. Sanity CORS (blocking full Studio connect): the Editor token cannot manage CORS, and my connector is stale. Add `http://localhost:3009` (dev) and the Vercel URLs (once known) as CORS origins with credentials allowed, at manage.sanity.io -> project inapmf9l -> API -> CORS Origins. OR send an Admin-permission token and I will self-serve all project config from here.
+1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
+   dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
+   Adding new origins still needs Angelo: the Editor token lacks the CORS grant and the connector
+   is stale.
 2. Vercel (blocking for deploy): import the (now public) GitHub repo into the TDB Vercel account. Add `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and the Sanity token as Vercel env vars (I will give the exact values). Add the resulting Vercel URL to Sanity CORS.
 3. GitHub: DONE. Repo public, `main` default.
 4. Sanity project + token: DONE (project inapmf9l, Editor token stored locally).
-5. **Google Search Console access for thedesignboutique.com — BLOCKING 2.3.** Verified July 27, 2026:
-   the `gsc-tdb` connection authenticates fine but only exposes `ferglawgroup.com` (a TDB client),
-   not thedesignboutique.com. The SEO Health panel needs the site's own Search Console data.
+5. **Google Search Console access for thedesignboutique.com — STILL BLOCKING 2.3.** Re-verified
+   July 28, 2026: the property now *appears* for our account, as `siteUnverifiedUser`, which is
+   progress on the July 27 position where it did not appear at all. But it is listed, not granted:
+   an actual data request returns HTTP 403, "user does not have sufficient permission". Being able
+   to see a property is not the same as being able to read it. The SEO Health panel needs the site's
+   own Search Console data.
    Laney (or whoever owns the property) needs to add our Google account as a user at
    search.google.com/search-console → Settings → Users and permissions. Full or Restricted both work
    for reading. This is SOW section 7 access.
