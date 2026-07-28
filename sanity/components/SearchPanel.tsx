@@ -6,6 +6,35 @@ import type { UserViewComponent } from 'sanity/structure'
 import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
 import { IssueRow, Section, pathForDoc, useSeoAudit, type Tone } from './seoShared'
+import { liveSearchUrl } from '../../app/lib/seo/liveUrl'
+
+/**
+ * The live site, which is what Search Console reports on.
+ *
+ * The staging build is hidden from Google by design and has no search presence
+ * of its own, so every link and figure on this tab refers to the published
+ * WordPress site. At go live this becomes the same address as the site itself
+ * and this constant can go.
+ */
+const LIVE_SITE = 'https://thedesignboutique.com/'
+
+/**
+ * A deep link into Google's own URL inspection screen for one page.
+ *
+ * There is deliberately no "submit for indexing" button here, because Google
+ * does not offer one. The Search Console API is read only for inspection: its
+ * published method list has no way to request indexing. The separate Indexing
+ * API can do it, but Google restricts that to pages carrying JobPosting or
+ * BroadcastEvent data, which none of these are, so using it would be outside
+ * its terms (ruleset 03: never claim a capability the API does not have).
+ *
+ * What is left is removing the friction honestly. This opens Google's own
+ * screen for this exact URL, where Request Indexing is one press.
+ */
+function inspectInSearchConsole(path: string): string {
+  const url = liveSearchUrl(LIVE_SITE, path)
+  return `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(LIVE_SITE)}&id=${encodeURIComponent(url)}`
+}
 
 /**
  * What Google reports about this page, on its own tab.
@@ -203,22 +232,46 @@ export const SearchPanel: UserViewComponent = function SearchPanel({ document, s
             <Stack space={4}>
               {/* The one thing to know, before any numbers. */}
               <Card padding={3} radius={2} tone={indexed ? 'positive' : 'caution'} border>
-                <Flex align="center" gap={3} wrap="wrap">
-                  <Badge tone={indexed ? 'positive' : 'caution'} fontSize={0} mode="outline">
-                    {indexed ? 'In Google' : 'Not in Google'}
-                  </Badge>
-                  <Box flex={1}>
-                    <Text size={1}>
-                      {audit.indexStatus ||
-                        (indexed ? 'This page is in Google.' : 'Google is not showing this page.')}
-                    </Text>
-                  </Box>
-                  {audit.lastCrawledAt ? (
-                    <Text size={0} muted style={{ whiteSpace: 'nowrap' }}>
-                      Last visited {timeAgo(audit.lastCrawledAt)}
-                    </Text>
+                <Stack space={3}>
+                  <Flex align="center" gap={3} wrap="wrap">
+                    <Badge tone={indexed ? 'positive' : 'caution'} fontSize={0} mode="outline">
+                      {indexed ? 'In Google' : 'Not in Google'}
+                    </Badge>
+                    <Box flex={1}>
+                      <Text size={1}>
+                        {audit.indexStatus ||
+                          (indexed ? 'This page is in Google.' : 'Google is not showing this page.')}
+                      </Text>
+                    </Box>
+                    {audit.lastCrawledAt ? (
+                      <Text size={0} muted style={{ whiteSpace: 'nowrap' }}>
+                        Last visited {timeAgo(audit.lastCrawledAt)}
+                      </Text>
+                    ) : null}
+                  </Flex>
+
+                  {!indexed && path ? (
+                    <Stack space={2}>
+                      <Box>
+                        <Button
+                          as="a"
+                          href={inspectInSearchConsole(path)}
+                          target="_blank"
+                          rel="noreferrer"
+                          text="Open in Search Console"
+                          mode="ghost"
+                          fontSize={1}
+                        />
+                      </Box>
+                      <Text size={0} muted>
+                        Google does not let another program ask for a page to be indexed, so there is
+                        no button here that can do it. This opens Google&rsquo;s own screen for this
+                        page, where <strong>Request Indexing</strong> is one press. It is a request
+                        rather than a guarantee, and it usually takes a few days.
+                      </Text>
+                    </Stack>
                   ) : null}
-                </Flex>
+                </Stack>
               </Card>
 
               <Grid columns={[2, 2, 4]} gap={2}>
