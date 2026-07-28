@@ -12,6 +12,8 @@ import { NotFoundMonitor } from './sanity/tools/NotFoundMonitor'
 import { SearchFiles } from './sanity/tools/SearchFiles'
 import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
 import { viewPageAction } from './sanity/actions/viewPage'
+import { tdbTheme } from './sanity/theme'
+import { StudioLogo } from './sanity/components/StudioLogo'
 
 const singletonSet: readonly string[] = SINGLETONS
 
@@ -65,6 +67,11 @@ const previewLocations = {
 export default defineConfig({
   basePath: '/studio',
   title: 'The Design Boutique',
+  // The editor in the client's own colours, and their mark in the corner.
+  // Restrained on purpose: only the neutrals and the accent are ours, so that
+  // green still means success and amber still means caution.
+  theme: tdbTheme,
+  studio: { components: { logo: StudioLogo } },
   projectId,
   dataset,
   schema,
