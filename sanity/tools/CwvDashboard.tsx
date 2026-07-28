@@ -117,7 +117,7 @@ export function CwvDashboard() {
     const everything = await client.fetch(
       `*[_type == "cwvSnapshot" && formFactor == $ff && hasData == true]
         | order(coalesce(periodEnd, fetchedAt) asc)[0...500]{
-          source, lcp, inp, cls, periodEnd, fetchedAt, hasData, seeded
+          source, target, lcp, inp, cls, periodEnd, fetchedAt, hasData, seeded
         }`,
       { ff: formFactor },
     )
@@ -131,8 +131,30 @@ export function CwvDashboard() {
   const age = daysSince(latest?.fetchedAt)
 
   // --- Historical trending (ruleset 05 section 9) ---
-  const fieldSnaps = useMemo(() => (allSnaps || []).filter((r) => r.source !== 'lab'), [allSnaps])
-  const labSnaps = useMemo(() => (allSnaps || []).filter((r) => r.source === 'lab'), [allSnaps])
+  /**
+   * Only ever chart one target at a time.
+   *
+   * The lab URL has pointed at more than one address over the life of this
+   * project, and readings of a different website plotted on the same line would
+   * show a step change that looks like the site got faster or slower when all
+   * that changed was what was being measured. Keep the most recently measured
+   * target and drop the rest.
+   */
+  const forCurrentTarget = useCallback((rows: any[]) => {
+    if (!rows.length) return rows
+    const newest = rows[rows.length - 1]?.target
+    if (!newest) return rows
+    return rows.filter((r) => !r.target || r.target === newest)
+  }, [])
+
+  const fieldSnaps = useMemo(
+    () => forCurrentTarget((allSnaps || []).filter((r) => r.source !== 'lab')),
+    [allSnaps, forCurrentTarget],
+  )
+  const labSnaps = useMemo(
+    () => forCurrentTarget((allSnaps || []).filter((r) => r.source === 'lab')),
+    [allSnaps, forCurrentTarget],
+  )
   const fieldHasHistory = useMemo(
     () => METRICS.some((m) => buildSeries(fieldSnaps, m.key).length >= 2),
     [fieldSnaps],
@@ -330,6 +352,12 @@ export function CwvDashboard() {
             </div>
           ) : null}
 
+          {trendSnaps.length && trendSnaps[trendSnaps.length - 1]?.target ? (
+            <p style={{ ...S.sub, marginTop: 0, marginBottom: 14 }}>
+              Measuring {trendSnaps[trendSnaps.length - 1].target}
+            </p>
+          ) : null}
+
           <div style={{ display: 'grid', gap: 16 }}>
             {METRICS.map((m) => {
               const all = buildSeries(trendSnaps, m.key)
@@ -353,7 +381,16 @@ export function CwvDashboard() {
                 <div key={m.key} style={S.card}>
                   <p style={S.metricLabel}>{m.key.toUpperCase()}</p>
                   <p style={S.metricName}>{m.label}</p>
-                  {points.length < 2 ? (
+                  {points.length < 2 && trendSource === 'lab' && m.key === 'inp' ? (
+                    // Not a gap in the data: INP measures how a page responds to a
+                    // real person, and there is nobody in a lab test to do the tapping.
+                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                      This one cannot be measured by a lab test. It records how quickly the page
+                      responds when somebody taps or clicks, and a lab test has nobody tapping. It
+                      appears here once there is enough real visitor data. Total Blocking Time, in
+                      the lab section above, is the closest stand-in.
+                    </p>
+                  ) : points.length < 2 ? (
                     <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
                       No readings in this period. Try a longer range.
                     </p>
