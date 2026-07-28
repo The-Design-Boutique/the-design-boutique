@@ -347,7 +347,7 @@ in-scope work.
 
       First attempt was discarded rather than reported: it captured at a fixed
       4000px viewport, so seven unrelated live pages all came back at exactly
-      3939px and thedifference column was measuring the screenshot cap rather than the
+      3939px and the difference column was measuring the screenshot cap rather than the
       sites. Redone with Playwright full-page captures and a scroll pass so lazy
       images load.
 
