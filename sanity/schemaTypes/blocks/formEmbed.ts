@@ -10,6 +10,7 @@ export const formEmbed = defineType({
   name: 'formEmbed',
   title: 'Form',
   type: 'object',
+  fieldsets: [{ name: 'split', title: 'Left column (two-column layout only)', options: { collapsible: true, collapsed: true } }],
   fields: [
     defineField({
       name: 'form',
@@ -27,6 +28,7 @@ export const formEmbed = defineType({
       type: 'string',
       options: {
         list: [
+          { title: 'Two columns (intro beside the form)', value: 'split' },
           { title: 'Centred', value: 'centered' },
           { title: 'Plain', value: 'inline' },
           { title: 'In a card', value: 'card' },
@@ -35,6 +37,14 @@ export const formEmbed = defineType({
       },
       initialValue: 'centered',
     }),
+    // The two-column layout Laney's contact section uses on most pages: an
+    // intro column on the left, the form on the right.
+    defineField({ name: 'leftHeading', title: 'Left heading', type: 'string', fieldset: 'split' }),
+    defineField({ name: 'leftBody', title: 'Left body', type: 'text', rows: 2, fieldset: 'split' }),
+    defineField({ name: 'bullets', title: 'Left bullets', type: 'array', of: [{ type: 'string' }], fieldset: 'split' }),
+    defineField({ name: 'addressHeading', title: 'Address heading', type: 'string', fieldset: 'split' }),
+    defineField({ name: 'addressLines', title: 'Address lines', type: 'text', rows: 2, fieldset: 'split' }),
+    defineField({ name: 'phone', title: 'Phone', type: 'string', fieldset: 'split' }),
     defineField({ name: 'settings', title: 'Section settings', type: 'sectionSettings' }),
   ],
   preview: {

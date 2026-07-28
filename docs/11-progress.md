@@ -7,9 +7,9 @@ Current phase: **Phase 4 (SEO tooling) IN PROGRESS.** Phases 0 to 3 are complete
 rebuilt on staging, all content is migrated, and category archives are live.
 
 Phase 4 at a glance: 2.2 and 2.4 are delivered and documented. 2.5 is code-complete apart from the
-AI suggest route, which ships dark by rule 21. **2.3 is the only SOW deliverable not started, and it
-is still blocked on Search Console access** (verified again July 28: the property is now visible to
-our account but returns 403, "user does not have sufficient permission").
+AI suggest route, which ships dark by rule 21. **2.3 is the only SOW deliverable not started, and it is
+now unblocked**: Search Console access was granted and verified July 28, 2026, returning real query
+data for thedesignboutique.com.
 
 Phase 3 status:
 - **All 30 top-level pages built and live on staging.** The full site map (from the live WP sitemaps) is rebuilt: home, about (+ Vision & Values, saliXus Process Advantage, Team, Case Study Oro, Case Study Argenti), solutions (parent) + all 10 service pages, Work, Programs, Video Content Expansion Packages, Gold, Trusted, Testimonials, More Testimonials, Contact (+ Thank You), Blog (hero), Privacy Policy, ADA Compliance. A live tracking sheet (Page Title / Staging URL / Live URL / Status) is maintained in TDB's Google Drive.
@@ -26,9 +26,9 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 - Docs and management system: in place.
 - Git repo: PUBLIC at github.com/The-Design-Boutique/the-design-boutique, default branch `main`. Working via `phaseN/*` branches and draft PRs at review gates.
 - Sanity: project `inapmf9l` ("the-design-boutique"), dataset `production` (public). Access via an Editor API token in `.env.local` (gitignored). Note: the claude.ai Sanity connector is stale (cannot manage this project), so project-admin actions (CORS, etc.) need Angelo via the UI or an admin-scoped token.
-- Blocked on Angelo for: `SEO_AI_SECRET` on Vercel (generated, sent), and the rule 21 decision on
-  whose key and whose budget before the AI layer can be switched on. Vercel is deployed and building.
-- Blocked on Laney for: Search Console access (blocking 2.3, the last unstarted deliverable).
+- Not blocked. `SEO_AI_SECRET` is set on Vercel, rule 21 is decided (Laney's key, Laney's budget;
+  Angelo demos with his own), and Search Console access was granted and verified July 28, 2026,
+  which unblocks 2.3.
 - Blocked on Laney for: real ADA Compliance copy (she has it, promised before production). 2.3 SEO Health panel is SIGNED OFF as of July 27, 2026.
 
 ## Needed from Angelo to unblock (you provide access)

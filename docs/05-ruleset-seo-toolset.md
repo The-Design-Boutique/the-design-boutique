@@ -43,6 +43,10 @@ Each feature has its own rules and its own definition of done. The SOW includes 
 19. Always on: the deterministic layer, which is the score checklist plus readability plus heading-structure hints (missing h2s, skipped heading levels, keyword absent from headings). No network, no cost, no configuration.
 20. Optional AI layer: a "suggest" control in the assist panel that appears only when the server reports a configured API key. Requests run server-side through one route; the key never reaches the browser. Suggestions are inserted only by explicit editor action, never automatically.
 21. Before enabling the AI layer for the client: record whose key and whose budget in this file. Until then it ships dark. This is the one feature in 2.5 with a per-use cost; it must not silently run on someone's dime.
+    **Recorded July 28, 2026: the key and the budget are Laney's.** The feature stays off until she
+    chooses to turn it on and supplies her own key. For the handover demo only, Angelo will paste his
+    own key temporarily to show how it works, then remove it. No client key is ever committed, and
+    none is stored unencrypted (see the encrypted key field in Site Settings).
 
 ## 8. SEO Health panel (was: Semrush sync)
 
