@@ -186,3 +186,31 @@ export function notFoundId(path: string, day: string = dayKey()): string {
     .slice(0, 80)
   return `notFound.${day}.${slug || 'root'}`
 }
+
+/**
+ * Redirects that follow a pattern rather than naming a page.
+ *
+ * The live WordPress site answers /blog/{slug} with a 301 to /{slug}, on every
+ * post. This site answered 404, which would have broken every existing link to
+ * a post the day it goes live: from other sites, from newsletters, and from
+ * Google's index, which still holds the /blog/ form for anything crawled before
+ * the change.
+ *
+ * Expressed as a rule rather than as 53 redirect documents, because it is one
+ * structural fact about the old site and 53 near-identical rows is a list
+ * nobody can maintain. It was found by a real 404: somebody followed a /blog/
+ * link and the monitor recorded it.
+ *
+ * Returns a record with an empty _id, which is the signal that there is no
+ * document behind it to count hits against.
+ */
+export function structuralRedirect(path: string): RedirectRecord | null {
+  const blogPost = /^\/blog\/(.+)$/.exec(path)
+  if (!blogPost || !blogPost[1]) return null
+
+  // "/blog" itself is a real page (the index) and must not be redirected.
+  const target = normalisePath(`/${blogPost[1]}`)
+  if (!target || target === '/') return null
+
+  return { _id: '', fromPath: path, toPath: target, statusCode: 301, enabled: true }
+}

@@ -1,5 +1,5 @@
 import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server'
-import { flattenChains, isExternalTarget, normalisePath, type RedirectRecord } from '@/app/lib/redirects'
+import { flattenChains, isExternalTarget, normalisePath, structuralRedirect, type RedirectRecord } from '@/app/lib/redirects'
 
 /**
  * Runtime redirects (SOW 2.5, ruleset 05 section 4, rules 12 and 13).
@@ -108,6 +108,9 @@ const pending = new Map<string, { id: string; count: number; since: number }>()
 async function recordHit(record: RedirectRecord): Promise<void> {
   const token = process.env.SANITY_API_WRITE_TOKEN
   if (!token || !projectId || !dataset) return
+  // Structural redirects are computed, not stored, so there is no document to
+  // count against. Patching a null id would fail every time and log noise.
+  if (!record._id) return
 
   const entry = pending.get(record.fromPath) || { id: record._id, count: 0, since: Date.now() }
   entry.count += 1
@@ -149,7 +152,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.next()
   }
 
-  const match = redirects.get(path)
+  const match = redirects.get(path) || structuralRedirect(path)
   if (!match) return NextResponse.next()
 
   const destination = isExternalTarget(match.toPath)

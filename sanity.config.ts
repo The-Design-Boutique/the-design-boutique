@@ -11,6 +11,7 @@ import { CwvDashboard } from './sanity/tools/CwvDashboard'
 import { NotFoundMonitor } from './sanity/tools/NotFoundMonitor'
 import { SearchFiles } from './sanity/tools/SearchFiles'
 import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
+import { viewPageAction } from './sanity/actions/viewPage'
 
 const singletonSet: readonly string[] = SINGLETONS
 
@@ -117,7 +118,13 @@ export default defineConfig({
       // Changing the address of a live page offers to leave a 301 behind
       // (ruleset 05, rule 12).
       if (!REDIRECTABLE_TYPES.includes(schemaType)) return prev
-      return prev.map((action) => (action.action === 'publish' ? withRedirectPrompt(action) : action))
+      // "View page" sits beside Publish, which is where "let me look at this"
+      // belongs. The Presentation tool still exists for browsing the site, but
+      // this is the one that shows the design at the width it was built for.
+      return [
+        ...prev.map((action) => (action.action === 'publish' ? withRedirectPrompt(action) : action)),
+        viewPageAction,
+      ]
     },
   },
 })

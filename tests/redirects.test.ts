@@ -6,6 +6,7 @@ import {
   notFoundId,
   shouldLogNotFound,
   validateRedirect,
+  structuralRedirect,
   type RedirectRecord,
 } from '../app/lib/redirects.ts'
 
@@ -150,5 +151,32 @@ describe('notFoundId', () => {
   test('produces a usable id from an awkward path', () => {
     const id = notFoundId('/a b/c%20d/!!', '2026-07-27')
     assert.match(id, /^notFound\.2026-07-27\.[a-z0-9-]+$/)
+  })
+})
+
+describe('structural redirects', () => {
+  test('sends /blog/{slug} to /{slug}, matching the live site', () => {
+    // Verified against thedesignboutique.com, which 301s every one of these.
+    const r = structuralRedirect('/blog/jungle')
+    assert.ok(r)
+    assert.equal(r!.toPath, '/jungle')
+    assert.equal(r!.statusCode, 301)
+  })
+
+  test('leaves the blog index alone', () => {
+    // /blog is a real page. Redirecting it to / would remove the blog.
+    assert.equal(structuralRedirect('/blog'), null)
+    assert.equal(structuralRedirect('/blog/'), null)
+  })
+
+  test('ignores anything that is not a blog path', () => {
+    assert.equal(structuralRedirect('/about'), null)
+    assert.equal(structuralRedirect('/portfolio/gloria-ferrer'), null)
+    assert.equal(structuralRedirect('/'), null)
+  })
+
+  test('carries no document id, so hits are not counted against one', () => {
+    // The proxy checks this before trying to patch a document that does not exist.
+    assert.equal(structuralRedirect('/blog/jungle')!._id, '')
   })
 })
