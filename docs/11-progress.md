@@ -33,6 +33,13 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 
 ## Needed from Angelo to unblock (you provide access)
 
+0. **Search Console credentials for the deployed cron.** The panel's search section
+   is built but dark. It needs `GSC_CLIENT_ID`, `GSC_CLIENT_SECRET` and
+   `GSC_REFRESH_TOKEN` in the environment. Recommendation: use a Google service
+   account added as a Search Console user, not a personal OAuth token. All tooling
+   becomes the client's property on final payment, and an integration resting on
+   Angelo's personal Google account breaks the day he stops maintaining it.
+
 1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
    dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
    Adding new origins still needs Angelo: the Editor token lacks the CORS grant and the connector
@@ -165,7 +172,21 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
       PageSpeed Insights (permitted by rule 5, never sets the pass/fail bands) gives the
       client something actionable today. The lab test measures whatever the deployment
       serves, so it needs no config change at go-live.
-- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**  →  PDF: `2.3 SEO Health Panel.pdf`
+- [x] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) BUILT  →  PDF: `2.3 SEO Health Panel.pdf` still to write
+      All three sources land in one issue list on the SEO tab, grouped as content
+      (our instant checks), technical (Lighthouse) and search presence (Search
+      Console), each with a severity and a field it maps to. Google data is fetched
+      by a daily cron and cached as `seoAudit` documents, so the Studio never calls
+      Google and no key is near a browser.
+      Two things worth recording. Audits run in concurrent batches against a clock
+      rather than a fixed page count: a page Google has not cached takes about
+      twenty seconds and one it has takes under a second, so a fixed count either
+      times out or wastes the budget. Ten at a time covers this site in under a
+      fortnight on the first pass and minutes thereafter. And the Lighthouse audit
+      "page is blocked from indexing" is suppressed while staging is noindex, since
+      it fails on every page by design and would train editors to ignore the panel.
+      Search Console is wired but not connected: it needs credentials the server can
+      hold. See the note below, because whose credentials matters.
 - [x] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf` DONE
       The stack existed but most of it never reached the page. Now renders canonical,
       robots, full Open Graph with image, the complete X/Twitter card, and per-type
