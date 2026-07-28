@@ -8,6 +8,12 @@ import {
   bandFor, formatMetric, daysSince,
   type Band, type MetricKey,
 } from '../../app/lib/cwv'
+import {
+  buildSeries, filterRange, hasGranularityShift, trendDirection,
+  type RangeKey,
+} from '../../app/lib/cwvTrend'
+import { CwvTrendChart } from '../components/CwvTrendChart'
+import { timeAgo } from '../../app/lib/timeAgo'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -87,6 +93,10 @@ export function CwvDashboard() {
   const [lab, setLab] = useState<any | null>(null)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
+  // Historical trending (ruleset 05 section 9).
+  const [range, setRange] = useState<RangeKey>(90)
+  const [trendSource, setTrendSource] = useState<'field' | 'lab'>('field')
+  const [allSnaps, setAllSnaps] = useState<any[] | null>(null)
 
   const load = useCallback(async () => {
     const rows = await client.fetch(
@@ -99,10 +109,20 @@ export function CwvDashboard() {
     setSnaps(rows)
     const labRow = await client.fetch(
       `*[_type == "cwvSnapshot" && source == "lab" && formFactor == $ff && hasData == true]
-        | order(fetchedAt desc)[0]{ performanceScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
+        | order(fetchedAt desc)[0]{ performanceScore, seoScore, accessibilityScore, bestPracticesScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
       { ff: formFactor },
     )
     setLab(labRow || null)
+    // Everything with a reading, for the trend charts. Ordered oldest first so
+    // the seeded weekly points lead into the daily ones.
+    const everything = await client.fetch(
+      `*[_type == "cwvSnapshot" && formFactor == $ff && hasData == true]
+        | order(coalesce(periodEnd, fetchedAt) asc)[0...500]{
+          source, target, lcp, inp, cls, periodEnd, fetchedAt, hasData, seeded
+        }`,
+      { ff: formFactor },
+    )
+    setAllSnaps(everything || [])
   }, [client, formFactor])
 
   useEffect(() => { load() }, [load])
@@ -111,23 +131,59 @@ export function CwvDashboard() {
   const history = useMemo(() => (snaps ? [...snaps].filter((s) => s.hasData).reverse() : []), [snaps])
   const age = daysSince(latest?.fetchedAt)
 
+  // --- Historical trending (ruleset 05 section 9) ---
+  /**
+   * Only ever chart one target at a time.
+   *
+   * The lab URL has pointed at more than one address over the life of this
+   * project, and readings of a different website plotted on the same line would
+   * show a step change that looks like the site got faster or slower when all
+   * that changed was what was being measured. Keep the most recently measured
+   * target and drop the rest.
+   */
+  const forCurrentTarget = useCallback((rows: any[]) => {
+    if (!rows.length) return rows
+    const newest = rows[rows.length - 1]?.target
+    if (!newest) return rows
+    return rows.filter((r) => !r.target || r.target === newest)
+  }, [])
+
+  const fieldSnaps = useMemo(
+    () => forCurrentTarget((allSnaps || []).filter((r) => r.source !== 'lab')),
+    [allSnaps, forCurrentTarget],
+  )
+  const labSnaps = useMemo(
+    () => forCurrentTarget((allSnaps || []).filter((r) => r.source === 'lab')),
+    [allSnaps, forCurrentTarget],
+  )
+  const fieldHasHistory = useMemo(
+    () => METRICS.some((m) => buildSeries(fieldSnaps, m.key).length >= 2),
+    [fieldSnaps],
+  )
+  const labHasHistory = useMemo(
+    () => METRICS.some((m) => buildSeries(labSnaps, m.key).length >= 2),
+    [labSnaps],
+  )
+  // Land on whichever source actually has something to show.
+  useEffect(() => {
+    if (allSnaps === null) return
+    if (!fieldHasHistory && labHasHistory) setTrendSource('lab')
+  }, [allSnaps, fieldHasHistory, labHasHistory])
+
+  const trendSnaps = trendSource === 'lab' ? labSnaps : fieldSnaps
+
   // "Refresh now" is throttled: CrUX itself only updates once a day, so a
   // faster refresh cannot produce newer numbers.
   const refresh = async () => {
-    const last = Number(window.localStorage.getItem('cwvLastRefresh') || 0)
-    const mins = (Date.now() - last) / 60000
-    if (mins < 10) {
-      setMsg(`Already refreshed ${Math.round(mins)} minute${Math.round(mins) === 1 ? '' : 's'} ago. Google updates this data once a day, so checking again now will not show anything newer.`)
-      return
-    }
     setBusy(true); setMsg(null)
     try {
+      // The server enforces the real throttle and returns 429 with a sentence
+      // worth showing, so there is no need to guess at it here.
       const res = await fetch('/api/cron/cwv')
       const json = await res.json()
       if (!res.ok) {
         setMsg(json.error || 'Could not refresh just now.')
       } else {
-        window.localStorage.setItem('cwvLastRefresh', String(Date.now()))
         setMsg('Refreshed.')
         await load()
       }
@@ -158,7 +214,7 @@ export function CwvDashboard() {
         </button>
         {latest?.fetchedAt ? (
           <span style={{ fontSize: 12.5, color: '#8a8a8a' }}>
-            Last checked {age === 0 ? 'today' : age === 1 ? 'yesterday' : `${age} days ago`}
+            Last checked {timeAgo(latest.fetchedAt)}
           </span>
         ) : null}
       </div>
@@ -237,6 +293,128 @@ export function CwvDashboard() {
         </>
       )}
 
+      <h2 style={{ ...S.h2, marginTop: 38 }}>History</h2>
+      <p style={S.sectionNote}>
+        How each measurement has moved over time. The coloured bands behind each line are
+        Google&rsquo;s own thresholds: inside the green band is good, the amber band needs
+        improvement, the red band is poor.
+      </p>
+
+      <div style={S.bar}>
+        <div style={S.toggle} role="group" aria-label="Period">
+          {([30, 90, 'all'] as const).map((r) => (
+            <button key={String(r)} type="button" style={S.tab(range === r)} onClick={() => setRange(r)}>
+              {r === 'all' ? 'All time' : `${r} days`}
+            </button>
+          ))}
+        </div>
+        <div style={S.toggle} role="group" aria-label="Data source">
+          {(['field', 'lab'] as const).map((src) => (
+            <button
+              key={src}
+              type="button"
+              style={S.tab(trendSource === src)}
+              onClick={() => setTrendSource(src)}
+            >
+              {src === 'field' ? 'Real visitors' : 'Lab test'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {allSnaps === null ? (
+        <p style={{ color: '#8a8a8a' }}>Loading&#8230;</p>
+      ) : trendSource === 'field' && !fieldHasHistory ? (
+        <div style={S.notice('info')}>
+          <strong>No history from real visitors yet.</strong>
+          <br />
+          Google has no Chrome UX Report data for this site, so there is nothing to chart here. That
+          needs more visitors, not a change to the site.
+          {labHasHistory ? ' The lab test does have history: switch to it above.' : ''}
+        </div>
+      ) : trendSource === 'lab' && !labHasHistory ? (
+        <div style={S.notice('info')}>
+          <strong>Not enough lab tests yet.</strong>
+          <br />
+          A chart needs at least two runs. One happens automatically each day.
+        </div>
+      ) : (
+        <>
+          {trendSource === 'lab' ? (
+            <div style={S.notice('info')}>
+              Lab results move around more than real-visitor data, because each run is a fresh test
+              on shared equipment. Read the shape over weeks rather than any single point, and
+              remember these do not count towards search rankings.
+            </div>
+          ) : null}
+
+          {trendSnaps.length && trendSnaps[trendSnaps.length - 1]?.target ? (
+            <p style={{ ...S.sub, marginTop: 0, marginBottom: 14 }}>
+              Measuring {trendSnaps[trendSnaps.length - 1].target}
+            </p>
+          ) : null}
+
+          <div style={{ display: 'grid', gap: 16 }}>
+            {METRICS.map((m) => {
+              const all = buildSeries(trendSnaps, m.key)
+              const points = filterRange(all, range)
+              const fmt = (v: number) => formatMetric(m.key as MetricKey, v)
+              const summary = trendDirection(points, {
+                label: m.label,
+                format: fmt,
+                // Lab readings are noisier, so demand a bigger move before
+                // calling it a trend.
+                noiseFloor: trendSource === 'lab' ? 0.15 : 0.1,
+              })
+              const mixed = hasGranularityShift(points)
+              const trendColor =
+                summary?.direction === 'improving'
+                  ? BAND_COLOR.good
+                  : summary?.direction === 'degrading'
+                    ? BAND_COLOR.poor
+                    : '#9a9a9a'
+              return (
+                <div key={m.key} style={S.card}>
+                  <p style={S.metricLabel}>{m.key.toUpperCase()}</p>
+                  <p style={S.metricName}>{m.label}</p>
+                  {points.length < 2 && trendSource === 'lab' && m.key === 'inp' ? (
+                    // Not a gap in the data: INP measures how a page responds to a
+                    // real person, and there is nobody in a lab test to do the tapping.
+                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                      This one cannot be measured by a lab test. It records how quickly the page
+                      responds when somebody taps or clicks, and a lab test has nobody tapping. It
+                      appears here once there is enough real visitor data. Total Blocking Time, in
+                      the lab section above, is the closest stand-in.
+                    </p>
+                  ) : points.length < 2 ? (
+                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                      No readings in this period. Try a longer range.
+                    </p>
+                  ) : (
+                    <>
+                      <CwvTrendChart points={points} good={m.good} poor={m.poor} format={fmt} />
+                      <p style={{ ...S.blurb, color: trendColor, fontWeight: 600 }}>
+                        {summary
+                          ? summary.sentence
+                          : `Not enough readings yet to say which way ${m.label} is going.`}
+                      </p>
+                      {mixed ? (
+                        <p style={S.blurb}>
+                          The earlier part of this chart is one reading per week, backfilled from
+                          Google&rsquo;s history. The later part is one per day. The line gets busier
+                          at that point because readings became more frequent, not because the site
+                          changed.
+                        </p>
+                      ) : null}
+                    </>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
+
       <h2 style={{ ...S.h2, marginTop: 38 }}>Lab test</h2>
       <p style={S.sectionNote}>
         A single test run on Google&rsquo;s own equipment. It works even when there are not
@@ -255,7 +433,8 @@ export function CwvDashboard() {
               <p style={S.metricLabel}>OVERALL</p>
               <p style={S.metricName}>Performance score</p>
               <p style={{ ...S.value, color: scoreColor(lab.performanceScore) }}>
-                {lab.performanceScore ?? '—'}<span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>
+                {lab.performanceScore ?? <span style={{ fontSize: 18 }}>No data</span>}
+                {lab.performanceScore == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
               </p>
               <p style={S.blurb}>Google&rsquo;s overall speed rating for this page. 90 and above is good, below 50 is poor.</p>
             </div>
@@ -276,8 +455,53 @@ export function CwvDashboard() {
               <p style={S.blurb}>How long the page was busy and unable to respond. A lab stand-in for responsiveness.</p>
             </div>
           </div>
+          <h3 style={{ fontSize: 14, fontWeight: 700, margin: '26px 0 4px' }}>Other Lighthouse checks</h3>
+          <p style={{ ...S.sectionNote, marginBottom: 14 }}>
+            The same test scores three more areas. These are a starting point rather than a verdict,
+            and none of them counts towards search rankings directly.
+          </p>
+          <div style={S.notice('info')}>
+            <strong>While the site is in staging, expect the SEO score to sit around 70.</strong>
+            <br />
+            The staging site is deliberately hidden from search engines until go live, and Lighthouse
+            counts that as a failure. It is the only SEO check currently failing, so this score should
+            jump close to 100 once the site is live. Nothing needs fixing.
+          </div>
+          <div style={S.grid}>
+            {[
+              {
+                key: 'seoScore',
+                name: 'SEO',
+                blurb: 'Technical checks a search engine cares about: a valid canonical, links it can follow, a meta description present. It does not judge your writing.',
+              },
+              {
+                key: 'accessibilityScore',
+                name: 'Accessibility',
+                blurb: 'Automated checks such as colour contrast, image alt text and form labels. It catches roughly a third of real accessibility problems, so a good score is a floor, not a pass.',
+              },
+              {
+                key: 'bestPracticesScore',
+                name: 'Best practices',
+                blurb: 'General site health: secure connections, no errors in the browser console, images at their correct dimensions.',
+              },
+            ].map((c) => {
+              const v = lab[c.key] as number | null | undefined
+              return (
+                <div key={c.key} style={S.card}>
+                  <p style={S.metricLabel}>{c.name.toUpperCase()}</p>
+                  <p style={S.metricName}>{c.name}</p>
+                  <p style={{ ...S.value, color: scoreColor(v) }}>
+                    {v ?? <span style={{ fontSize: 18 }}>No data</span>}
+                    {v == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
+                  </p>
+                  <p style={S.blurb}>{c.blurb}</p>
+                </div>
+              )
+            })}
+          </div>
+
           <p style={{ ...S.sub, marginTop: 14, marginBottom: 0 }}>
-            Tested: {lab.target}
+            Tested: {lab.target} · {timeAgo(lab.fetchedAt) || 'time unknown'}
           </p>
         </>
       )}

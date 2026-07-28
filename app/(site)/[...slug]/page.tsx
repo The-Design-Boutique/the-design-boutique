@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { client } from '@/sanity/lib/client'
 import {
@@ -16,6 +17,7 @@ import { GoldEventTemplate } from '@/app/components/GoldEventTemplate'
 import { ClientTemplate } from '@/app/components/ClientTemplate'
 import { CategoryTemplate } from '@/app/components/CategoryTemplate'
 import { buildMetadata, buildJsonLd, jsonLdString } from '@/app/lib/pageMeta'
+import { recordNotFound } from '@/app/lib/notFoundLog'
 
 export const dynamic = 'force-dynamic'
 
@@ -91,7 +93,13 @@ export default async function Page({ params }: PageParams) {
   }
 
   const found = await getDocument(slug)
-  if (!found) notFound()
+  if (!found) {
+    // Log the dead URL before giving up, so the 404 monitor can surface it
+    // with a one-click redirect (ruleset 05, rules 14 and 15).
+    const referrer = (await headers()).get('referer')
+    await recordNotFound(`/${path}`, referrer)
+    notFound()
+  }
 
   const ld = <JsonLd data={buildJsonLd(found.doc, { path, siteDefaults, office })} />
 

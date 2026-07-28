@@ -33,11 +33,13 @@ import { PostGrid } from './blocks/PostGrid'
 import { ContactForm } from './blocks/ContactForm'
 import { NewsletterSignup } from './blocks/NewsletterSignup'
 import { HtmlEmbed } from './blocks/HtmlEmbed'
+import { FormEmbed } from './blocks/FormEmbed'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type BlockComponent = (props: { block: any }) => ReactNode | Promise<ReactNode>
 
 const registry: Record<string, BlockComponent> = {
+  formEmbed: FormEmbed,
   heroHome: HeroHome,
   subpageBanner: SubpageBanner,
   aboutSection: AboutSection,

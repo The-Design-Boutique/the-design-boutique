@@ -2,8 +2,14 @@
 
 The always-current view of what is done, in progress, and left. Git log says what changed; this says where we are. Updated on every task. Read top to bottom for status.
 
-Last updated: July 24, 2026.
-Current phase: **Phase 3 (pages & migration) IN PROGRESS.** Phases 0, 1 and 2 are complete: the homepage matches the live site section by section at desktop and mobile, and nested routing is live.
+Last updated: July 28, 2026.
+Current phase: **Phase 4 (SEO tooling) IN PROGRESS.** Phases 0 to 3 are complete: the full site is
+rebuilt on staging, all content is migrated, and category archives are live.
+
+Phase 4 at a glance: 2.2 and 2.4 are delivered and documented. 2.5 is code-complete apart from the
+AI suggest route, which ships dark by rule 21. **2.3 is the only SOW deliverable not started, and it is
+now unblocked**: Search Console access was granted and verified July 28, 2026, returning real query
+data for thedesignboutique.com.
 
 Phase 3 status:
 - **All 30 top-level pages built and live on staging.** The full site map (from the live WP sitemaps) is rebuilt: home, about (+ Vision & Values, saliXus Process Advantage, Team, Case Study Oro, Case Study Argenti), solutions (parent) + all 10 service pages, Work, Programs, Video Content Expansion Packages, Gold, Trusted, Testimonials, More Testimonials, Contact (+ Thank You), Blog (hero), Privacy Policy, ADA Compliance. A live tracking sheet (Page Title / Staging URL / Live URL / Status) is maintained in TDB's Google Drive.
@@ -20,18 +26,26 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 - Docs and management system: in place.
 - Git repo: PUBLIC at github.com/The-Design-Boutique/the-design-boutique, default branch `main`. Working via `phaseN/*` branches and draft PRs at review gates.
 - Sanity: project `inapmf9l` ("the-design-boutique"), dataset `production` (public). Access via an Editor API token in `.env.local` (gitignored). Note: the claude.ai Sanity connector is stale (cannot manage this project), so project-admin actions (CORS, etc.) need Angelo via the UI or an admin-scoped token.
-- Blocked on Angelo for: add CORS origins to the Sanity project (localhost + Vercel URLs); Vercel link. See "Needed from Angelo".
+- Not blocked. `SEO_AI_SECRET` is set on Vercel, rule 21 is decided (Laney's key, Laney's budget;
+  Angelo demos with his own), and Search Console access was granted and verified July 28, 2026,
+  which unblocks 2.3.
 - Blocked on Laney for: real ADA Compliance copy (she has it, promised before production). 2.3 SEO Health panel is SIGNED OFF as of July 27, 2026.
 
 ## Needed from Angelo to unblock (you provide access)
 
-1. Sanity CORS (blocking full Studio connect): the Editor token cannot manage CORS, and my connector is stale. Add `http://localhost:3009` (dev) and the Vercel URLs (once known) as CORS origins with credentials allowed, at manage.sanity.io -> project inapmf9l -> API -> CORS Origins. OR send an Admin-permission token and I will self-serve all project config from here.
+1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
+   dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
+   Adding new origins still needs Angelo: the Editor token lacks the CORS grant and the connector
+   is stale.
 2. Vercel (blocking for deploy): import the (now public) GitHub repo into the TDB Vercel account. Add `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and the Sanity token as Vercel env vars (I will give the exact values). Add the resulting Vercel URL to Sanity CORS.
 3. GitHub: DONE. Repo public, `main` default.
 4. Sanity project + token: DONE (project inapmf9l, Editor token stored locally).
-5. **Google Search Console access for thedesignboutique.com — BLOCKING 2.3.** Verified July 27, 2026:
-   the `gsc-tdb` connection authenticates fine but only exposes `ferglawgroup.com` (a TDB client),
-   not thedesignboutique.com. The SEO Health panel needs the site's own Search Console data.
+5. **Google Search Console access for thedesignboutique.com — STILL BLOCKING 2.3.** Re-verified
+   July 28, 2026: the property now *appears* for our account, as `siteUnverifiedUser`, which is
+   progress on the July 27 position where it did not appear at all. But it is listed, not granted:
+   an actual data request returns HTTP 403, "user does not have sufficient permission". Being able
+   to see a property is not the same as being able to read it. The SEO Health panel needs the site's
+   own Search Console data.
    Laney (or whoever owns the property) needs to add our Google account as a user at
    search.google.com/search-console → Settings → Users and permissions. Full or Restricted both work
    for reading. This is SOW section 7 access.
@@ -157,6 +171,48 @@ Output location and naming (fixed, do not change):
       Also removed an orphaned `seo.metaTitle` field my import scripts had written
       to 114 documents; the schema field is `seo.title`.
 - [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending  →  PDF: `2.5 SEO Toolset.pdf`
+    - [x] §3 XML sitemap + robots (123 URLs, staging noindex holds)
+    - [x] §5 canonical / OG fallbacks (delivered with 2.4)
+    - [x] §6 local SEO: `officeLocation` singleton, LocalBusiness JSON-LD on Contact
+    - [x] §1 on-page score, §2 readability, §7 deterministic assist (heading hints).
+      One shared check library in `app/lib/seo/`, as rulesets 05§5 and 03§7 require,
+      surfaced as an SEO tab on page/post/client/goldEvent. Verified against all 83
+      real pages and posts: every document resolves exactly one h1 and a non-zero
+      word count, and the score discriminates (keyword genuinely the topic 85,
+      merely present 75, absent 45). Two bugs found by that run and fixed rather
+      than shipped: the document title was counted twice in the word total, and the
+      density advice rounded to "0.5%, aim for at least 0.5%".
+    - [x] §7 AI layer settings: provider + model + API key in Site Settings.
+      The key is encrypted (AES-256-GCM against `SEO_AI_SECRET`) because the
+      `production` dataset is **public**: an unauthenticated API request returns
+      documents, so a raw key in a document would be a published key. Only
+      ciphertext plus a masked hint are stored. Ships dark per rule 21.
+    - [ ] §7 the AI suggest route itself. Needs `SEO_AI_SECRET` on Vercel, and
+      rule 21's "whose key and whose budget" recorded in ruleset 05 before enabling.
+    - [x] §4 redirect manager + 404 monitor. `redirect` and `notFoundEntry` types,
+      runtime redirects in `proxy.ts` (Next 16's replacement for middleware) reading
+      a 60s-cached, authenticated map from Sanity and failing open, a Dead Links tool that
+      turns a 404 into a redirect in one click, publish-time prompt to leave a 301
+      when a live page changes address, and a daily prune holding the log to 1,000
+      distinct paths. Chain flattening and loop prevention are covered by 25 tests
+      (`npm test`), which now runs something real instead of exiting 1.
+    - [x] §9 CWV trending charts. Per metric, per device, with Google's thresholds
+      shaded behind the line, 30/90/all-time ranges, and a plain-English trend
+      sentence. Backfilled weekly points and daily ones are visually distinguished
+      and the handover labelled, per rule 24. Seeding route added for the CrUX
+      History API. Two facts worth recording: the History API returns 25 weekly
+      periods, not the ~40 rule 23 assumes; and it returns 404 for
+      thedesignboutique.com, so there is no field history to seed until the site
+      gets more traffic. The charts fall back to the daily lab readings, clearly
+      labelled as not counting towards rankings. Seeding and chart logic were
+      verified end to end against a control origin with real history.
+    - Worth knowing: the dataset ACL reads as "public", but only `siteSettings`,
+      `navigation`, `officeLocation` and the asset types are actually readable
+      without a token. `page`, `post`, `client`, `goldEvent`, `redirect` and
+      `notFoundEntry` are not, and an unauthenticated query returns an empty set
+      rather than an error. Anything reading content outside the Studio needs the
+      token. The AI key still has to be encrypted, because `siteSettings` is one
+      of the types that IS world readable, and that is where the key lives.
 - [ ] Phase 4 QC + review gate
 
 ## Phase 5 — Parity, accessibility, performance QA
