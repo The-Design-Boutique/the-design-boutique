@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Content Findings</title>
+<style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  figure { margin: 14px 0 18px; page-break-inside: avoid; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #333; display: block; }
+  figcaption { font-size: 8.6pt; color: #777; margin-top: 6px; font-style: italic; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .example { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 4px; padding: 10px 13px;
+             margin: 10px 0 13px; font-size: 9.3pt; }
+  .example .lbl { color: #777; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+  .arrow { text-align: center; color: #999; font-size: 12pt; margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>Content Findings</h1>
+<p class="sub">Things worth fixing in the words and pictures &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  Every page, post, case study and event on the new site was checked automatically: 115 documents in
+  all. This lists what came back. It is about the content rather than the build, so most of it is a
+  writing job rather than a development one.
+</p>
+
+<div class="box ok">
+  <strong class="hd">Nothing was lost in the move</strong>
+  <p style="margin-bottom:0">
+    Worth saying first, because several items below look at a glance like missing content. They are
+    not. Pages that hold a video, a photo gallery or a wall of logos genuinely contain very few words,
+    on the existing site as much as the new one. Everything that was there came across.
+  </p>
+</div>
+
+
+<h2>1. Placeholder text still on the site</h2>
+<p>One page, and it is a real one that a visitor can reach today.</p>
+<table><tr><th>Page</th><th>What is there</th></tr><tr><td>/ada-compliance</td><td>Latin filler text (&ldquo;Lorem ipsum dolor sit amet&hellip;&rdquo;) instead of the real wording</td></tr></table>
+<div class="box warn"><strong class="hd">This one needs fixing before anything is shown to anybody</strong>
+<p style="margin-bottom:0">It is the only page on the site carrying filler text. The real wording exists and has been promised; it simply has not been supplied yet. It now also appears in the file that describes the site to AI assistants, so it is no longer only visible to someone who happens to open that page.</p></div>
+
+<h2>2. Images with no alternative text</h2>
+<p>Alternative text is the sentence that describes a picture to somebody who cannot see it, and to a search engine, which cannot see it either. It is a piece of writing attached to the image, not a design change: adding it alters nothing about how the site looks.</p>
+<p>18 pages are affected, 85 images in total.</p>
+<table><tr><th>Page</th><th>Type</th><th>Images</th></tr><tr><td>/home</td><td>page</td><td>25</td></tr><tr><td>/solutions</td><td>page</td><td>20</td></tr><tr><td>/kinders-meats</td><td>client</td><td>5</td></tr><tr><td>/hoover-krepelka-llp</td><td>client</td><td>4</td></tr><tr><td>/mjc-development</td><td>client</td><td>4</td></tr><tr><td>/central-glass-industries</td><td>client</td><td>3</td></tr><tr><td>/empress-hotel-la-jolla</td><td>client</td><td>3</td></tr><tr><td>/gloria-ferrer</td><td>client</td><td>3</td></tr><tr><td>/l2-ventures</td><td>client</td><td>3</td></tr><tr><td>/next-level-strategies</td><td>client</td><td>3</td></tr><tr><td>/samyana-yoga-center</td><td>client</td><td>3</td></tr><tr><td>/lms-law</td><td>client</td><td>2</td></tr><tr><td>/merit-hr</td><td>client</td><td>2</td></tr><tr><td>/programs</td><td>page</td><td>1</td></tr><tr><td>/video-content-expansion-packages</td><td>page</td><td>1</td></tr><tr><td>/work</td><td>page</td><td>1</td></tr><tr><td>/blog-post-content-seo-best-practices</td><td>post</td><td>1</td></tr><tr><td>/jungle</td><td>post</td><td>1</td></tr></table>
+
+<h2>3. Pages with no meta description</h2>
+<p>Without one, Google writes its own sentence from whatever it finds on the page. That is rarely the sentence you would have chosen.</p>
+<table><tr><th>Page</th><th>Type</th></tr><tr><td>/unconditionallove</td><td>post</td></tr><tr><td>/blog</td><td>page</td></tr><tr><td>/seo-for-real</td><td>post</td></tr><tr><td>/doubleyourvisitorstoyourwebsite</td><td>post</td></tr></table>
+
+<h2>4. Posts that are a video and almost nothing else</h2>
+<p>These posts consist of a video with a line or two around it. Nothing is broken and nothing was lost in the move: that is genuinely all the page has ever contained.</p>
+<p>It is worth raising because neither a search engine nor an AI assistant can watch a video. A post like this is effectively invisible to both, however good the video is. A short written summary underneath, or a transcript, turns it into something that can be found and quoted.</p>
+<table><tr><th>Post</th><th>Words of text</th></tr><tr><td>/unconditionallove</td><td>4</td></tr><tr><td>/10-ways-to-survive-and-thrive</td><td>8</td></tr><tr><td>/seo-for-real</td><td>9</td></tr><tr><td>/doubleyourvisitorstoyourwebsite</td><td>12</td></tr><tr><td>/4things-you-can-do-right-now</td><td>13</td></tr><tr><td>/success-2022</td><td>20</td></tr><tr><td>/brand-vibes</td><td>27</td></tr><tr><td>/soultion-branding-contentcreation</td><td>28</td></tr><tr><td>/marketing_content_values</td><td>30</td></tr><tr><td>/buying-a-ferrari-and-keeping-it-in-the-garage</td><td>32</td></tr><tr><td>/happy-new-year-2022</td><td>34</td></tr><tr><td>/seo-podcast</td><td>40</td></tr><tr><td>/animated-video-could-solve-your-clients-questions-with-ease</td><td>56</td></tr></table>
+
+<h2>5. Client case studies are short</h2>
+<p>The fourteen case studies average around thirty words each. That is what came across from the existing site, so nothing has been lost, but a case study of thirty words cannot rank for anything or answer a question an assistant is asked.</p>
+<table><tr><th>Case study</th><th>Words</th></tr><tr><td>/portfolio/kinders-meats</td><td>2</td></tr><tr><td>/portfolio/l2-ventures</td><td>2</td></tr><tr><td>/portfolio/hoover-krepelka-llp</td><td>26</td></tr><tr><td>/portfolio/samyana-yoga-center</td><td>26</td></tr><tr><td>/portfolio/gloria-ferrer</td><td>33</td></tr><tr><td>/portfolio/merit-hr</td><td>34</td></tr><tr><td>/portfolio/mjc-development</td><td>35</td></tr><tr><td>/portfolio/logos</td><td>36</td></tr><tr><td>/portfolio/carlin-associates</td><td>40</td></tr><tr><td>/portfolio/central-glass-industries</td><td>49</td></tr><tr><td>/portfolio/crown-llp</td><td>49</td></tr><tr><td>/portfolio/lms-law</td><td>49</td></tr><tr><td>/portfolio/empress-hotel-la-jolla</td><td>52</td></tr><tr><td>/portfolio/next-level-strategies</td><td>56</td></tr></table>
+
+<h2>6. Gold event pages are short</h2>
+<p>The same pattern. Shown here are the eight shortest of eighteen.</p>
+<table><tr><th>Event</th><th>Words</th></tr><tr><td>/gold/employee-or-contractor</td><td>12</td></tr><tr><td>/gold/touch-it-once</td><td>12</td></tr><tr><td>/gold/what-is-blockchain-what-is-cryptocurrency</td><td>12</td></tr><tr><td>/gold/law-firm-generational-transfer-with-intention</td><td>15</td></tr><tr><td>/gold/success-in-2022</td><td>17</td></tr><tr><td>/gold/team-doesnt-know-like-trust-each-other-yikes-you-are-losing</td><td>20</td></tr><tr><td>/gold/risks-you-cant-see-succession-planning-for-lawyers-reputation-clients-cash-flow</td><td>21</td></tr><tr><td>/gold/5-steps-to-profit-with-a-podcast</td><td>24</td></tr></table>
+
+
+<h2>How to read the &ldquo;short&rdquo; findings</h2>
+<p>
+  A word count is a blunt measure and it is wrong about some pages on purpose. The Work page, the
+  Trusted page and the blog index are lists of other things; they are short because that is what they
+  are, and lengthening them would make them worse. The same is true of a case study built around
+  photographs.
+</p>
+<p>
+  The reason it is still worth listing is that search engines and AI assistants have no way of telling
+  a deliberately visual page from a page somebody never finished. Both look identical from the
+  outside: not much to read. Where a page is short by design, the fix is usually a paragraph of
+  context rather than an essay.
+</p>
+
+<h2>Suggested order</h2>
+<ol>
+  <li><strong>The ADA Compliance page.</strong> Real wording instead of filler. This is the only item
+      that is unambiguously a defect.</li>
+  <li><strong>Alternative text on images.</strong> A sentence per picture. It helps people using a
+      screen reader and it helps Google, and it changes nothing visually.</li>
+  <li><strong>The four missing descriptions.</strong> A sentence each.</li>
+  <li><strong>A summary under each video post.</strong> Turns thirteen invisible posts into thirteen
+      findable ones.</li>
+  <li><strong>Case studies.</strong> The largest opportunity and the largest amount of work. Worth
+      treating as its own project rather than a tidy-up.</li>
+</ol>
+
+<div class="box">
+  <strong class="hd">A note on what this check does not cover</strong>
+  <p style="margin-bottom:0">
+    This looked for missing and placeholder content, not for quality. Spelling, tone, accuracy and
+    whether each page still says what the business wants it to say in 2026 have not been reviewed. A
+    proper read-through by somebody who knows the business would find things no automated check can.
+    Two small examples already spotted by eye: the Thank You page reads &ldquo;more revenue than you
+    could have ever imaged&rdquo; and &ldquo;we will get back to you licky split&rdquo;. Both are
+    inherited from the existing site.
+  </p>
+</div>
+
+<div class="foot">
+  <p>
+    Generated from an automatic check of all 115 pages, posts, case studies and events on 28 July
+    2026. Re-running it will produce current numbers.
+  </p>
+</div>
+
+</body>
+</html>
