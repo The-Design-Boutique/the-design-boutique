@@ -47,7 +47,7 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
-      S.documentTypeListItem('form').title('Forms').icon(() => '🧾'),
+      S.documentTypeListItem('form').title('Forms by Angelo').icon(() => '🧾'),
       S.documentTypeListItem('formSubmission').title('Form Submissions').icon(() => '📥'),
       S.documentTypeListItem('redirect').title('Redirects').icon(() => '↪️'),
 
