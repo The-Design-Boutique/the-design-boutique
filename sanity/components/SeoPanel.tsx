@@ -7,6 +7,7 @@ import { analyseSeo, type CheckResult, type SeoAnalysis } from '../../app/lib/se
 import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
 import { IssueRow, Section, pathForDoc, useSeoAudit } from './seoShared'
+import { SuggestControls } from './SuggestControls'
 
 type Tone = 'default' | 'primary' | 'positive' | 'caution' | 'critical'
 
@@ -113,7 +114,7 @@ function CheckRow({ check }: { check: CheckResult }) {
  * question: this panel is a checklist you act on while writing, that one is a
  * report on results you cannot change today.
  */
-export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaType }) {
+export const SeoPanel: UserViewComponent = function SeoPanel({ document, documentId, schemaType }) {
   const doc = useDebounced(document?.displayed, 400)
 
   const path = pathForDoc(schemaType?.name || '', (doc as any)?.slug?.current)
@@ -262,6 +263,15 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaT
             </Stack>
           </Section>
         ) : null}
+
+        {/* Renders nothing unless a key is configured (ruleset 05, rule 20). */}
+        <SuggestControls
+          documentId={documentId}
+          documentType={schemaType?.name || ''}
+          title={(doc as any)?.title}
+          keyword={(doc as any)?.seo?.focusKeyword}
+          prose={analysis.content.text}
+        />
 
         <Section
           title="Technical"
