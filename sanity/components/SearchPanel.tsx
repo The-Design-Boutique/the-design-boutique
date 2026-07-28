@@ -221,61 +221,90 @@ function RequestIndexing({ path }: { path: string }) {
     }
   }, [liveUrl])
 
+  const engines = (indexNow?.engines || INDEXNOW_ENGINE_NAMES).join(', ')
+
+  // Why the button cannot be pressed, in the words of somebody who has to read
+  // it. Null means it can. A disabled control with no explanation is the most
+  // annoying thing an interface can do, so there is always a reason beside it.
+  const disabledReason: string | null = !indexNow
+    ? 'Checking whether this is available.'
+    : !indexNow.ready
+      ? 'This site has not been given an IndexNow key yet, so it cannot identify itself to the search engines.'
+      : !indexNowUsable
+        ? `The figures on this tab describe ${liveHost || 'the live site'}, but this preview lives at a different address (${indexNow.host}). IndexNow only accepts addresses belonging to the site doing the asking, which is how it knows the request is genuine. When this build becomes ${liveHost || 'the live site'}, this turns on by itself.`
+        : null
+
   return (
     <Stack space={4}>
-      <Stack space={2}>
-        <Text size={1} weight="semibold">Ask Google to look at this page</Text>
-        <Text size={0} muted>
-          Google publishes no way for another program to do this, so it is three presses in their own
-          tool rather than a button here. It is a request, not a guarantee, and usually takes a few
-          days.
-        </Text>
-        <Box>
-          <Button
-            as="a"
-            href={inspectInSearchConsole(path)}
-            target="_blank"
-            rel="noreferrer"
-            text="Open this page in Search Console"
-            mode="ghost"
-            fontSize={1}
-          />
-        </Box>
-        <Stack space={1} paddingTop={1}>
-          <Text size={0} muted>1. Sign in with the Google account that has access to the site.</Text>
-          <Text size={0} muted>2. Wait for it to finish testing the address, then press <strong>Request Indexing</strong>.</Text>
-          <Text size={0} muted>3. Close the tab. Nothing else is needed, and asking twice does not help.</Text>
-        </Stack>
-      </Stack>
-
-      <Stack space={2}>
-        <Text size={1} weight="semibold">Tell the other search engines now</Text>
-        {indexNowUsable ? (
-          <>
-            <Text size={0} muted>
-              Sends this address straight to {(indexNow?.engines || []).join(', ')}. Not Google, which
-              does not take part in this.
-            </Text>
-            <Box>
-              <Button
-                text={submitting ? 'Sending' : 'Submit to IndexNow'}
-                mode="ghost"
-                fontSize={1}
-                disabled={submitting}
-                onClick={submit}
-              />
-            </Box>
-          </>
-        ) : (
-          <Text size={0} muted>
-            IndexNow can notify {(indexNow?.engines || INDEXNOW_ENGINE_NAMES).join(', ')} instantly, but
-            never Google. It only accepts addresses on the site holding its key file, and these figures
-            describe {liveHost || 'the live site'}, which this build does not serve yet. It becomes
-            available on its own at go live.
+      <Card padding={3} radius={2} tone="transparent" border>
+        <Stack space={3}>
+          <Text size={1} weight="semibold">Ask Google to look at this page</Text>
+          <Text size={1} muted>
+            Google finds new and changed pages by revisiting sites on its own schedule, which can take
+            days or weeks. You can jump the queue by asking directly, and it is worth doing for a page
+            like this one that Google has never picked up.
           </Text>
-        )}
-        {note ? <Text size={0} muted>{note}</Text> : null}
-      </Stack>
+          <Text size={0} muted>
+            There is no button here that can do it for you. Google deliberately offers no way for other
+            software to make this request, so it has to be three presses in their own tool.
+          </Text>
+          <Box>
+            <Button
+              as="a"
+              href={inspectInSearchConsole(path)}
+              target="_blank"
+              rel="noreferrer"
+              text="Open this page in Search Console"
+              mode="ghost"
+              fontSize={1}
+            />
+          </Box>
+          <Stack space={2}>
+            <Text size={0} muted>
+              <strong>1.</strong> The link opens Google Search Console at this exact address. Sign in
+              with a Google account that has been given access to the site.
+            </Text>
+            <Text size={0} muted>
+              <strong>2.</strong> Wait a few seconds while it says &ldquo;Retrieving data from Google
+              index&rdquo;, then press <strong>Request Indexing</strong>.
+            </Text>
+            <Text size={0} muted>
+              <strong>3.</strong> That is all. Close the tab. It is a request rather than a guarantee,
+              it usually takes a few days, and asking repeatedly does not make it faster.
+            </Text>
+          </Stack>
+        </Stack>
+      </Card>
+
+      <Card padding={3} radius={2} tone="transparent" border>
+        <Stack space={3}>
+          <Text size={1} weight="semibold">Tell the other search engines straight away</Text>
+          <Text size={1} muted>
+            IndexNow is a way of telling search engines the moment a page appears or changes, instead of
+            waiting for them to come and look. Publish a page, and they hear about it in seconds rather
+            than days.
+          </Text>
+          <Text size={1} muted>
+            It does not include Google. Google chose not to take part, so this changes nothing about the
+            figures above. It reaches {engines}.
+          </Text>
+          <Box>
+            <Button
+              text={submitting ? 'Sending' : 'Submit to IndexNow'}
+              mode="ghost"
+              fontSize={1}
+              disabled={submitting || Boolean(disabledReason)}
+              onClick={submit}
+            />
+          </Box>
+          {disabledReason ? (
+            <Text size={0} muted>
+              <strong>Not available yet.</strong> {disabledReason}
+            </Text>
+          ) : null}
+          {note ? <Text size={0} muted>{note}</Text> : null}
+        </Stack>
+      </Card>
     </Stack>
   )
 }
@@ -361,27 +390,28 @@ export const SearchPanel: UserViewComponent = function SearchPanel({ document, s
             <Stack space={4}>
               {/* The one thing to know, before any numbers. */}
               <Card padding={3} radius={2} tone={indexed ? 'positive' : 'caution'} border>
-                <Stack space={3}>
-                  <Flex align="center" gap={3} wrap="wrap">
-                    <Badge tone={indexed ? 'positive' : 'caution'} fontSize={0} mode="outline">
-                      {indexed ? 'In Google' : 'Not in Google'}
-                    </Badge>
-                    <Box flex={1}>
-                      <Text size={1}>
-                        {audit.indexStatus ||
-                          (indexed ? 'This page is in Google.' : 'Google is not showing this page.')}
-                      </Text>
-                    </Box>
-                    {audit.lastCrawledAt ? (
-                      <Text size={0} muted style={{ whiteSpace: 'nowrap' }}>
-                        Last visited {timeAgo(audit.lastCrawledAt)}
-                      </Text>
-                    ) : null}
-                  </Flex>
-
-                  {!indexed && path ? <RequestIndexing path={path} /> : null}
-                </Stack>
+                <Flex align="center" gap={3} wrap="wrap">
+                  <Badge tone={indexed ? 'positive' : 'caution'} fontSize={0} mode="outline">
+                    {indexed ? 'In Google' : 'Not in Google'}
+                  </Badge>
+                  <Box flex={1}>
+                    <Text size={1}>
+                      {audit.indexStatus ||
+                        (indexed ? 'This page is in Google.' : 'Google is not showing this page.')}
+                    </Text>
+                  </Box>
+                  {audit.lastCrawledAt ? (
+                    <Text size={0} muted style={{ whiteSpace: 'nowrap' }}>
+                      Last visited {timeAgo(audit.lastCrawledAt)}
+                    </Text>
+                  ) : null}
+                </Flex>
               </Card>
+
+              {/* Sits beside the status rather than inside it: these are two
+                  bordered cards of their own, and nesting them in the toned
+                  status card made the whole thing read as one heavy block. */}
+              {!indexed && path ? <RequestIndexing path={path} /> : null}
 
               <Grid columns={[2, 2, 4]} gap={2}>
                 <Stat label="Clicks" value={String(clicks)} hint="Visits from a search" />
