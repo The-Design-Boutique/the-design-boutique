@@ -58,7 +58,8 @@ async function getDocument(parts: string[]) {
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params
   const path = (slug || []).join('/')
-  const siteDefaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const defaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const siteDefaults = defaults?.settings
   const page = await getPage(slug)
   if (page) return buildMetadata(page, { path, siteDefaults })
   const found = await getDocument(slug)
@@ -75,13 +76,15 @@ function JsonLd({ data }: { data: object | null }) {
 export default async function Page({ params }: PageParams) {
   const { slug } = await params
   const path = (slug || []).join('/')
-  const siteDefaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const defaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const siteDefaults = defaults?.settings
+  const office = defaults?.office
 
   const page = await getPage(slug)
   if (page) {
     return (
       <>
-        <JsonLd data={buildJsonLd(page, { path, siteDefaults })} />
+        <JsonLd data={buildJsonLd(page, { path, siteDefaults, office })} />
         <BlockRenderer blocks={page.pageBuilder} />
       </>
     )
@@ -90,7 +93,7 @@ export default async function Page({ params }: PageParams) {
   const found = await getDocument(slug)
   if (!found) notFound()
 
-  const ld = <JsonLd data={buildJsonLd(found.doc, { path, siteDefaults })} />
+  const ld = <JsonLd data={buildJsonLd(found.doc, { path, siteDefaults, office })} />
 
   if (found.kind === 'client') return <>{ld}<ClientTemplate client={found.doc} /></>
 

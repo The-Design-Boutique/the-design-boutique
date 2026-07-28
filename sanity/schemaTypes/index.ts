@@ -14,6 +14,7 @@ import { formSubmission } from './documents/formSubmission'
 
 // Singletons
 import { siteSettings } from './singletons/siteSettings'
+import { officeLocation } from './singletons/officeLocation'
 import { navigation } from './singletons/navigation'
 
 // Shared objects
@@ -28,7 +29,7 @@ import { bodyHtml } from './objects/bodyHtml'
 import { blocks } from './blocks'
 
 /** Document type names that are singletons (one instance, pinned in the desk). */
-export const SINGLETONS = ['siteSettings', 'navigation'] as const
+export const SINGLETONS = ['siteSettings', 'navigation', 'officeLocation'] as const
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -47,6 +48,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     formSubmission,
     // singletons
     siteSettings,
+  officeLocation,
     navigation,
     // shared objects
     seoFields,

@@ -124,9 +124,15 @@ export const BLOG_SETTINGS_QUERY = defineQuery(`
   }
 `)
 
-export const SITE_DEFAULTS_QUERY = defineQuery(`
-  *[_id == "siteSettings"][0]{ siteName, email, phone, address, defaultShareImage }
-`)
+export const SITE_DEFAULTS_QUERY = defineQuery(`{
+  "settings": *[_id == "siteSettings"][0]{ siteName, email, phone, address, defaultShareImage },
+  "office": *[_id == "officeLocation"][0]{
+    name, streetAddress, addressLocality, addressRegion, postalCode, addressCountry,
+    latitude, longitude, phone, email, priceRange,
+    openingHours[]{ days, opens, closes },
+    sameAs
+  }
+}`)
 
 export const LAYOUT_QUERY = defineQuery(`{
   "nav": *[_id == "navigation"][0]{

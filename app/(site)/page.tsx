@@ -13,14 +13,16 @@ async function getHome() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [page, siteDefaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
-  return buildMetadata(page, { path: '', siteDefaults })
+  const [page, defaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  return buildMetadata(page, { path: '', siteDefaults: defaults?.settings })
 }
 
 export default async function HomePage() {
-  const [page, siteDefaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  const [page, defaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  const siteDefaults = defaults?.settings
+  const office = defaults?.office
   if (!page) return null
-  const json = jsonLdString(buildJsonLd(page, { path: '', siteDefaults }))
+  const json = jsonLdString(buildJsonLd(page, { path: '', siteDefaults, office }))
   return (
     <>
       {json ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} /> : null}

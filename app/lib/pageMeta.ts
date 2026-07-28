@@ -95,10 +95,13 @@ export function buildMetadata(doc: any, opts: { path?: string; siteDefaults?: an
  * Builds the JSON-LD block for a document, based on its structured data type.
  * Returning null means the page emits nothing rather than an empty shell.
  */
-export function buildJsonLd(doc: any, opts: { path?: string; siteDefaults?: any } = {}): object | null {
+export function buildJsonLd(
+  doc: any,
+  opts: { path?: string; siteDefaults?: any; office?: any } = {},
+): object | null {
   if (!doc) return null
   const seo = doc.seo || {}
-  const { path, siteDefaults } = opts
+  const { path, siteDefaults, office } = opts
   const url = seo.canonicalUrl || absoluteUrl(path)
   const name = seo.title || doc.title
   const description = seo.metaDescription || doc.excerpt || undefined
@@ -135,18 +138,49 @@ export function buildJsonLd(doc: any, opts: { path?: string; siteDefaults?: any 
       }
     }
 
-    case 'LocalBusiness':
+    case 'LocalBusiness': {
+      // Assembled from the Office & Local SEO settings so it can never drift
+      // from what the site itself displays.
+      const o = office || {}
+      const address = o.streetAddress || o.addressLocality
+        ? {
+            '@type': 'PostalAddress',
+            streetAddress: o.streetAddress || undefined,
+            addressLocality: o.addressLocality || undefined,
+            addressRegion: o.addressRegion || undefined,
+            postalCode: o.postalCode || undefined,
+            addressCountry: o.addressCountry || undefined,
+          }
+        : siteDefaults?.address
+          ? { '@type': 'PostalAddress', streetAddress: siteDefaults.address }
+          : undefined
+      const hours = Array.isArray(o.openingHours)
+        ? o.openingHours
+            .filter((h: any) => h?.opens && h?.closes && Array.isArray(h.days) && h.days.length)
+            .map((h: any) => ({
+              '@type': 'OpeningHoursSpecification',
+              dayOfWeek: h.days,
+              opens: h.opens,
+              closes: h.closes,
+            }))
+        : []
       return {
         ...base,
         '@type': 'LocalBusiness',
-        name: org,
-        telephone: siteDefaults?.phone || undefined,
-        email: siteDefaults?.email || undefined,
-        address: siteDefaults?.address
-          ? { '@type': 'PostalAddress', streetAddress: siteDefaults.address }
-          : undefined,
+        name: o.name || org,
+        telephone: o.phone || siteDefaults?.phone || undefined,
+        email: o.email || siteDefaults?.email || undefined,
+        priceRange: o.priceRange || undefined,
+        address,
+        geo:
+          typeof o.latitude === 'number' && typeof o.longitude === 'number'
+            ? { '@type': 'GeoCoordinates', latitude: o.latitude, longitude: o.longitude }
+            : undefined,
+        openingHoursSpecification: hours.length ? hours : undefined,
+        sameAs: Array.isArray(o.sameAs) && o.sameAs.length ? o.sameAs : undefined,
         image: image ? [image] : undefined,
       }
+    }
 
     case 'Organization':
       return {
