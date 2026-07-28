@@ -340,7 +340,37 @@ without being asked. They are recorded so she can see them once the site is live
 and become a maintenance proposal after go live. Do not raise them again as
 in-scope work.
 
-- [ ] Full visual diff pass, all pages/breakpoints
+- [x] Full visual diff pass, all pages/breakpoints (July 28, 2026)
+      Every page plus one of each template, 33 in all, captured full-page on both
+      the live site and staging at 1440 and 390, with real heights read from the
+      DOM. 63 comparable pairs.
+
+      First attempt was discarded rather than reported: it captured at a fixed
+      4000px viewport, so seven unrelated live pages all came back at exactly
+      3939px and thedifference column was measuring the screenshot cap rather than the
+      sites. Redone with Playwright full-page captures and a scroll pass so lazy
+      images load.
+
+      **Result: one systematic finding, not a list of them.** Median height ratio
+      of ours to live is 1.01 on mobile and 0.89 on desktop. Mobile is effectively
+      exact; desktop is consistently about 11 percent more compact. It reads as
+      vertical section spacing being tighter than the original, and it compounds
+      down card-heavy pages, which is why Work and More Testimonials show the
+      largest gaps at 25 percent.
+
+      Content parity is intact where inspected closely: all 12 testimonials and
+      all 14 portfolio tiles are present, correctly ordered, with the same
+      imagery. The gap is spacing, not missing content.
+
+      The pages where ours is *taller* are almost all mobile, and the largest,
+      ADA Compliance at +64 percent, is the placeholder text page: Latin filler
+      runs longer than the real copy will.
+
+      **Not fixed, deliberately.** Loosening desktop spacing by ~11 percent is a
+      site-wide visual change and Laney's design is the brief. Worth showing her
+      side by side and asking whether she wants exact parity or prefers the
+      tighter rhythm, rather than deciding for her.
+- [ ] Angelo/Laney decision: match the live desktop spacing exactly, or keep the tighter version
 - [ ] WCAG 2.1 AA audit, findings recorded, **fixes deliberately out of scope** (see above)
 - [x] Core Web Vitals / Lighthouse pass on staging (July 28, 2026)
       Measured before changing anything, which mattered: the assumed culprit was
