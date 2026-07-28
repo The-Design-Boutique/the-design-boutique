@@ -10,6 +10,12 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // Lets a library import a sibling as "./thing.ts". Needed because the test
+    // runner (node --experimental-strip-types) resolves ESM strictly and will
+    // not guess an extension, while tsc rejects the extension without this.
+    // Every other tested library here happens to be self-contained; app/lib/aeo.ts
+    // is the first that genuinely needs another one.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

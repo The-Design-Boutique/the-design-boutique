@@ -1,6 +1,7 @@
 import type { DefaultDocumentNodeResolver, StructureResolver } from 'sanity/structure'
 import { SeoPanel } from './components/SeoPanel'
 import { SearchPanel } from './components/SearchPanel'
+import { AeoPanel } from './components/AeoPanel'
 
 /** Document types that are real, routable pages and so get the SEO panel. */
 const ROUTABLE_TYPES = ['page', 'post', 'client', 'goldEvent']
@@ -21,6 +22,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, { schemaType
     S.view.form().title('Edit'),
     S.view.component(SeoPanel).title('SEO').id('seo'),
     S.view.component(SearchPanel).title('Search').id('search'),
+    S.view.component(AeoPanel).title('AEO').id('aeo'),
   ])
 }
 
