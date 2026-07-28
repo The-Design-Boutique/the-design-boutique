@@ -9,6 +9,7 @@ import { schema, SINGLETONS } from './sanity/schemaTypes'
 import { structure, defaultDocumentNode } from './sanity/structure'
 import { CwvDashboard } from './sanity/tools/CwvDashboard'
 import { NotFoundMonitor } from './sanity/tools/NotFoundMonitor'
+import { SearchFiles } from './sanity/tools/SearchFiles'
 import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
 
 const singletonSet: readonly string[] = SINGLETONS
@@ -94,6 +95,11 @@ export default defineConfig({
       name: 'dead-links',
       title: 'Dead Links',
       component: NotFoundMonitor,
+    },
+    {
+      name: 'search-files',
+      title: 'For Search Engines',
+      component: SearchFiles,
     },
     ...prev,
   ],
