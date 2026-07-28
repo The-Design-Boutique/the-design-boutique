@@ -29,19 +29,30 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 - Not blocked. `SEO_AI_SECRET` is set on Vercel, rule 21 is decided (Laney's key, Laney's budget;
   Angelo demos with his own), and Search Console access was granted and verified July 28, 2026,
   which unblocks 2.3.
-- Blocked on Laney for: real ADA Compliance copy (she has it, promised before production). 2.3 SEO Health panel is SIGNED OFF as of July 27, 2026.
+- Blocked on Laney for: real ADA Compliance copy (she has it, promised before production);
+  a Resend account and domain verification so form notifications can actually send
+  (`Setting Up Email.pdf`, and Angelo or Robert do the DNS step); her own API key at demo
+  if she wants the writing assistant; and, before handover, her own Search Console service
+  account to replace Angelo's personal credentials. 2.3 SEO Health panel is SIGNED OFF as
+  of July 27, 2026.
 
 ## Needed from Angelo to unblock (you provide access)
 
-0. **Search Console credentials for the deployed cron.** The panel's search section
-   is built but dark. The route is a Google service account created in Laney's own
-   Google Cloud account and added to the Search Console property as a **Full** user
-   (Full, not Restricted: URL Inspection needs it). Verified July 28, 2026 that a
-   service account email can be added as a Search Console user. Instructions for
-   Laney are written up as `Search Console Access.pdf`. A personal OAuth token would
-   also work and was rejected: all tooling becomes the client's property on final
-   payment, and an integration resting on a personal Google account breaks at
-   handover.
+0. **Search Console credentials: RESOLVED July 28, 2026, with a caveat for handover.**
+   Working credentials already existed on Angelo's machine (the `gsc-tdb` MCP, an
+   OAuth client plus refresh token in `~/.config/gcloud/`), holding **siteOwner** on
+   `https://thedesignboutique.com/`. Those are now set on Vercel and the deployed
+   cron reports `searchConsole: connected`. All 115 routable pages have been audited:
+   65 indexed, 26 unknown to Google, 55 carrying real search traffic.
+
+   The caveat stands and is not optional at handover. These are Angelo's *personal*
+   Google credentials. All tooling becomes the client's property on final payment,
+   and an integration resting on a contractor's personal account breaks the day that
+   token is revoked. Before handover this must move to a service account in Laney's
+   own Google Cloud account, added to the property as a **Full** user (Full, not
+   Restricted: URL Inspection needs it). Instructions for her are written up as
+   `Search Console Access.pdf`. Using Angelo's credentials was the right call to
+   unblock 2.3 and demo; it is the wrong thing to hand over.
 
 1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
    dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
@@ -50,15 +61,13 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 2. Vercel (blocking for deploy): import the (now public) GitHub repo into the TDB Vercel account. Add `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and the Sanity token as Vercel env vars (I will give the exact values). Add the resulting Vercel URL to Sanity CORS.
 3. GitHub: DONE. Repo public, `main` default.
 4. Sanity project + token: DONE (project inapmf9l, Editor token stored locally).
-5. **Google Search Console access for thedesignboutique.com — STILL BLOCKING 2.3.** Re-verified
-   July 28, 2026: the property now *appears* for our account, as `siteUnverifiedUser`, which is
-   progress on the July 27 position where it did not appear at all. But it is listed, not granted:
-   an actual data request returns HTTP 403, "user does not have sufficient permission". Being able
-   to see a property is not the same as being able to read it. The SEO Health panel needs the site's
-   own Search Console data.
-   Laney (or whoever owns the property) needs to add our Google account as a user at
-   search.google.com/search-console → Settings → Users and permissions. Full or Restricted both work
-   for reading. This is SOW section 7 access.
+5. **Google Search Console access — RESOLVED July 28, 2026.** See item 0. The earlier
+   403 came from asking as `sc-domain:thedesignboutique.com`, the *unverified* domain
+   property. The account holds `siteOwner` on the **URL-prefix** property
+   `https://thedesignboutique.com/`, which is the one the tooling now uses. The two
+   look almost identical in a property list and only one of them works, which is
+   worth remembering before diagnosing a permissions problem that is really a
+   wrong-property problem.
 
 ## Phase 0 — Foundations & walking skeleton
 
@@ -188,8 +197,30 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
       fortnight on the first pass and minutes thereafter. And the Lighthouse audit
       "page is blocked from indexing" is suppressed while staging is noindex, since
       it fails on every page by design and would train editors to ignore the panel.
-      Search Console is wired but not connected: it needs credentials the server can
-      hold. See the note below, because whose credentials matters.
+      Search Console is connected as of July 28, 2026 and all 115 pages are audited.
+      See item 0 above, because whose credentials matters at handover.
+
+      Three defects were found only once real data arrived, all fixed:
+
+      Search Console compares URLs as exact strings and does not normalise or follow
+      redirects. The audit asked about `/about` while the live site publishes
+      `/about/`. That does not error: it returns HTTP 200, verdict NEUTRAL, "URL is
+      unknown to Google", and no queries, so every page read as de-indexed. All 25
+      live pages carrying search data end in a slash; the slashless form is kept as a
+      fallback tried only when the first is unknown, so the panel repairs itself if
+      the convention changes at go live.
+
+      Search totals were summed from the query rows. Google withholds rare queries
+      from any query-level breakdown to protect the people who typed them but still
+      counts them in page totals, so `/about/` reported 2 clicks against a true 6.
+      Totals now come from the authoritative page row; the query breakdown is used
+      only for the top-queries list, and average position uses Google's own
+      impression-weighted figure rather than an unweighted mean.
+
+      The panel reported "Not connected to Search Console" whenever a page had no
+      audit record, which almost always means it is waiting its turn in the rotation.
+      Never checked, checked but no Search Console, and Google errored are now three
+      distinct messages.
 - [x] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf` DONE
       The stack existed but most of it never reached the page. Now renders canonical,
       robots, full Open Graph with image, the complete X/Twitter card, and per-type
@@ -243,6 +274,60 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
       rather than an error. Anything reading content outside the Studio needs the
       token. The AI key still has to be encrypted, because `siteSettings` is one
       of the types that IS world readable, and that is where the key lives.
+### Also delivered July 28, 2026 (outside the 2.x numbering)
+
+- [x] **Email delivery for form notifications (Resend).** The key is stored encrypted
+      in Site Settings under Forms, alongside sending address, sender name and an
+      optional reply-to, so it can be changed without a deploy. There is deliberately
+      **no environment-variable fallback**: during development the fallback found a
+      `RESEND_API_KEY` exported in a developer's shell belonging to an entirely
+      different account, which would have sent the client's enquiries through someone
+      else's Resend account and domain reputation with nothing looking wrong.
+      An unsent notification is indistinguishable from a form nobody filled in, so a
+      missing key is stated in three places: the Site Settings field, a panel at the
+      top of every form's Notifications tab, and the reason recorded on the
+      submission. Client guide: `Setting Up Email.pdf`, which recommends a `send.`
+      subdomain so the DNS records cannot collide with an existing `v=spf1` line and
+      break the client's day-to-day email.
+- [x] **Draft preview.** The Presentation tool gives a Preview tab beside the fields
+      showing the page with current unpublished edits, wired to the four types that
+      have a public page. All content reads through one helper that decides whether
+      drafts are visible; it returns the client rather than wrapping `fetch`, so the
+      generated query result types survive. A fixed banner marks any previewed page,
+      because preview is a cookie that outlives the reason it was switched on.
+      Confirmed drafts do **not** leak to visitors: API version 2025-02-19 defaults to
+      the `published` perspective. Tested with a throwaway draft, since deducing it
+      from documentation is not the same as knowing.
+- [x] **Search presence split onto its own Search tab**, redesigned as a dashboard
+      (status strip, four stat cards including click rate, a page-of-results scale,
+      query rows with position badges). Colours come from Sanity's tone system rather
+      than hex values so the panel follows the Studio into light mode.
+- [x] **IndexNow submission**, plus manual Google instructions. Two facts checked
+      rather than assumed, both of which limit it:
+      Google does not participate in IndexNow. The engines are Bing, Yandex, Naver,
+      Seznam, Yep and Amazon. A test asserts Google is absent from that list so nobody
+      later assumes this affects the figures above it.
+      IndexNow only accepts addresses on the host serving its key file. The panel
+      reports on the live WordPress site, and proving ownership of that domain means
+      placing a file on it, which hard rule 1 forbids. The button therefore shows
+      **disabled with the reason stated**, and becomes usable on its own at go live
+      when this application serves that domain. The mismatch is caught before
+      anything is sent, so the explanation is a sentence rather than an unexplained
+      422 from a third party.
+      Google offers no API equivalent at all: the Search Console API's method list has
+      nothing that requests indexing, and the separate Indexing API is restricted by
+      Google's documentation to `JobPosting` and `BroadcastEvent` pages. So the Google
+      half is a deep link into their own screen plus the three presses to make there.
+- [x] The Studio listed every blog post as `/blog/{slug}`. That address 404s here and
+      301s to the root on the live site. Posts live at `/{slug}`, which the routing and
+      the audit job already assumed; only the label was wrong, and it was the label
+      anyone would copy.
+- [x] The "Check with Google" button could never work: it runs in a browser, so it
+      cannot send the cron secret, and the route returned 401 to anything unsigned,
+      which the panel reported as Google being unreachable. A single page may now be
+      re-checked without the secret, throttled server-side to once every ten minutes.
+      Whole-site runs still require it.
+
 - [ ] Phase 4 QC + review gate
 
 ## Phase 5 — Parity, accessibility, performance QA
