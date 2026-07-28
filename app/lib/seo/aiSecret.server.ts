@@ -92,6 +92,9 @@ export function looksLikeKey(provider: string, key: string): { ok: true } | { ok
   // minimum length is per service rather than one number for everything.
   const minimum = provider === 'mailverify' || provider === 'numverify' ? 12 : 20
   if (k.length < minimum) return { ok: false, reason: 'That looks too short to be an API key.' }
+  if (provider === 'resend' && !k.startsWith('re_')) {
+    return { ok: false, reason: 'A Resend key starts with "re_". Check you copied the whole key.' }
+  }
   if (provider === 'anthropic' && !k.startsWith('sk-ant-')) {
     return { ok: false, reason: 'An Anthropic key starts with "sk-ant-". Check you copied the whole key.' }
   }

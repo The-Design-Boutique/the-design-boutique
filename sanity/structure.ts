@@ -27,7 +27,10 @@ export const structure: StructureResolver = (S) =>
     .title('Content')
     .items([
       S.documentTypeListItem('page').title('Pages').icon(() => '📄'),
-      S.documentTypeListItem('post').title('Laney Said').icon(() => '📝'),
+      // The blog is branded "Laney Said" on the site itself. The parenthesis is
+      // a label rather than part of the name, so that someone new to the Studio
+      // can find the blog without already knowing what it is called.
+      S.documentTypeListItem('post').title('Laney Said (Blog)').icon(() => '📝'),
       S.documentTypeListItem('client').title('Clients').icon(() => '💼'),
       S.documentTypeListItem('goldEvent').title('Gold Events').icon(() => '🥇'),
       S.documentTypeListItem('testimonial').title('Testimonials').icon(() => '💬'),

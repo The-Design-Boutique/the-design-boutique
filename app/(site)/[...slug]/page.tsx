@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
-import { client } from '@/sanity/lib/client'
+import { getClient } from '@/app/lib/sanityFetch'
 import {
   PAGE_BY_SLUG_QUERY,
   POST_BY_SLUG_QUERY,
@@ -26,7 +26,7 @@ type PageParams = { params: Promise<{ slug: string[] }> }
 /** Resolves a page by its full path slug (e.g. "solutions/seo-services"). */
 async function getPage(slugParts: string[]) {
   const slug = (slugParts || []).join('/')
-  return client.fetch(PAGE_BY_SLUG_QUERY, { slug })
+  return (await getClient()).fetch(PAGE_BY_SLUG_QUERY, { slug })
 }
 
 /**
@@ -39,19 +39,19 @@ async function getPage(slugParts: string[]) {
 async function getDocument(parts: string[]) {
   if (!parts?.length) return null
   if (parts.length === 1) {
-    const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: parts[0] })
+    const post = await (await getClient()).fetch(POST_BY_SLUG_QUERY, { slug: parts[0] })
     return post ? { kind: 'post' as const, doc: post } : null
   }
   if (parts.length === 2 && parts[0] === 'gold') {
-    const event = await client.fetch(GOLD_EVENT_BY_SLUG_QUERY, { slug: parts[1] })
+    const event = await (await getClient()).fetch(GOLD_EVENT_BY_SLUG_QUERY, { slug: parts[1] })
     return event ? { kind: 'gold' as const, doc: event } : null
   }
   if (parts.length === 2 && parts[0] === 'portfolio') {
-    const c = await client.fetch(CLIENT_BY_SLUG_QUERY, { slug: parts[1] })
+    const c = await (await getClient()).fetch(CLIENT_BY_SLUG_QUERY, { slug: parts[1] })
     return c ? { kind: 'client' as const, doc: c } : null
   }
   if (parts.length === 2 && parts[0] === 'category') {
-    const cat = await client.fetch(CATEGORY_BY_SLUG_QUERY, { slug: parts[1] })
+    const cat = await (await getClient()).fetch(CATEGORY_BY_SLUG_QUERY, { slug: parts[1] })
     return cat ? { kind: 'category' as const, doc: cat } : null
   }
   return null
@@ -60,7 +60,7 @@ async function getDocument(parts: string[]) {
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params
   const path = (slug || []).join('/')
-  const defaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const defaults = await (await getClient()).fetch(SITE_DEFAULTS_QUERY)
   const siteDefaults = defaults?.settings
   const page = await getPage(slug)
   if (page) return buildMetadata(page, { path, siteDefaults })
@@ -78,7 +78,7 @@ function JsonLd({ data }: { data: object | null }) {
 export default async function Page({ params }: PageParams) {
   const { slug } = await params
   const path = (slug || []).join('/')
-  const defaults = await client.fetch(SITE_DEFAULTS_QUERY)
+  const defaults = await (await getClient()).fetch(SITE_DEFAULTS_QUERY)
   const siteDefaults = defaults?.settings
   const office = defaults?.office
 
@@ -105,7 +105,7 @@ export default async function Page({ params }: PageParams) {
 
   if (found.kind === 'client') return <>{ld}<ClientTemplate client={found.doc} /></>
 
-  const settings = await client.fetch(BLOG_SETTINGS_QUERY)
+  const settings = await (await getClient()).fetch(BLOG_SETTINGS_QUERY)
   if (found.kind === 'category') {
     return <>{ld}<CategoryTemplate category={found.doc} posts={found.doc.posts || []} settings={settings} /></>
   }

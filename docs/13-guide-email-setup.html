@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Setting Up Email</title>
+<style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 5px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box.help { border-left-color: #2874a6; background: #f4f9fd; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 12px 15px; margin: 0 0 10px; background: #fcfcfc;
+          page-break-inside: avoid; }
+  .step .n { display: inline-block; background: #f26722; color: #fff; width: 20px; height: 20px;
+             border-radius: 50%; text-align: center; line-height: 20px; font-size: 9pt; font-weight: 700;
+             margin-right: 7px; }
+  .step strong.t { font-size: 10.6pt; }
+  .url { display: block; background: #f1f1f1; border-radius: 3px; padding: 5px 9px; margin: 7px 0;
+         font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 9pt; word-break: break-all; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .pagebreak { page-break-before: always; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+</style>
+</head>
+<body>
+
+<h1>Setting Up Email</h1>
+<p class="sub">So the website can send you form enquiries &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  A website cannot send email on its own. It has to hand each message to a service built for the job,
+  and that service has to be given permission to send using your domain name. Without that
+  permission, anything it sent would land in spam folders, because email providers have no way of
+  telling it apart from somebody pretending to be you.
+</p>
+<p>
+  The service we use is called <strong>Resend</strong>. This guide sets it up. It is a one time job.
+</p>
+
+<div class="box ok">
+  <strong class="hd">Nothing is broken in the meantime</strong>
+  <p style="margin-bottom:0">
+    Until this is done, forms on the site still work and every submission is still saved. You will
+    find them in the editor under <strong>Form Submissions</strong>. What is missing is only the
+    email telling you a new one has arrived. Nothing is lost.
+  </p>
+</div>
+
+<div class="box help">
+  <strong class="hd">You do not have to do step 3 yourself</strong>
+  <p style="margin-bottom:0">
+    Steps 1, 2 and 4 take about ten minutes and need no technical knowledge. Step 3 involves your
+    domain settings, which is the one part where a mistake can affect your existing email.
+    <strong>Angelo or Robert will do that part for you.</strong> Send them the screen Resend shows you
+    and they will take it from there.
+  </p>
+</div>
+
+<h2>Step 1: Create the Resend account</h2>
+
+<div class="step">
+  <p><span class="n">1</span><strong class="t">Sign up</strong></p>
+  <span class="url">https://resend.com/signup</span>
+  <p style="margin-bottom:0">
+    Use a work email address you will keep access to. The free plan sends 3,000 emails a month, which
+    is far more than a contact form will ever need. There is no card required.
+  </p>
+</div>
+
+<h2>Step 2: Tell Resend about your domain</h2>
+
+<div class="step">
+  <p><span class="n">2</span><strong class="t">Add the domain</strong></p>
+  <span class="url">https://resend.com/domains</span>
+  <p>
+    Click <strong>Add Domain</strong>. When it asks for the name, we recommend entering:
+  </p>
+  <p style="text-align:center; font-size:11pt; margin:10px 0;"><code>send.thedesignboutique.com</code></p>
+  <p style="margin-bottom:0">
+    Note the <code>send.</code> at the front. That is deliberate and worth understanding: it keeps
+    website emails separate from the email you and your team send day to day. If the website ever
+    sends something that upsets a spam filter, it cannot damage the reputation of your ordinary
+    email. It also means the setup in step 3 cannot disturb the email you already use.
+  </p>
+</div>
+
+<h2>Step 3: Prove the domain is yours</h2>
+
+<p>
+  Resend will now show you a table of settings to add to your domain. This is how you prove you own
+  it: only somebody with control of the domain could add them, so the settings are the proof.
+</p>
+<p>
+  These live wherever your domain is managed, which is usually the company you bought it from. The
+  screen will look something like this, with three or four rows:
+</p>
+
+<table>
+  <tr><th style="width:14%">Type</th><th style="width:26%">Name</th><th>Value</th></tr>
+  <tr><td>MX</td><td>send</td><td>feedback-smtp.us-east-1.amazonses.com</td></tr>
+  <tr><td>TXT</td><td>send</td><td>v=spf1 include:amazonses.com ~all</td></tr>
+  <tr><td>TXT</td><td>resend._domainkey</td><td>p=MIGfMA0GCSqGSIb3DQ... (a long string)</td></tr>
+</table>
+
+<p style="font-size:9pt; color:#666;">
+  Your actual values will be different. Never copy the ones above; use the ones on your own screen.
+</p>
+
+<div class="box help">
+  <strong class="hd">This is the step to hand over</strong>
+  <p>
+    Take a screenshot of that table, or use the <strong>Share</strong> option if Resend offers one,
+    and send it to Angelo or Robert. They will add the records and confirm when it is verified.
+  </p>
+  <p style="margin-bottom:0">
+    If you would rather do it yourself, you will need the login for wherever the domain is managed.
+    Add each row exactly as shown, changing nothing. Then return to the Resend page and press
+    <strong>Verify DNS Records</strong>. It usually goes green within fifteen minutes, though it can
+    take a few hours.
+  </p>
+</div>
+
+<div class="box warn">
+  <strong class="hd">One genuine risk, and how it is avoided</strong>
+  <p style="margin-bottom:0">
+    If a domain already sends email, it may already have a line of the <code>v=spf1</code> kind. A
+    domain is only allowed one, and adding a second quietly breaks email delivery for everybody. This
+    is the single most common way this goes wrong. Using the <code>send.</code> prefix in step 2
+    avoids it entirely, because the new records sit on their own name and cannot collide with
+    anything you already have. It is also why we would rather do this part for you.
+  </p>
+</div>
+
+<h2 class="pagebreak">Step 4: Create a key and paste it into the website</h2>
+
+<div class="step">
+  <p><span class="n">3</span><strong class="t">Create the key</strong></p>
+  <span class="url">https://resend.com/api-keys</span>
+  <p>
+    Click <strong>Create API Key</strong>. Give it a name you will recognise later, such as
+    <em>Website forms</em>. For permission choose <strong>Sending access</strong>, which lets it send
+    email and nothing else.
+  </p>
+  <p style="margin-bottom:0">
+    Resend shows you the key <strong>once</strong>. Copy it immediately. It begins with
+    <code>re_</code>. If you lose it you cannot look it up again, but you can always delete it and
+    make a new one, so this is an inconvenience rather than a disaster.
+  </p>
+</div>
+
+<div class="step">
+  <p><span class="n">4</span><strong class="t">Paste it into the website</strong></p>
+  <p>In the editor, open <strong>Site Settings</strong> and choose the <strong>Forms</strong> tab. Fill in:</p>
+  <table style="margin-bottom:8px">
+    <tr>
+      <th style="width:34%">Resend API key</th>
+      <td>Paste the key. Press Save. It is stored scrambled, and afterwards you will only ever see
+      the first few characters followed by asterisks. That is expected.</td>
+    </tr>
+    <tr>
+      <th>Send notifications from</th>
+      <td>
+        An address on the domain you verified, for example
+        <code>website@send.thedesignboutique.com</code>. It does not need to be a real inbox that
+        anybody reads. The part after the @ must match what you verified in step 2, or Resend will
+        refuse to send.
+      </td>
+    </tr>
+    <tr>
+      <th>Sender name</th>
+      <td>What appears in the inbox beside the address, such as <em>The Design Boutique</em>.</td>
+    </tr>
+    <tr>
+      <th>Replies go to</th>
+      <td>Optional. If somebody hits reply on a notification, this is where it goes. Set it to a real
+      inbox you read, otherwise replies go nowhere.</td>
+    </tr>
+  </table>
+  <p style="margin-bottom:0">Press <strong>Publish</strong> to save the settings.</p>
+</div>
+
+<h2>Step 5: Check it worked</h2>
+
+<ol>
+  <li>Open any form in <strong>Forms by Angelo</strong> and go to its <strong>Notifications</strong>
+      tab. If the orange &ldquo;Emails are not being sent yet&rdquo; panel has gone, the website is
+      satisfied.</li>
+  <li>Make sure your own address is listed under <strong>Email these people</strong>.</li>
+  <li>Go to the live contact page and submit the form yourself, as a visitor would.</li>
+  <li>The email should arrive within a minute. Check the junk folder if it does not appear.</li>
+</ol>
+
+<h2>If something does not work</h2>
+
+<table>
+  <tr>
+    <th style="width:38%">The orange panel is still there</th>
+    <td>Either the key or the sending address is missing. The panel says which. Check you pressed
+    Publish in Site Settings.</td>
+  </tr>
+  <tr>
+    <th>Nothing arrives, and the submission mentions the domain</th>
+    <td>The domain is not verified yet, or the address after the @ does not match the verified
+    domain. Go back to the Resend domains page and check it shows as verified.</td>
+  </tr>
+  <tr>
+    <th>Nothing arrives, and the submission mentions the key</th>
+    <td>The key was deleted or regenerated inside Resend. Create a new one and paste it in again.</td>
+  </tr>
+  <tr>
+    <th>The email arrives in junk</th>
+    <td>Mark it as not junk once. If it keeps happening, tell Angelo or Robert; a further record can
+    be added to improve it.</td>
+  </tr>
+  <tr>
+    <th>Nothing arrives and nothing explains why</th>
+    <td>Check <strong>Form Submissions</strong> in the editor. If the submission is there, the form
+    worked and only the email failed, so no enquiry has been lost.</td>
+  </tr>
+</table>
+
+<div class="box">
+  <strong class="hd">Where to see what Resend has sent</strong>
+  <p style="margin-bottom:0">
+    Resend keeps a log of every email, whether it was delivered, and whether it bounced.
+    <span class="url" style="margin:6px 0 0">https://resend.com/emails</span>
+  </p>
+</div>
+
+<div class="foot">
+  <p>
+    The key is stored encrypted and is never visible to visitors or shown again after saving. It can
+    be replaced at any time from Site Settings without anyone touching the website code.
+    Correct as of July 2026.
+  </p>
+</div>
+
+</body>
+</html>

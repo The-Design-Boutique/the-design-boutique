@@ -10,6 +10,7 @@ import {
   type FormField,
   type FormValues,
 } from '@/app/lib/formLogic'
+import { readMailConfig } from '@/app/lib/mail.server'
 
 /**
  * Receives a submission for any form built in Forms by Angelo.
@@ -87,9 +88,12 @@ async function sendNotification(form: FormDoc, answers: Array<{ label: string; v
   const recipients = (form.notifications?.recipients || []).filter(Boolean)
   if (!recipients.length) return { sent: false, reason: 'no recipients configured' }
 
-  const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.FORM_FROM_EMAIL
-  if (!apiKey || !from) return { sent: false, reason: 'email is not configured on the server' }
+  // The key lives in Site Settings so that it can be changed without a deploy.
+  // When it is missing the reason is a sentence an editor can act on, because
+  // it is stored on the submission and shown in the Studio.
+  const mail = await readMailConfig()
+  if (!mail.config) return { sent: false, reason: mail.reason }
+  const { apiKey, from, replyTo } = mail.config
 
   const subject = interpolate(
     form.notifications?.subjectTemplate || 'New {{formTitle}} submission',
@@ -107,14 +111,34 @@ async function sendNotification(form: FormDoc, answers: Array<{ label: string; v
       body: JSON.stringify({
         from,
         to: recipients,
+        ...(replyTo ? { reply_to: replyTo } : {}),
         subject,
         html: `<p>A new submission from <strong>${form.title || 'a form'}</strong>.</p><table>${rows}</table>`,
       }),
       signal: AbortSignal.timeout(10_000),
     })
-    return res.ok ? { sent: true } : { sent: false, reason: `email provider returned ${res.status}` }
+    if (res.ok) return { sent: true }
+
+    // Resend explains its refusals, and the explanation is usually the whole
+    // answer: an unverified domain, or a key that has been revoked. Passing the
+    // status code alone would send someone hunting through logs they cannot
+    // reach.
+    let detail = ''
+    try {
+      const body = await res.json()
+      detail = body?.message || body?.error?.message || ''
+    } catch {
+      // A response we cannot parse still has a status code worth reporting.
+    }
+    const suffix =
+      res.status === 403 || res.status === 422
+        ? ' This usually means the sending domain has not been verified inside Resend yet.'
+        : res.status === 401
+          ? ' This usually means the API key is wrong or has been revoked.'
+          : ''
+    return { sent: false, reason: `Resend refused the message${detail ? `: ${detail}` : ` (error ${res.status})`}.${suffix}` }
   } catch {
-    return { sent: false, reason: 'could not reach the email provider' }
+    return { sent: false, reason: 'Could not reach Resend. The submission was saved and no email was sent.' }
   }
 }
 

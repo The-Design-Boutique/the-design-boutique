@@ -1,4 +1,4 @@
-import { client } from '@/sanity/lib/client'
+import { getClient } from '@/app/lib/sanityFetch'
 import { Section } from '../Section'
 import { FormRenderer, type FormDoc } from '../forms/FormRenderer'
 
@@ -33,7 +33,7 @@ export async function FormEmbed({ block }: { block: any }) {
   const id = block?.form?._ref
   if (!id) return null
 
-  const form = await client.fetch<FormDoc | null>(FORM_QUERY, { id })
+  const form = await (await getClient()).fetch<FormDoc | null>(FORM_QUERY, { id })
   if (!form?.slug) return null
 
   const variant = block.variant || 'centered'
