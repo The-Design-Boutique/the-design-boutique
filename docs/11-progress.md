@@ -33,6 +33,16 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 
 ## Needed from Angelo to unblock (you provide access)
 
+0. **Search Console credentials for the deployed cron.** The panel's search section
+   is built but dark. The route is a Google service account created in Laney's own
+   Google Cloud account and added to the Search Console property as a **Full** user
+   (Full, not Restricted: URL Inspection needs it). Verified July 28, 2026 that a
+   service account email can be added as a Search Console user. Instructions for
+   Laney are written up as `Search Console Access.pdf`. A personal OAuth token would
+   also work and was rejected: all tooling becomes the client's property on final
+   payment, and an integration resting on a personal Google account breaks at
+   handover.
+
 1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
    dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
    Adding new origins still needs Angelo: the Editor token lacks the CORS grant and the connector
@@ -149,7 +159,13 @@ Output location and naming (fixed, do not change):
     2.3 SEO Health Panel.pdf
     2.4 SEO Fields.pdf
     2.5 SEO Toolset.pdf
+    Forms.pdf
 ```
+
+Status of the folder as of July 28, 2026: 2.2, 2.4, 2.5 and Forms are all present.
+2.5 now carries real Studio screenshots. 2.3 follows its build. Note that this
+sandbox can create new files in that folder but cannot overwrite existing ones,
+so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand.
 
 - [x] 2.2 CWV dashboard + snapshot cron  →  PDF: `2.2 Core Web Vitals Dashboard.pdf` DONE
       Live in production, daily cron at 06:00 UTC, both field and lab collecting.
@@ -159,7 +175,21 @@ Output location and naming (fixed, do not change):
       PageSpeed Insights (permitted by rule 5, never sets the pass/fail bands) gives the
       client something actionable today. The lab test measures whatever the deployment
       serves, so it needs no config change at go-live.
-- [ ] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) — **SIGNED OFF by Laney (July 27, 2026), unblocked**  →  PDF: `2.3 SEO Health Panel.pdf`
+- [x] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) BUILT  →  PDF: `2.3 SEO Health Panel.pdf` still to write
+      All three sources land in one issue list on the SEO tab, grouped as content
+      (our instant checks), technical (Lighthouse) and search presence (Search
+      Console), each with a severity and a field it maps to. Google data is fetched
+      by a daily cron and cached as `seoAudit` documents, so the Studio never calls
+      Google and no key is near a browser.
+      Two things worth recording. Audits run in concurrent batches against a clock
+      rather than a fixed page count: a page Google has not cached takes about
+      twenty seconds and one it has takes under a second, so a fixed count either
+      times out or wastes the budget. Ten at a time covers this site in under a
+      fortnight on the first pass and minutes thereafter. And the Lighthouse audit
+      "page is blocked from indexing" is suppressed while staging is noindex, since
+      it fails on every page by design and would train editors to ignore the panel.
+      Search Console is wired but not connected: it needs credentials the server can
+      hold. See the note below, because whose credentials matters.
 - [x] 2.4 SEO field stack verified across all content types  →  PDF: `2.4 SEO Fields.pdf` DONE
       The stack existed but most of it never reached the page. Now renders canonical,
       robots, full Open Graph with image, the complete X/Twitter card, and per-type
@@ -217,8 +247,16 @@ Output location and naming (fixed, do not change):
 
 ## Phase 5 — Parity, accessibility, performance QA
 
+**Accessibility decision (July 28, 2026, Angelo): report only, do not fix, in this
+project.** The brief is to reproduce Laney's existing design, and the accessibility
+problems the tooling surfaces are inherited from that design rather than introduced
+by the rebuild. Fixing colour contrast and similar would mean changing her design
+without being asked. They are recorded so she can see them once the site is live,
+and become a maintenance proposal after go live. Do not raise them again as
+in-scope work.
+
 - [ ] Full visual diff pass, all pages/breakpoints
-- [ ] WCAG 2.1 AA audit + fixes
+- [ ] WCAG 2.1 AA audit, findings recorded, **fixes deliberately out of scope** (see above)
 - [ ] Core Web Vitals / Lighthouse pass on staging
 - [ ] Phase 5 QC + review gate
 

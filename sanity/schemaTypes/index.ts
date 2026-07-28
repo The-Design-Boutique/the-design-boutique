@@ -14,6 +14,7 @@ import { formSubmission } from './documents/formSubmission'
 import { redirect } from './documents/redirect'
 import { notFoundEntry } from './documents/notFoundEntry'
 import { form } from './documents/form'
+import { seoAudit } from './documents/seoAudit'
 
 // Singletons
 import { siteSettings } from './singletons/siteSettings'
@@ -52,6 +53,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     redirect,
     notFoundEntry,
     form,
+    seoAudit,
     // singletons
     siteSettings,
   officeLocation,
