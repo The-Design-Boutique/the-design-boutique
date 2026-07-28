@@ -149,7 +149,13 @@ Output location and naming (fixed, do not change):
     2.3 SEO Health Panel.pdf
     2.4 SEO Fields.pdf
     2.5 SEO Toolset.pdf
+    Forms.pdf
 ```
+
+Status of the folder as of July 28, 2026: 2.2, 2.4, 2.5 and Forms are all present.
+2.5 now carries real Studio screenshots. 2.3 follows its build. Note that this
+sandbox can create new files in that folder but cannot overwrite existing ones,
+so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand.
 
 - [x] 2.2 CWV dashboard + snapshot cron  →  PDF: `2.2 Core Web Vitals Dashboard.pdf` DONE
       Live in production, daily cron at 06:00 UTC, both field and lab collecting.
