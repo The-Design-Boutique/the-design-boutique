@@ -177,12 +177,19 @@ Output location and naming (fixed, do not change):
       rule 21's "whose key and whose budget" recorded in ruleset 05 before enabling.
     - [x] §4 redirect manager + 404 monitor. `redirect` and `notFoundEntry` types,
       runtime redirects in `proxy.ts` (Next 16's replacement for middleware) reading
-      a 60s-cached map from Sanity's CDN and failing open, a Dead Links tool that
+      a 60s-cached, authenticated map from Sanity and failing open, a Dead Links tool that
       turns a 404 into a redirect in one click, publish-time prompt to leave a 301
       when a live page changes address, and a daily prune holding the log to 1,000
       distinct paths. Chain flattening and loop prevention are covered by 25 tests
       (`npm test`), which now runs something real instead of exiting 1.
     - [ ] §9 CWV trending charts
+    - Worth knowing: the dataset ACL reads as "public", but only `siteSettings`,
+      `navigation`, `officeLocation` and the asset types are actually readable
+      without a token. `page`, `post`, `client`, `goldEvent`, `redirect` and
+      `notFoundEntry` are not, and an unauthenticated query returns an empty set
+      rather than an error. Anything reading content outside the Studio needs the
+      token. The AI key still has to be encrypted, because `siteSettings` is one
+      of the types that IS world readable, and that is where the key lives.
 - [ ] Phase 4 QC + review gate
 
 ## Phase 5 — Parity, accessibility, performance QA

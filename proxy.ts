@@ -13,8 +13,15 @@ import { flattenChains, isExternalTarget, normalisePath, type RedirectRecord } f
  *   The map is cached in memory for a minute, so a burst of traffic costs one
  *   lookup rather than one per request.
  *
- *   Reads go to Sanity's CDN with no token. The dataset is public, so there is
- *   no credential to leak into the edge runtime.
+ *   Reads are authenticated and go to the live API, not the CDN. Both details
+ *   were established by testing rather than assumption. Although the dataset's
+ *   ACL is "public", only a handful of types (siteSettings, navigation,
+ *   officeLocation and assets) are actually readable without a token;
+ *   `redirect` is not, and an unauthenticated query returns an empty set
+ *   rather than an error. The CDN separately served stale empty results. Either
+ *   would have meant every redirect silently failing, with nothing in any log
+ *   to say why, because this fails open. One authenticated request a minute is
+ *   a cheap way to avoid that.
  *
  *   It fails open. If Sanity is slow or unreachable the request continues
  *   normally. A broken redirect lookup must never take the site down.
@@ -48,11 +55,20 @@ let cache: { at: number; map: Map<string, RedirectRecord> } | null = null
 let inFlight: Promise<Map<string, RedirectRecord>> | null = null
 
 async function fetchRedirects(): Promise<Map<string, RedirectRecord>> {
-  if (!projectId || !dataset) return new Map()
-  const url = `https://${projectId}.apicdn.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(REDIRECT_QUERY)}`
-  const res = await fetch(url, { signal: AbortSignal.timeout(2_500) })
+  const token = process.env.SANITY_API_WRITE_TOKEN
+  if (!projectId || !dataset || !token) {
+    // Without a token the query silently returns nothing, which would look
+    // exactly like "no redirects configured". Say so instead.
+    throw new Error('redirect lookup is not configured: missing project, dataset or token')
+  }
+  const url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(REDIRECT_QUERY)}`
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(2_500),
+  })
   if (!res.ok) throw new Error(`redirect lookup failed: ${res.status}`)
-  const body = (await res.json()) as { result?: RedirectRecord[] }
+  const body = (await res.json()) as { result?: RedirectRecord[]; error?: unknown }
+  if (body.error) throw new Error(`redirect lookup returned an error: ${JSON.stringify(body.error)}`)
   return flattenChains(body.result || [])
 }
 
@@ -72,8 +88,11 @@ async function getRedirects(): Promise<Map<string, RedirectRecord>> {
   }
   try {
     return await inFlight
-  } catch {
-    // Serve a stale map rather than nothing when the lookup fails.
+  } catch (error) {
+    // Serve a stale map rather than nothing when the lookup fails, but do not
+    // swallow the reason: a permanently failing lookup means every redirect is
+    // dead, and that must be findable in the logs.
+    console.error('[proxy] redirect lookup failed', error)
     return cache?.map ?? new Map()
   }
 }
