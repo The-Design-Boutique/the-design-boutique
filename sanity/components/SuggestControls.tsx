@@ -31,9 +31,17 @@ interface Availability {
 
 type Task = 'title' | 'description'
 
+/**
+ * Where an accepted suggestion is written.
+ *
+ * The description field is `metaDescription`, not `description`. Getting this
+ * wrong does not throw: the patch succeeds against a field nothing reads, so the
+ * suggestion appears to save and then silently fails to appear anywhere. Checked
+ * against the schema and the documents themselves rather than assumed.
+ */
 const FIELD_FOR_TASK: Record<Task, string> = {
   title: 'seo.title',
-  description: 'seo.description',
+  description: 'seo.metaDescription',
 }
 
 const LABEL_FOR_TASK: Record<Task, string> = {
