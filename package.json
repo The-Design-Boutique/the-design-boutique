@@ -16,6 +16,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
     "@portabletext/react": "^6.2.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^6.6.0",
