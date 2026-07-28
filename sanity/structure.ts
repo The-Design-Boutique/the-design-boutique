@@ -48,6 +48,7 @@ export const structure: StructureResolver = (S) =>
         ),
 
       S.documentTypeListItem('formSubmission').title('Form Submissions').icon(() => '📥'),
+      S.documentTypeListItem('redirect').title('Redirects').icon(() => '↪️'),
 
       S.divider(),
 

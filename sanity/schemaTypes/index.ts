@@ -11,6 +11,8 @@ import { author } from './documents/author'
 import { category } from './documents/category'
 import { clientCategory } from './documents/clientCategory'
 import { formSubmission } from './documents/formSubmission'
+import { redirect } from './documents/redirect'
+import { notFoundEntry } from './documents/notFoundEntry'
 
 // Singletons
 import { siteSettings } from './singletons/siteSettings'
@@ -46,6 +48,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     clientCategory,
     // operational
     formSubmission,
+    redirect,
+    notFoundEntry,
     // singletons
     siteSettings,
   officeLocation,
