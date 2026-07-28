@@ -1,4 +1,21 @@
-import type { StructureResolver } from 'sanity/structure'
+import type { DefaultDocumentNodeResolver, StructureResolver } from 'sanity/structure'
+import { SeoPanel } from './components/SeoPanel'
+
+/** Document types that are real, routable pages and so get the SEO panel. */
+const ROUTABLE_TYPES = ['page', 'post', 'client', 'goldEvent']
+
+/**
+ * Adds an SEO tab beside the editor on every routable document (SOW 2.5
+ * sections 1, 2 and 7). Everything in it is computed from the open document,
+ * so it needs no network call and costs nothing to run.
+ */
+export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, { schemaType }) => {
+  if (!ROUTABLE_TYPES.includes(schemaType)) return S.document().views([S.view.form()])
+  return S.document().views([
+    S.view.form().title('Edit'),
+    S.view.component(SeoPanel).title('SEO').id('seo'),
+  ])
+}
 
 /**
  * WordPress-familiar desk: content types up top (like WP's Pages/Posts/CPTs),

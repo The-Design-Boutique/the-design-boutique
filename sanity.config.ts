@@ -5,7 +5,7 @@ import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema, SINGLETONS } from './sanity/schemaTypes'
-import { structure } from './sanity/structure'
+import { structure, defaultDocumentNode } from './sanity/structure'
 import { CwvDashboard } from './sanity/tools/CwvDashboard'
 
 const singletonSet: readonly string[] = SINGLETONS
@@ -16,7 +16,7 @@ export default defineConfig({
   projectId,
   dataset,
   schema,
-  plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: apiVersion })],
+  plugins: [structureTool({ structure, defaultDocumentNode }), visionTool({ defaultApiVersion: apiVersion })],
   // The Core Web Vitals dashboard is the first thing the team sees on login.
   tools: (prev) => [
     {
