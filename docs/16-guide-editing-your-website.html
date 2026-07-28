@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Editing Your Website</title><style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  figure { margin: 14px 0 18px; page-break-inside: avoid; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #333; display: block; }
+  figcaption { font-size: 8.6pt; color: #777; margin-top: 6px; font-style: italic; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .example { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 4px; padding: 10px 13px;
+             margin: 10px 0 13px; font-size: 9.3pt; }
+  .example .lbl { color: #777; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+  .arrow { text-align: center; color: #999; font-size: 12pt; margin: 4px 0; }
+</style></head>
+<body>
+
+<h1>Editing Your Website</h1>
+<p class="sub">A guide for anyone coming from WordPress &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  Your website now runs on two pieces: an editor where the words and pictures live, and the website
+  itself, which reads from it. You will only ever use the editor. It does the same job as the
+  WordPress admin, and this guide is written on the assumption that WordPress is what you know.
+</p>
+
+<h2>The differences worth knowing on day one</h2>
+
+<table>
+  <tr>
+    <th style="width:30%">There are no plugins</th>
+    <td>Nothing to update, nothing that can break the site overnight, and no security patches to
+    chase. Everything the old site used plugins for is built in.</td>
+  </tr>
+  <tr>
+    <th>Nothing is live until you publish</th>
+    <td>WordPress saves drafts, but its editor and its live page are the same thing. Here, your
+    changes are saved constantly and privately as you work. The public site does not change until
+    you press <strong>Publish</strong>.</td>
+  </tr>
+  <tr>
+    <th>Pages are built from blocks</th>
+    <td>Similar to Elementor, but the blocks are the ones your site actually uses, so there is a
+    much shorter list and none of them can be arranged into something broken.</td>
+  </tr>
+  <tr>
+    <th>You cannot break the design</th>
+    <td>Fonts, colours, spacing and layout are set once, in the site itself. There is no styling
+    panel because there is nothing to style. This is deliberate: it is why the site cannot drift
+    out of shape over time.</td>
+  </tr>
+  <tr>
+    <th>Two people can edit at once</th>
+    <td>You will see their cursor. Nobody overwrites anybody.</td>
+  </tr>
+</table>
+
+<h2>Finding your way around</h2>
+
+<p>Down the left is your content, in the same shape as the old site:</p>
+
+<table>
+  <tr><th style="width:30%">Pages</th><td>Every ordinary page: home, about, the service pages, contact.</td></tr>
+  <tr><th>Laney Said (Blog)</th><td>Blog posts.</td></tr>
+  <tr><th>Clients</th><td>The portfolio case studies.</td></tr>
+  <tr><th>Gold Events</th><td>The Golden Hour episodes.</td></tr>
+  <tr><th>Testimonials</th><td>Written once, used on any page.</td></tr>
+  <tr><th>Taxonomies</th><td>Blog categories, client categories and authors.</td></tr>
+  <tr><th>Forms by Angelo</th><td>The forms themselves. See the separate Forms guide.</td></tr>
+  <tr><th>Form Submissions</th><td>Every enquiry anyone has sent, whether or not an email went out.</td></tr>
+  <tr><th>Redirects</th><td>Old addresses pointed at new ones.</td></tr>
+  <tr><th>Navigation</th><td>The menus.</td></tr>
+  <tr><th>Site Settings</th><td>Logo, contact details, social links, and the keys for email and the writing assistant.</td></tr>
+  <tr><th>Office &amp; Local SEO</th><td>The San Francisco address as Google needs to see it.</td></tr>
+</table>
+
+<p>Across the top are four tools that look at the whole site rather than one page:</p>
+
+<table>
+  <tr><th style="width:30%">Site Speed</th><td>How fast the site is, measured by Google, with the history.</td></tr>
+  <tr><th>Dead Links</th><td>Addresses people tried that do not exist, and a one-click fix for each.</td></tr>
+  <tr><th>For Search Engines</th><td>The three behind-the-scenes files search engines read. Explained there.</td></tr>
+  <tr><th>Preview</th><td>Browse the site with your unpublished changes showing.</td></tr>
+</table>
+
+<h2 class="pagebreak">Editing a page</h2>
+
+<ol>
+  <li>Open <strong>Pages</strong> and click the one you want.</li>
+  <li>Change what you need. It saves as you type; there is no Save button and nothing to lose.</li>
+  <li>Press <strong>View page</strong> to see it in a new tab exactly as it will look, including
+      changes nobody else can see yet.</li>
+  <li>When you are happy, press <strong>Publish</strong>.</li>
+</ol>
+
+<div class="box">
+  <strong class="hd">The orange dot</strong>
+  <p style="margin-bottom:0">
+    A page with unpublished changes shows an orange dot. It means the version you are looking at is
+    not the version the public sees. Publishing clears it.
+  </p>
+</div>
+
+<h3>Working with blocks</h3>
+<p>
+  Below the page title is the page itself, built from blocks stacked in order. Drag the handle at the
+  left of a block to move it. Use the menu at its right to duplicate or remove it. The plus button
+  between blocks adds a new one.
+</p>
+<p>
+  Most blocks have a <strong>Section settings</strong> group for the background colour and spacing.
+  Those options are the ones your design allows, which is why there are only a few.
+</p>
+
+<h3>Images</h3>
+<p>
+  Drag a picture in, or click to choose one. Two things are worth doing every time:
+</p>
+<ul>
+  <li><strong>Alternative text.</strong> One sentence describing the picture. It is read aloud to
+      people who cannot see it, and it is the only thing Google can understand about an image.</li>
+  <li><strong>The crop.</strong> Click the crop icon and set the focal point on the part that matters.
+      The site crops images differently on a phone, and this tells it what to keep.</li>
+</ul>
+<p>
+  You do not need to resize or compress anything. Upload the original and the site produces the right
+  size and format for each visitor automatically.
+</p>
+
+<h3>Undoing something</h3>
+<p>
+  Every change is kept. The clock icon at the top right opens the history: scroll back, see who
+  changed what, and restore any earlier version. Nothing is ever really lost, including a deleted
+  page.
+</p>
+
+<h2>Writing a blog post</h2>
+<ol>
+  <li>Open <strong>Laney Said (Blog)</strong> and press the plus.</li>
+  <li>Give it a title. The web address fills itself in; you can change it before publishing.</li>
+  <li>Set the author, the date, a category and a featured image.</li>
+  <li>Write the post.</li>
+  <li>Check the <strong>SEO</strong> tab, then publish.</li>
+</ol>
+
+<div class="box warn">
+  <strong class="hd">Changing the address of a page that is already live</strong>
+  <p style="margin-bottom:0">
+    If you change the address of something already published, the editor will offer to leave a
+    forwarding note behind so old links still work. Say yes. Links live in other people&rsquo;s
+    emails, other websites and Google&rsquo;s index, and none of those update when you rename a page.
+  </p>
+</div>
+
+<h2>The four tabs on every page</h2>
+<p>
+  Beside <strong>Edit</strong> you will find <strong>SEO</strong>, <strong>Search</strong> and
+  <strong>AEO</strong>. They are covered properly in the separate SEO Health guide. In short: SEO is a
+  checklist you can act on now, Search is how the page is really doing in Google, and AEO is whether
+  an AI assistant could quote it.
+</p>
+
+<h2>Things you might reasonably worry about</h2>
+
+<h3>Can I break the site?</h3>
+<p>
+  Not visually, and not permanently. You cannot change the design, and every version is kept and
+  restorable. The worst you can do is publish something you would rather not have, and that can be
+  put back in a few clicks.
+</p>
+
+<h3>Where do form enquiries go?</h3>
+<p>
+  Always into <strong>Form Submissions</strong>, whether or not an email is sent. If somebody says
+  they never heard back, look there first: if their message is in the list, the form worked and only
+  the email failed.
+</p>
+
+<h3>Somebody sent me a link that gives an error</h3>
+<p>
+  Open <strong>Dead Links</strong>. If the address is listed, type where it should go and press the
+  button. That is the whole job.
+</p>
+
+<h3>Do I need to do anything for SEO?</h3>
+<p>
+  Write a real title and description on every new page, and give every image alternative text.
+  Those two habits are most of it. The SEO tab tells you the rest, page by page.
+</p>
+
+<h3>Who do I ask?</h3>
+<p>
+  The written guides cover forms, email setup, SEO health, site speed and the search files. Anything
+  they do not answer is worth asking rather than guessing at.
+</p>
+
+<div class="foot">
+  <p>
+    The editor works in any modern browser and needs no installation. Everything in it belongs to
+    The Design Boutique. Correct as of July 2026.
+  </p>
+</div>
+
+</body></html>

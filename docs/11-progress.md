@@ -184,7 +184,7 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
       PageSpeed Insights (permitted by rule 5, never sets the pass/fail bands) gives the
       client something actionable today. The lab test measures whatever the deployment
       serves, so it needs no config change at go-live.
-- [x] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks) BUILT  →  PDF: `2.3 SEO Health Panel.pdf` still to write
+- [x] 2.3 SEO Health panel (GSC + Lighthouse + in-CMS checks)  →  PDF: `SEO Health.pdf` DONE
       All three sources land in one issue list on the SEO tab, grouped as content
       (our instant checks), technical (Lighthouse) and search presence (Search
       Console), each with a severity and a field it maps to. Google data is fetched
@@ -379,7 +379,15 @@ in-scope work.
 
 ## Phase 6 — Training & handoff (SOW 2.6)
 
-- [ ] Editor guide written (WP-to-Sanity oriented)
+- [x] Editor guide written (WP-to-Sanity oriented): `Editing Your Website.pdf`
+      (source `docs/16-guide-editing-your-website.html`). Leads with the five
+      differences from WordPress that matter on day one, because everything else
+      follows from those: no plugins, nothing live until you publish, pages built
+      from blocks, the design cannot be broken, and two people can edit at once.
+- [x] All twelve client documents delivered to Google Drive (`TDB/Guides`) with an
+      index sheet, `TDB Website: Document Index`, marking which need action from
+      Laney and which are instructions. Left unshared deliberately: Angelo shares
+      it at the demo so the timing and the covering message are his.
 - [ ] Walkthrough session with Laney + team
 - [ ] Ownership transfer + admin access to client
 - [ ] Phase 6 QC + review gate
