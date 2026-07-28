@@ -42,4 +42,8 @@ export const structure: StructureResolver = (S) =>
         .title('Site Settings')
         .icon(() => '⚙️')
         .child(S.document().schemaType('siteSettings').documentId('siteSettings').title('Site Settings')),
+      S.listItem()
+        .title('Office & Local SEO')
+        .icon(() => '📍')
+        .child(S.document().schemaType('officeLocation').documentId('officeLocation').title('Office & Local SEO')),
     ])
