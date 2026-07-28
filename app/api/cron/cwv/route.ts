@@ -45,6 +45,13 @@ function labTarget(): string {
 }
 const LAB_URL = labTarget()
 
+/**
+ * How recent a reading has to be before a manual Refresh is refused.
+ * Google's own data updates once a day, so anything shorter cannot show
+ * something newer (ruleset 02, rule 11).
+ */
+const MANUAL_REFRESH_THROTTLE_MS = 10 * 60_000
+
 const writeClient = createClient({
   projectId, dataset, apiVersion,
   token: process.env.SANITY_API_WRITE_TOKEN,
@@ -91,11 +98,25 @@ async function queryCrux(key: string, target: string, formFactor: string, isUrl:
 }
 
 type LabResult =
-  | { ok: true; score: number | null; lcp: number | null; cls: number | null; tbt: number | null }
+  | {
+      ok: true
+      score: number | null
+      /** The other three Lighthouse categories, which come free with the same call. */
+      seoScore: number | null
+      accessibilityScore: number | null
+      bestPracticesScore: number | null
+      lcp: number | null
+      cls: number | null
+      tbt: number | null
+    }
   | { ok: false; error: string }
 
 async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'): Promise<LabResult> {
-  const qs = new URLSearchParams({ url, strategy, category: 'performance', key })
+  // Lighthouse scores all four categories in one run regardless, so asking for
+  // all of them costs nothing extra and gives the SEO Health panel (ruleset 03)
+  // its Lighthouse inputs without a second call.
+  const qs = new URLSearchParams({ url, strategy, key })
+  for (const c of ['performance', 'seo', 'accessibility', 'best-practices']) qs.append('category', c)
   // Lighthouse can take a while, and the mobile run is the slower of the two
   // because of the CPU throttling it simulates. Both run concurrently, so each
   // gets most of the 60 second budget. A run that still overshoots is recorded
@@ -108,10 +129,16 @@ async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'
     const v = lh?.audits?.[id]?.numericValue
     return v === undefined || v === null ? null : Number(v)
   }
-  const score = lh?.categories?.performance?.score
+  const categoryScore = (id: string) => {
+    const v = lh?.categories?.[id]?.score
+    return v === undefined || v === null ? null : Math.round(Number(v) * 100)
+  }
   return {
     ok: true,
-    score: score === undefined || score === null ? null : Math.round(Number(score) * 100),
+    score: categoryScore('performance'),
+    seoScore: categoryScore('seo'),
+    accessibilityScore: categoryScore('accessibility'),
+    bestPracticesScore: categoryScore('best-practices'),
     lcp: audit('largest-contentful-paint'),
     cls: audit('cumulative-layout-shift'),
     tbt: audit('total-blocking-time'),
@@ -119,12 +146,34 @@ async function queryPsi(key: string, url: string, strategy: 'mobile' | 'desktop'
 }
 
 export async function GET(request: Request) {
-  // Vercel signs cron calls; a shared secret covers manual runs from the Studio.
   const auth = request.headers.get('authorization')
   const secret = process.env.CRON_SECRET
   const isVercelCron = request.headers.get('user-agent')?.includes('vercel-cron')
-  if (secret && !isVercelCron && auth !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const isScheduled = !secret || isVercelCron || auth === `Bearer ${secret}`
+
+  // The Refresh button in the Studio runs in a browser and so cannot send the
+  // cron secret: putting it there would publish it. Rather than lock the button
+  // out (which is what used to happen, silently, with a 401), an unsigned call
+  // is allowed but has to pass a throttle enforced here on the server.
+  //
+  // Server-side matters. The dashboard also throttles in the browser, but that
+  // is per-browser and easily bypassed, so it protects the user from
+  // themselves rather than protecting the API quota.
+  if (!isScheduled) {
+    const newest = await writeClient.fetch<string | null>(
+      `*[_type == "cwvSnapshot"] | order(fetchedAt desc)[0].fetchedAt`,
+    )
+    const age = newest ? Date.now() - new Date(newest).getTime() : Infinity
+    if (age < MANUAL_REFRESH_THROTTLE_MS) {
+      const wait = Math.ceil((MANUAL_REFRESH_THROTTLE_MS - age) / 60_000)
+      return NextResponse.json(
+        {
+          error: `These numbers were refreshed less than ${MANUAL_REFRESH_THROTTLE_MS / 60_000} minutes ago. Google updates them once a day, so checking again now cannot show anything newer. Try again in ${wait} minute${wait === 1 ? '' : 's'}.`,
+          throttled: true,
+        },
+        { status: 429 },
+      )
+    }
   }
 
   const key = process.env.CRUX_API_KEY
@@ -198,6 +247,9 @@ export async function GET(request: Request) {
         ? {
             ...base,
             performanceScore: lab.score, lcp: lab.lcp, cls: lab.cls, tbt: lab.tbt,
+            seoScore: lab.seoScore,
+            accessibilityScore: lab.accessibilityScore,
+            bestPracticesScore: lab.bestPracticesScore,
             lcpBand: bandFor('lcp', lab.lcp), clsBand: bandFor('cls', lab.cls),
             hasData: true,
           }

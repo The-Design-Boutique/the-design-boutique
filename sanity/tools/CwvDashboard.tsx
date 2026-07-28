@@ -13,6 +13,7 @@ import {
   type RangeKey,
 } from '../../app/lib/cwvTrend'
 import { CwvTrendChart } from '../components/CwvTrendChart'
+import { timeAgo } from '../../app/lib/timeAgo'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -108,7 +109,7 @@ export function CwvDashboard() {
     setSnaps(rows)
     const labRow = await client.fetch(
       `*[_type == "cwvSnapshot" && source == "lab" && formFactor == $ff && hasData == true]
-        | order(fetchedAt desc)[0]{ performanceScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
+        | order(fetchedAt desc)[0]{ performanceScore, seoScore, accessibilityScore, bestPracticesScore, lcp, cls, tbt, target, fetchedAt, hasData, error }`,
       { ff: formFactor },
     )
     setLab(labRow || null)
@@ -174,20 +175,15 @@ export function CwvDashboard() {
   // "Refresh now" is throttled: CrUX itself only updates once a day, so a
   // faster refresh cannot produce newer numbers.
   const refresh = async () => {
-    const last = Number(window.localStorage.getItem('cwvLastRefresh') || 0)
-    const mins = (Date.now() - last) / 60000
-    if (mins < 10) {
-      setMsg(`Already refreshed ${Math.round(mins)} minute${Math.round(mins) === 1 ? '' : 's'} ago. Google updates this data once a day, so checking again now will not show anything newer.`)
-      return
-    }
     setBusy(true); setMsg(null)
     try {
+      // The server enforces the real throttle and returns 429 with a sentence
+      // worth showing, so there is no need to guess at it here.
       const res = await fetch('/api/cron/cwv')
       const json = await res.json()
       if (!res.ok) {
         setMsg(json.error || 'Could not refresh just now.')
       } else {
-        window.localStorage.setItem('cwvLastRefresh', String(Date.now()))
         setMsg('Refreshed.')
         await load()
       }
@@ -218,7 +214,7 @@ export function CwvDashboard() {
         </button>
         {latest?.fetchedAt ? (
           <span style={{ fontSize: 12.5, color: '#8a8a8a' }}>
-            Last checked {age === 0 ? 'today' : age === 1 ? 'yesterday' : `${age} days ago`}
+            Last checked {timeAgo(latest.fetchedAt)}
           </span>
         ) : null}
       </div>
@@ -437,7 +433,8 @@ export function CwvDashboard() {
               <p style={S.metricLabel}>OVERALL</p>
               <p style={S.metricName}>Performance score</p>
               <p style={{ ...S.value, color: scoreColor(lab.performanceScore) }}>
-                {lab.performanceScore ?? '—'}<span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>
+                {lab.performanceScore ?? <span style={{ fontSize: 18 }}>No data</span>}
+                {lab.performanceScore == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
               </p>
               <p style={S.blurb}>Google&rsquo;s overall speed rating for this page. 90 and above is good, below 50 is poor.</p>
             </div>
@@ -458,8 +455,53 @@ export function CwvDashboard() {
               <p style={S.blurb}>How long the page was busy and unable to respond. A lab stand-in for responsiveness.</p>
             </div>
           </div>
+          <h3 style={{ fontSize: 14, fontWeight: 700, margin: '26px 0 4px' }}>Other Lighthouse checks</h3>
+          <p style={{ ...S.sectionNote, marginBottom: 14 }}>
+            The same test scores three more areas. These are a starting point rather than a verdict,
+            and none of them counts towards search rankings directly.
+          </p>
+          <div style={S.notice('info')}>
+            <strong>While the site is in staging, expect the SEO score to sit around 70.</strong>
+            <br />
+            The staging site is deliberately hidden from search engines until go live, and Lighthouse
+            counts that as a failure. It is the only SEO check currently failing, so this score should
+            jump close to 100 once the site is live. Nothing needs fixing.
+          </div>
+          <div style={S.grid}>
+            {[
+              {
+                key: 'seoScore',
+                name: 'SEO',
+                blurb: 'Technical checks a search engine cares about: a valid canonical, links it can follow, a meta description present. It does not judge your writing.',
+              },
+              {
+                key: 'accessibilityScore',
+                name: 'Accessibility',
+                blurb: 'Automated checks such as colour contrast, image alt text and form labels. It catches roughly a third of real accessibility problems, so a good score is a floor, not a pass.',
+              },
+              {
+                key: 'bestPracticesScore',
+                name: 'Best practices',
+                blurb: 'General site health: secure connections, no errors in the browser console, images at their correct dimensions.',
+              },
+            ].map((c) => {
+              const v = lab[c.key] as number | null | undefined
+              return (
+                <div key={c.key} style={S.card}>
+                  <p style={S.metricLabel}>{c.name.toUpperCase()}</p>
+                  <p style={S.metricName}>{c.name}</p>
+                  <p style={{ ...S.value, color: scoreColor(v) }}>
+                    {v ?? <span style={{ fontSize: 18 }}>No data</span>}
+                    {v == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
+                  </p>
+                  <p style={S.blurb}>{c.blurb}</p>
+                </div>
+              )
+            })}
+          </div>
+
           <p style={{ ...S.sub, marginTop: 14, marginBottom: 0 }}>
-            Tested: {lab.target}
+            Tested: {lab.target} · {timeAgo(lab.fetchedAt) || 'time unknown'}
           </p>
         </>
       )}

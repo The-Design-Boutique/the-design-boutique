@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Badge, Box, Button, Card, Container, Flex, Heading, Spinner, Stack, Text, TextInput } from '@sanity/ui'
 import { useClient, useCurrentUser } from 'sanity'
 import { normalisePath, validateRedirect, type RedirectRecord } from '../../app/lib/redirects'
+import { timeAgo } from '../../app/lib/timeAgo'
 
 /**
  * The 404 monitor (SOW 2.5, ruleset 05 section 4, rule 15).
@@ -25,16 +26,6 @@ interface NotFoundRow {
 const ENTRIES_QUERY = `*[_type == "notFoundEntry"]{_id, path, count, day, referrer, lastSeenAt, resolved}`
 const REDIRECTS_QUERY = `*[_type == "redirect"]{_id, fromPath, toPath, statusCode, enabled}`
 
-function relative(iso?: string): string {
-  if (!iso) return ''
-  const diff = Date.now() - new Date(iso).getTime()
-  const hours = Math.floor(diff / 3_600_000)
-  if (hours < 1) return 'in the last hour'
-  if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`
-  const days = Math.floor(hours / 24)
-  return `${days} day${days === 1 ? '' : 's'} ago`
-}
-
 export function NotFoundMonitor() {
   const client = useClient({ apiVersion: '2025-02-19' })
   const user = useCurrentUser()
@@ -45,6 +36,7 @@ export function NotFoundMonitor() {
   const [busy, setBusy] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showResolved, setShowResolved] = useState(false)
+  const [loadedAt, setLoadedAt] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     const [entries, reds] = await Promise.all([
@@ -71,6 +63,7 @@ export function NotFoundMonitor() {
 
     setRedirects(reds || [])
     setRows([...byPath.values()].sort((a, b) => b.hits - a.hits))
+    setLoadedAt(new Date().toISOString())
   }, [client])
 
   useEffect(() => {
@@ -168,6 +161,11 @@ export function NotFoundMonitor() {
                 onClick={() => setShowResolved((v) => !v)}
               />
               <Button mode="bleed" fontSize={1} text="Refresh" onClick={() => load()} />
+              {loadedAt ? (
+                <Text size={0} muted>
+                  Updated {timeAgo(loadedAt)}
+                </Text>
+              ) : null}
             </Flex>
 
             <Stack space={3}>
@@ -191,7 +189,7 @@ export function NotFoundMonitor() {
                     <Flex gap={3} wrap="wrap">
                       {row.lastSeenAt ? (
                         <Text size={0} muted>
-                          Last tried {relative(row.lastSeenAt)}
+                          Last tried {timeAgo(row.lastSeenAt)}
                         </Text>
                       ) : null}
                       {row.referrer ? (

@@ -41,6 +41,12 @@ export const cwvSnapshot = defineType({
     defineField({ name: 'seeded', title: 'Seeded from history', type: 'boolean', description: 'True for the backfilled weekly points from the CrUX History API.' }),
     // Lab-only. Never used for the pass/fail bands, which are field data only.
     defineField({ name: 'performanceScore', title: 'Lighthouse performance score', type: 'number', description: 'Lab runs only, 0 to 100.' }),
+    // Lighthouse scores all four categories in a single run, so these come at no
+    // extra cost. Performance is shown on the Site Speed dashboard; the other
+    // three are inputs to the SEO Health panel (ruleset 03).
+    defineField({ name: 'seoScore', title: 'Lighthouse SEO score', type: 'number', description: 'Lab runs only, 0 to 100. Technical SEO checks such as a valid canonical, crawlable links and a present meta description.' }),
+    defineField({ name: 'accessibilityScore', title: 'Lighthouse accessibility score', type: 'number', description: 'Lab runs only, 0 to 100. An automated first pass only; it catches roughly a third of real accessibility problems.' }),
+    defineField({ name: 'bestPracticesScore', title: 'Lighthouse best practices score', type: 'number', description: 'Lab runs only, 0 to 100. Things like HTTPS, console errors and correct image dimensions.' }),
     defineField({ name: 'tbt', title: 'Total Blocking Time (ms)', type: 'number', description: 'Lab stand-in for responsiveness; INP cannot be measured in a lab.' }),
     defineField({ name: 'error', title: 'Error', type: 'string' }),
   ],
