@@ -942,3 +942,6 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* Stands in for the hero video until it loads, so the layout never shifts. */
+.hero-video-frame .hero-video-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
