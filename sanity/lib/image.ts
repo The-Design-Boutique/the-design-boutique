@@ -14,5 +14,10 @@ const builder = imageUrlBuilder({ projectId, dataset })
  * for no visible difference. Callers can still override it.
  */
 export function urlFor(source: Parameters<typeof builder.image>[0]) {
-  return builder.image(source).auto('format')
+  // A default quality as well as the format. Several callers set a width but no
+  // quality, and Sanity then serves close to the original: one 900 pixel image
+  // on the services pages was arriving at 295KB. 75 is indistinguishable from
+  // the original at these sizes. Callers that need more can still say so, since
+  // a later .quality() in the chain wins.
+  return builder.image(source).auto('format').quality(75)
 }
