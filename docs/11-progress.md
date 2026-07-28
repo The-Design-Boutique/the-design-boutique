@@ -386,6 +386,23 @@ in-scope work.
 
 ## Backlog — suggestions to raise with Laney
 
+- **Full content audit and rewrite pass.** An automatic check of all 115 documents ran on
+  July 28, 2026 and is written up for the client as `Content Findings.pdf` (source:
+  `docs/14-guide-content-findings.html`). It found one page still carrying Latin filler
+  (ADA Compliance), 18 pages with images and no alternative text, four pages with no meta
+  description, thirteen posts that are a video and almost nothing else, and fourteen case
+  studies averaging around thirty words.
+
+  Nothing was lost in the migration; all of it came across as it was. What the automatic
+  check explicitly did **not** look at is quality: spelling, tone, accuracy, and whether each
+  page still says what the business wants it to say. Two typos were spotted by eye on the
+  Thank You page alone ("imaged" for imagined, "licky split" for lickety split), both
+  inherited from the live site, which suggests a read-through would find more.
+
+  Worth proposing as its own piece of work rather than folding into the rebuild: the case
+  studies in particular are a writing project, not a tidy-up, and they are the largest
+  untapped SEO and AEO opportunity on the site.
+
 - **Dynamic Google reviews on /more-testimonials.** Researched and documented July 27, 2026;
   written up for Laney as `Google-Reviews-Integration-Options.pdf`. Summary:
   - The Places API is the wrong tool: capped at 5 reviews, and Google's terms forbid storing
