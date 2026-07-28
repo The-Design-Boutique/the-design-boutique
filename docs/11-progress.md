@@ -157,6 +157,26 @@ Output location and naming (fixed, do not change):
       Also removed an orphaned `seo.metaTitle` field my import scripts had written
       to 114 documents; the schema field is `seo.title`.
 - [ ] 2.5 score, readability, sitemap, redirects/404, fallbacks, local schema, content assist, CWV trending  →  PDF: `2.5 SEO Toolset.pdf`
+    - [x] §3 XML sitemap + robots (123 URLs, staging noindex holds)
+    - [x] §5 canonical / OG fallbacks (delivered with 2.4)
+    - [x] §6 local SEO: `officeLocation` singleton, LocalBusiness JSON-LD on Contact
+    - [x] §1 on-page score, §2 readability, §7 deterministic assist (heading hints).
+      One shared check library in `app/lib/seo/`, as rulesets 05§5 and 03§7 require,
+      surfaced as an SEO tab on page/post/client/goldEvent. Verified against all 83
+      real pages and posts: every document resolves exactly one h1 and a non-zero
+      word count, and the score discriminates (keyword genuinely the topic 85,
+      merely present 75, absent 45). Two bugs found by that run and fixed rather
+      than shipped: the document title was counted twice in the word total, and the
+      density advice rounded to "0.5%, aim for at least 0.5%".
+    - [x] §7 AI layer settings: provider + model + API key in Site Settings.
+      The key is encrypted (AES-256-GCM against `SEO_AI_SECRET`) because the
+      `production` dataset is **public**: an unauthenticated API request returns
+      documents, so a raw key in a document would be a published key. Only
+      ciphertext plus a masked hint are stored. Ships dark per rule 21.
+    - [ ] §7 the AI suggest route itself. Needs `SEO_AI_SECRET` on Vercel, and
+      rule 21's "whose key and whose budget" recorded in ruleset 05 before enabling.
+    - [ ] §4 redirect manager + 404 monitor
+    - [ ] §9 CWV trending charts
 - [ ] Phase 4 QC + review gate
 
 ## Phase 5 — Parity, accessibility, performance QA
