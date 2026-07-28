@@ -23,7 +23,28 @@ interface SectionInfo {
   title: string
   description: string
   count: number
+  /** What the file advertises: the live domain. */
   url: string
+  /** Where it can actually be read today: this deployment. */
+  viewUrl: string
+}
+
+/**
+ * A link that opens the real file in a new tab.
+ *
+ * Always points at this deployment, never at the live domain. The live
+ * thedesignboutique.com is still WordPress and serves its own robots.txt and
+ * sitemap, so a link there would quietly show the old site's files and look like
+ * ours were wrong.
+ */
+function OpenFile({ href, label = 'Open the file' }: { href: string; label?: string }) {
+  return (
+    <Text size={0}>
+      <a href={href} target="_blank" rel="noreferrer">
+        {label} ↗
+      </a>
+    </Text>
+  )
 }
 
 interface SiteFiles {
@@ -37,7 +58,8 @@ interface SiteFiles {
     privatePaths: string[]
   }
   llms: { text: string | null; lines: number }
-  sitemap: { indexUrl: string; sections: SectionInfo[]; total: number }
+  sitemap: { indexUrl: string; indexViewUrl: string; sections: SectionInfo[]; total: number }
+  view: { robots: string; llms: string; sitemap: string }
 }
 
 /** A file shown as it actually is, in a monospaced block that can be scrolled. */
@@ -143,6 +165,8 @@ export function SearchFiles() {
             <Badge tone={data.robots.staging ? 'caution' : 'positive'} fontSize={0} mode="outline">
               {data.robots.staging ? 'Blocking everything' : 'Open to search engines'}
             </Badge>
+            <Box flex={1} />
+            <OpenFile href={data.view.robots} />
           </Flex>
 
           <Explain>
@@ -210,6 +234,8 @@ export function SearchFiles() {
           <Flex align="center" gap={3}>
             <Heading size={1}>Sitemap</Heading>
             <Badge tone="positive" fontSize={0} mode="outline">{data.sitemap.total} addresses</Badge>
+            <Box flex={1} />
+            <OpenFile href={data.sitemap.indexViewUrl} label="Open the index" />
           </Flex>
 
           <Explain>
@@ -235,6 +261,7 @@ export function SearchFiles() {
                         <Stack space={2}>
                           <Text size={1} weight="semibold">{s.title}</Text>
                           <Text size={0} muted>{s.description}</Text>
+                          <OpenFile href={s.viewUrl} label={s.file} />
                         </Stack>
                       </Box>
                       <Badge tone="default" fontSize={0} mode="outline" style={{ whiteSpace: 'nowrap' }}>
@@ -258,6 +285,8 @@ export function SearchFiles() {
           <Flex align="center" gap={3}>
             <Heading size={1}>llms.txt</Heading>
             <Badge tone="default" fontSize={0} mode="outline">{data.llms.lines} entries</Badge>
+            <Box flex={1} />
+            <OpenFile href={data.view.llms} />
           </Flex>
 
           <Explain>

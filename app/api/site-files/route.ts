@@ -34,7 +34,13 @@ export async function GET(request: Request) {
         key: section,
         ...SECTION_LABELS[section],
         count: rows.length,
+        // Two different addresses, and confusing them would be the mistake here.
+        // `url` is what the file advertises, which is the live domain the site
+        // will eventually serve. `viewUrl` is where you can actually read it
+        // today, which is this deployment. The live domain currently serves
+        // WordPress's own sitemap, so a link there would show the old site.
         url: `${siteBase()}/${SECTION_LABELS[section].file}`,
+        viewUrl: `${origin}/${SECTION_LABELS[section].file}`,
       }
     }),
   )
@@ -56,8 +62,15 @@ export async function GET(request: Request) {
     },
     sitemap: {
       indexUrl: `${siteBase()}/sitemap.xml`,
+      indexViewUrl: `${origin}/sitemap.xml`,
       sections,
       total: sections.reduce((sum, s) => sum + s.count, 0),
+    },
+    // Where each file can be opened and read right now.
+    view: {
+      robots: `${origin}/robots.txt`,
+      llms: `${origin}/llms.txt`,
+      sitemap: `${origin}/sitemap.xml`,
     },
   })
 }
