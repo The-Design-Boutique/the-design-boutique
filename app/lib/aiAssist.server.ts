@@ -145,19 +145,43 @@ function buildPrompt(task: SuggestTask, page: PageContext): { system: string; us
   }
 }
 
+/**
+ * Room for the model to think before it writes.
+ *
+ * The answer here is one or two sentences, so this looks absurdly generous. It
+ * is not: current models reason before answering, and those tokens count
+ * against the same budget as the reply. At 400 this silently produced nothing
+ * on a thin page, because the reasoning used the whole allowance and the reply
+ * never got written. The response came back well formed, with a thinking block
+ * and no text block, which reads exactly like the model refusing.
+ *
+ * A ceiling is not a cost. Only what is actually generated is billed, and the
+ * replies are short, so the headroom is free insurance against a silent empty
+ * answer.
+ */
+const MAX_TOKENS = 2000
+
 async function askAnthropic(settings: AiSettings, prompt: { system: string; user: string }): Promise<string> {
   const client = new Anthropic({ apiKey: settings.apiKey })
   const message = await client.messages.create({
     model: settings.model,
-    max_tokens: 400,
+    max_tokens: MAX_TOKENS,
     system: prompt.system,
     messages: [{ role: 'user', content: prompt.user }],
   })
-  return message.content
+
+  const text = message.content
     .filter((block): block is Anthropic.TextBlock => block.type === 'text')
     .map((block) => block.text)
     .join('')
     .trim()
+
+  // Say which of the two silences this was, rather than reporting both as
+  // "returned nothing" and leaving somebody to guess.
+  if (!text && message.stop_reason === 'max_tokens') {
+    throw new Error('The model ran out of room before it finished writing. Try again.')
+  }
+  return text
 }
 
 /**
@@ -189,6 +213,19 @@ async function askOpenAi(settings: AiSettings, prompt: { system: string; user: s
   return String(json?.choices?.[0]?.message?.content || '').trim()
 }
 
+/** The ceiling the SEO panel will mark a field down for exceeding. */
+const MAX_CHARS: Record<SuggestTask, number> = {
+  title: TITLE_CHARS.warnAbove,
+  description: DESCRIPTION_CHARS.warnAbove,
+}
+
+function tidy(text: string): string {
+  // Models occasionally wrap short copy in quotes despite being asked not to.
+  // Stripping them here is kinder than showing the editor something they have
+  // to tidy by hand every time.
+  return text.replace(/^["'“”]+|["'“”]+$/g, '').trim()
+}
+
 export async function suggest(
   task: SuggestTask,
   page: PageContext,
@@ -197,17 +234,39 @@ export async function suggest(
   if ('error' in settings) return { ok: false, reason: settings.error }
 
   const prompt = buildPrompt(task, page)
+  const ask = (p: { system: string; user: string }) =>
+    settings.provider === 'openai' ? askOpenAi(settings, p) : askAnthropic(settings, p)
 
   try {
-    const text =
-      settings.provider === 'openai' ? await askOpenAi(settings, prompt) : await askAnthropic(settings, prompt)
+    let cleaned = tidy(await ask(prompt))
+    if (!cleaned) return { ok: false, reason: 'The provider returned nothing.' }
 
-    if (!text) return { ok: false, reason: 'The provider returned nothing.' }
+    // Asking for a limit does not guarantee one. Observed in testing: a
+    // description came back at 171 characters against a stated ceiling of 160,
+    // which the panel would then have marked down. Handing an editor copy that
+    // our own scorer penalises is worse than taking one more turn to fix it.
+    //
+    // The retry states the actual overage rather than repeating the limit,
+    // because the first attempt already had the limit and missed it. One retry
+    // only, and the long version is returned rather than discarded if it misses
+    // again: a slightly long draft an editor can trim beats no draft at all.
+    const max = MAX_CHARS[task]
+    if (cleaned.length > max) {
+      const over = cleaned.length - max
+      const retry = await ask({
+        system: prompt.system,
+        user: [
+          prompt.user,
+          '',
+          `Your previous attempt was ${cleaned.length} characters, which is ${over} too many. It must be ${max} characters or fewer. Shorten it by cutting words, not by adding abbreviations. Return only the shortened text.`,
+          '',
+          `Previous attempt: ${cleaned}`,
+        ].join('\n'),
+      })
+      const shortened = tidy(retry)
+      if (shortened && shortened.length <= max) cleaned = shortened
+    }
 
-    // Models occasionally wrap short copy in quotes despite being asked not to.
-    // Stripping them here is kinder than showing the editor something they have
-    // to tidy by hand every time.
-    const cleaned = text.replace(/^["'“”]+|["'“”]+$/g, '').trim()
     return { ok: true, suggestion: cleaned }
   } catch (error) {
     // The provider's own message is usually the whole answer: a revoked key, no

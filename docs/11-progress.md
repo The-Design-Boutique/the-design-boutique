@@ -347,7 +347,7 @@ in-scope work.
 
       First attempt was discarded rather than reported: it captured at a fixed
       4000px viewport, so seven unrelated live pages all came back at exactly
-      3939px and thedifference column was measuring the screenshot cap rather than the
+      3939px and the difference column was measuring the screenshot cap rather than the
       sites. Redone with Playwright full-page captures and a scroll pass so lazy
       images load.
 
@@ -370,7 +370,35 @@ in-scope work.
       site-wide visual change and Laney's design is the brief. Worth showing her
       side by side and asking whether she wants exact parity or prefers the
       tighter rhythm, rather than deciding for her.
-- [ ] Angelo/Laney decision: match the live desktop spacing exactly, or keep the tighter version
+- [x] **Decision (Angelo, July 28, 2026): leave the desktop difference as it is.**
+      Revisit only if Laney raises it, as a later iteration rather than now.
+
+      Worth recording why, because the first framing of this was wrong and a
+      future session should not act on it. "Desktop spacing is 11 percent
+      tighter" was too simple. Measured three ways, the difference has several
+      unrelated per-page causes and no single value to change:
+
+      | Page | What actually differs |
+      |---|---|
+      | Contact | Live form sits in a narrow centred column; ours runs nearly full width |
+      | Work | Portfolio tiles are proportionally shorter |
+      | More Testimonials | Card padding and type size are tighter |
+      | Vision & Values | Internal column widths differ inside a matching outer shell |
+
+      Text column widths cluster at 105/366/900/1180px on live and 522/620/992px
+      here: different per-section layout decisions, not one offset. A global
+      spacing change would fix none of them precisely and would break the 15
+      page/view pairs already within 5 percent.
+
+      What is confirmed good: the outer container matches exactly (1340px full
+      width on both), mobile matches (median ratio 1.01), and content parity is
+      intact on every page inspected closely, with every testimonial, portfolio
+      tile and value card present and correctly ordered.
+
+      If it is ever picked up: the evidence is a full-page capture of all 33
+      pages on both sites at 1440 and 390, and the work is page by page, roughly
+      a day, best limited to Contact, Work, More Testimonials, About and the
+      Solutions template.
 - [ ] WCAG 2.1 AA audit, findings recorded, **fixes deliberately out of scope** (see above)
 - [x] Core Web Vitals / Lighthouse pass on staging (July 28, 2026)
       Measured before changing anything, which mattered: the assumed culprit was

@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Google Reviews Integration: Options, Costs and Requirements</title>
+<style>
+  @page { size: Letter; margin: 18mm 16mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.2pt; line-height: 1.5; color: #1c1c1c; margin: 0;
+  }
+  h1 { font-size: 20pt; line-height: 1.15; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0 0 4px; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 12px 0 20px; }
+  h2 {
+    font-size: 12.5pt; margin: 22px 0 8px; padding-bottom: 5px;
+    border-bottom: 1px solid #ddd; page-break-after: avoid;
+  }
+  h3 { font-size: 10.6pt; margin: 14px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 17px; }
+  li { margin-bottom: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 9px 0 12px; font-size: 9pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  td.num { text-align: right; white-space: nowrap; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb; padding: 10px 13px; margin: 12px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .verdict { font-weight: 600; }
+  .yes { color: #1e8449; } .no { color: #c0392b; } .maybe { color: #b7791f; }
+  code { font-family: "SF Mono", Menlo, monospace; font-size: 8.6pt; background: #f2f2f2; padding: 1px 4px; border-radius: 2px; }
+  .src { font-size: 7.8pt; color: #777; word-break: break-all; }
+  .pagebreak { page-break-before: always; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .askbox { border: 2px solid #1c1c1c; padding: 12px 15px; margin: 12px 0; }
+  .askbox h3 { margin-top: 0; }
+  .tag { display: inline-block; font-size: 8pt; font-weight: 600; padding: 1px 6px; border-radius: 2px; margin-right: 5px; }
+  .tag-rec { background: #1e8449; color: #fff; }
+  .tag-no { background: #c0392b; color: #fff; }
+  .tag-alt { background: #777; color: #fff; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 12px 15px; margin: 0 0 10px;
+        background: #fcfcfc; page-break-inside: avoid; }
+  .step .n { display: inline-block; background: #f26722; color: #fff; width: 20px; height: 20px;
+        border-radius: 50%; text-align: center; line-height: 20px; font-size: 9pt; font-weight: 700;
+        margin-right: 7px; }
+  .step strong.t { font-size: 10.6pt; }
+  .url { display: block; background: #f1f1f1; border-radius: 3px; padding: 5px 9px; margin: 7px 0;
+        font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 9pt; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<h1>Pulling Google Reviews onto the Website</h1>
+<p class="sub">Options, costs and what we would need from you &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 27, 2026</p>
+<div class="rule"></div>
+
+<p>
+  The testimonials on <strong>/more-testimonials</strong> are currently hardcoded: the twelve reviews are typed
+  into the page, and the 5.0 rating badge is a static widget. If a client leaves a new Google review, nothing on
+  the site changes until someone edits it by hand.
+</p>
+<p>
+  This document sets out the three realistic ways to make that page pull from Google automatically, what each
+  costs, and what we would need from you to build it. There is a clear recommendation at the end.
+</p>
+
+<div class="box ok">
+  <strong class="hd">Short answer on cost: nothing needs to be bought</strong>
+  <p>
+    Both options we would actually recommend are <strong>free</strong>. Google's Business Profile API costs nothing
+    to use, and the fallback option is free at this site's traffic level.
+  </p>
+  <p style="margin-bottom:0">
+    The only option on this page that costs money is <strong>the one currently in use</strong>. The TrustIndex widget
+    on the site today is on a free tier that withholds two features this project actually needs, so keeping it
+    properly would mean paying $65 to $349 a year. Moving to Google directly removes that cost rather than adding one.
+  </p>
+</div>
+
+<div class="box warn">
+  <strong class="hd">The one rule that decides this</strong>
+  <p>
+    Google's Maps Platform terms prohibit storing review text. Section 3.2.3(a) explicitly bars anyone from
+    "copy and save business names, addresses, or user reviews", and the only caching Google permits for the
+    Places API is latitude and longitude, for 30 days. Review text has no such allowance.
+  </p>
+  <p>
+    That single rule rules out the obvious approach of syncing reviews into the CMS on a schedule, unless we use
+    the Business Profile API, which has its own separate and more generous 30 day allowance. This is why the
+    recommendation below is not the cheapest or the fastest option.
+  </p>
+</div>
+
+<h2>The three options at a glance</h2>
+
+<table>
+  <tr>
+    <th style="width:20%">Option</th>
+    <th style="width:13%">Reviews shown</th>
+    <th style="width:17%">Cost</th>
+    <th style="width:16%">Needed from you</th>
+    <th style="width:12%">Lead time</th>
+    <th>Design control</th>
+  </tr>
+  <tr>
+    <td><strong>1. Google Business Profile API</strong><br><span class="tag tag-rec">RECOMMENDED</span></td>
+    <td><strong>All of them</strong></td>
+    <td><strong>Free</strong></td>
+    <td>Profile access + an approval request</td>
+    <td>14 days min</td>
+    <td>Full. We own the markup, so it matches the site exactly.</td>
+  </tr>
+  <tr>
+    <td><strong>2. Places UI Kit</strong><br><span class="tag tag-alt">FALLBACK</span></td>
+    <td>5 only</td>
+    <td>Free to about 10,000 views/mo, then $1 per 1,000</td>
+    <td>Nothing</td>
+    <td>Immediate</td>
+    <td>Limited. Google's component, styled through a fixed set of options.</td>
+  </tr>
+  <tr>
+    <td><strong>3. Stay on a widget</strong><br>(TrustIndex)</td>
+    <td>Depends on plan</td>
+    <td>$65 to $349/yr</td>
+    <td>Nothing</td>
+    <td>Immediate</td>
+    <td>None. Vendor's iframe, vendor's styling.</td>
+  </tr>
+</table>
+
+<h2>Option 1: Google Business Profile API <span class="tag tag-rec">RECOMMENDED</span></h2>
+
+<p>
+  This is Google's official API for a business to manage its own profile. Because you own the profile, Google
+  grants far more access than the public Places API does.
+</p>
+
+<h3>What it gives us</h3>
+<ul>
+  <li><strong>Every review, not just five.</strong> Paginated 50 at a time, with the total count and average rating.</li>
+  <li><strong>Sorting</strong> by rating or by most recent.</li>
+  <li><strong>The ability to reply to reviews from the site's admin,</strong> if you ever want that. Replies post back to Google.</li>
+  <li><strong>Permission to cache for up to 30 days,</strong> which means the page can be fast and does not have to call Google on every visit.</li>
+</ul>
+
+<h3>What it costs</h3>
+<p class="verdict yes">Nothing. Google states plainly that the Business Profile API is available at no charge.</p>
+<p>There is no per-request fee, no monthly minimum, and no credit card required for the API itself.</p>
+
+<div class="askbox">
+  <h3>What we would need from you</h3>
+  <ol>
+    <li><strong>Confirmation the Google Business Profile is verified and has been active for at least 60 days.</strong>
+        Google requires this before it will even consider an access request. Almost certainly already true, but it has to be confirmed.</li>
+    <li><strong>Manager access to the profile</strong> for a Google account we nominate. Google explicitly recommends
+        that agencies and partners be added as <em>managers</em> and never as owners, so you keep full ownership and
+        can revoke our access at any time. Adding a manager takes about a minute in the Business Profile settings.</li>
+    <li><strong>Someone with owner or manager status to submit the access request form.</strong> Google requires the
+        submitting email address to already be on the profile. We can prepare the entire submission for you, but the
+        send has to come from an account on the profile.</li>
+    <li><strong>A decision on the Google Cloud project.</strong> Either we create one under our account and hand it
+        over at the end of the engagement, or we use one under yours. Either works; yours is tidier long term.</li>
+  </ol>
+  <p style="margin-bottom:0"><strong>You do not need to buy anything for this option.</strong></p>
+</div>
+
+<div class="box ok">
+  <strong class="hd">This is not needed for the site to go live</strong>
+  <p style="margin-bottom:0">
+    Nothing here blocks anything. The website launches perfectly well without it, and this can be started at any
+    point, before launch or a year afterwards, without anything having to be rebuilt. If you decide you want it,
+    the only reason to begin sooner rather than later is the approval wait described below, which is out of
+    everybody's hands.
+  </p>
+</div>
+
+<h3>How to request access, step by step</h3>
+
+<p>
+  Four steps. Two of them are a few minutes of clicking, one is a form, and the last is waiting. Everything except
+  the form can be done by us if you would rather; the form itself has to be sent by somebody who is already an owner
+  or manager on the Business Profile, because Google checks that the sending address is on the profile.
+</p>
+
+<div class="step">
+  <p><span class="n">1</span><strong class="t">Check the profile qualifies</strong></p>
+  <p style="margin-bottom:0">
+    Google will only consider a request if the Business Profile is <strong>verified, active, and has been for at
+    least 60 days</strong>, and the business has a website listed on it. All of that is almost certainly already
+    true; it just has to be confirmed before anything is submitted.
+  </p>
+</div>
+
+<div class="step">
+  <p><span class="n">2</span><strong class="t">Create a Google Cloud project and note its number</strong></p>
+  <span class="url">https://console.cloud.google.com</span>
+  <p>
+    Sign in, click <strong>Create project</strong>, give it a name such as &ldquo;TDB Website Reviews&rdquo;, and
+    confirm. Nothing is charged; a project on its own costs nothing.
+  </p>
+  <p style="margin-bottom:0">
+    Then open the project&rsquo;s <strong>Dashboard</strong> and find the <strong>Project number</strong> on the
+    Project info card. It is a long string of digits. Copy it, because the form asks for it and the request cannot
+    be submitted without it.
+  </p>
+</div>
+
+<div class="step">
+  <p><span class="n">3</span><strong class="t">Submit the access request</strong></p>
+  <span class="url">https://support.google.com/business/contact/api_default</span>
+  <p>
+    Choose <strong>Application for Basic API Access</strong> and fill in the form. It asks for the project number
+    from the previous step, the business details, and the website address.
+  </p>
+  <p style="margin-bottom:0">
+    <strong>Send it from an email address that is already an owner or manager on the Business Profile.</strong> This
+    is the one part that cannot be delegated: Google matches the sending address against the profile and rejects
+    anything else. We can prepare every answer for you in advance; the send has to come from you.
+  </p>
+</div>
+
+<div class="step">
+  <p><span class="n">4</span><strong class="t">Wait, and check the quota</strong></p>
+  <p>
+    Google reviews each request by hand and replies by email. They do not publish a guaranteed turnaround, and in
+    practice it is commonly a couple of weeks. Nothing can speed it up, and chasing it does not help.
+  </p>
+  <p style="margin-bottom:0">
+    You can check without waiting for the email. In the Cloud console, look at the quota for the Business Profile
+    API: <strong>0 requests per minute means it has not been approved yet</strong>, and <strong>300 means it
+    has</strong>.
+  </p>
+</div>
+
+<div class="box">
+  <strong class="hd">What happens after approval</strong>
+  <p style="margin-bottom:0">
+    The building is the small part. Once access is granted, connecting it to the website and showing the reviews is
+    a short piece of work. The wait above is the long pole by a wide margin, which is the only argument for starting
+    it early rather than leaving it until you want it.
+  </p>
+</div>
+
+<div class="pagebreak"></div>
+
+<h2>Option 2: Places UI Kit <span class="tag tag-alt">FALLBACK</span></h2>
+
+<p>
+  Google provides a drop-in web component that renders reviews for any business. No permission and no relationship
+  with the business is required, just an API key.
+</p>
+
+<table>
+  <tr><th style="width:34%">Reviews returned</th><td><strong>Five, maximum.</strong> Google picks which five by its own relevance ranking, and they can change between page loads. There is no way to sort, filter, choose, or page through to the rest.</td></tr>
+  <tr><th>Cost</th><td>Billed at <strong>$1.00 per 1,000</strong> requests, with the <strong>first 10,000 per month free</strong>. For a site at this traffic level that is realistically free.</td></tr>
+  <tr><th>Needed from you</th><td><strong>Nothing.</strong> No account access, no approval.</td></tr>
+  <tr><th>Design control</th><td>Limited. It is Google's component. We can style it through the properties Google exposes, but we cannot restructure it, and Google's terms forbid removing or obscuring their attribution and links.</td></tr>
+</table>
+
+<div class="box">
+  <strong class="hd">Worth knowing</strong>
+  <p style="margin-bottom:0">
+    There is a second, older way to do this: calling the Places API directly and building the markup ourselves. We
+    do <strong>not</strong> recommend it. It is capped at the same five reviews, costs <strong>$25 per 1,000</strong>
+    requests with only 1,000 free per month, and because review text cannot legally be stored, every single page view
+    would trigger a paid API call. The UI Kit does the same job for a twenty fifth of the price.
+  </p>
+</div>
+
+<h2>Option 3: Stay with a review widget</h2>
+
+<p>
+  The site currently uses TrustIndex. This is the do-nothing option, and it is a legitimate choice, but it has two
+  costs that are easy to miss.
+</p>
+
+<table>
+  <tr>
+    <th style="width:20%">Service</th>
+    <th style="width:30%">Free tier</th>
+    <th style="width:24%">Paid</th>
+    <th>Can we style it ourselves?</th>
+  </tr>
+  <tr>
+    <td><strong>TrustIndex</strong><br>(current)</td>
+    <td>Free forever, but excludes review schema markup and lazy loading</td>
+    <td>$65/yr single site<br>$125/yr up to 5<br>$349/yr unlimited</td>
+    <td><span class="no">No.</span> No public API. Embedded script only.</td>
+  </tr>
+  <tr>
+    <td>Elfsight</td>
+    <td>200 page views per month, which is not viable for a live site</td>
+    <td>From about $4/mo</td>
+    <td><span class="no">No.</span> No API.</td>
+  </tr>
+  <tr>
+    <td>REVIEWS.io</td>
+    <td>None relevant</td>
+    <td>About <strong>$500/mo</strong></td>
+    <td><span class="yes">Yes</span>, but only on their top plan</td>
+  </tr>
+</table>
+
+<div class="box warn">
+  <strong class="hd">Two hidden costs in staying on the free TrustIndex tier</strong>
+  <ul style="margin-bottom:0">
+    <li><strong>No review schema markup.</strong> Schema is what lets Google show star ratings in search results.
+        It is withheld from the free tier. Given that a large part of this project is SEO, that is a meaningful
+        thing to be giving up for $65 a year.</li>
+    <li><strong>No lazy loading.</strong> The widget script loads immediately and blocks rendering, which works
+        against the Core Web Vitals work in this project. Also withheld from the free tier.</li>
+  </ul>
+</div>
+
+<p>
+  In other words, if the decision is to stay with TrustIndex, the paid tier is effectively required rather than
+  optional. At $65 per year that is a small number, but it should be a deliberate choice rather than a surprise.
+</p>
+
+<h2>Rules we have to follow either way</h2>
+
+<p>
+  If Google reviews are displayed on the site, Google's terms impose requirements. These are obligations, not
+  suggestions, and they apply to every option above.
+</p>
+<ul>
+  <li><strong>Credit the reviewer.</strong> Their name, photo and profile link where there is room. At minimum, their photo.</li>
+  <li><strong>Link each review to Google.</strong> Visitors must be able to open the original review on Google Maps.</li>
+  <li><strong>Say how the reviews are ordered or filtered.</strong> This one is easy to overlook. If the page shows a
+      selection rather than everything, the page has to say so.</li>
+  <li><strong>Show the Google Maps logo</strong> when reviews are displayed without a map.</li>
+  <li><strong>Do not edit review text.</strong> Reviews go up verbatim, not trimmed or reworded.</li>
+  <li><strong>Reference Google in the site's terms and privacy policy.</strong> A small addition we would handle.</li>
+</ul>
+
+<div class="box warn">
+  <strong class="hd">One thing to be aware of before deciding</strong>
+  <p style="margin-bottom:0">
+    Today the page shows twelve chosen reviews. Pulling from Google means the page reflects whatever is on the
+    profile, including any future negative review. Filtering to show only positive ones is possible, but Google
+    requires that any filtering be disclosed on the page. This is worth a conscious decision rather than a
+    discovery later.
+  </p>
+</div>
+
+<h2>Recommendation</h2>
+
+<div class="box ok">
+  <strong class="hd">Go with the Business Profile API, and start the access request early</strong>
+  <p>
+    It is the only option that shows every review rather than five, the only one that lets the reviews be styled to
+    match the rest of the site, and it is free. The 30 day caching allowance also means it will not slow the page
+    down.
+  </p>
+  <p style="margin-bottom:0">
+    The only real cost is the wait for Google's approval. Because that wait is the long pole and cannot be
+    shortened, the sensible move is to file the request now and keep the current hardcoded reviews in place until
+    access comes through. Nothing on the site has to change while we wait, and if approval is refused or takes too
+    long, the Places UI Kit is a working fallback that needs nothing from you.
+  </p>
+</div>
+
+<h3>If you agree, the next steps are</h3>
+<ol>
+  <li>You confirm the Business Profile has been verified and active for 60 days or more.</li>
+  <li>You add a Google account we nominate as a <strong>manager</strong> on the profile.</li>
+  <li>We prepare the access request; someone on the profile submits it.</li>
+  <li>We wait for Google, typically two weeks or more, and check the quota to confirm approval.</li>
+  <li>We build the integration and the reviews become live and self updating.</li>
+</ol>
+
+<p><strong>Total spend required from you for the recommended path: none.</strong></p>
+
+<div class="foot">
+  <p>
+    Figures verified against Google's own documentation on July 27, 2026. Google Maps Platform Terms of Service last
+    modified June 23, 2026; Service Specific Terms last modified June 10, 2026. Third party pricing checked the same
+    day and may carry promotional rates.
+  </p>
+  <p class="src">
+    Sources: developers.google.com/maps/documentation/places/web-service/reference/rest/v1/places &middot;
+    developers.google.com/maps/billing-and-pricing/pricing &middot;
+    developers.google.com/maps/billing-and-pricing/sku-details &middot;
+    cloud.google.com/maps-platform/terms &middot;
+    cloud.google.com/maps-platform/terms/maps-service-terms &middot;
+    developers.google.com/my-business/reference/rest/v4/accounts.locations.reviews/list &middot;
+    developers.google.com/my-business/content/prereqs &middot;
+    developers.google.com/my-business/content/pricing &middot;
+    developers.google.com/my-business/content/policies &middot;
+    developers.google.com/my-business/content/limits &middot;
+    developers.google.com/maps/documentation/places/web-service/policies &middot;
+    trustindex.io/prices &middot; elfsight.com/google-reviews-widget/pricing &middot; reviews.io/front/pricingplans
+  </p>
+</div>
+
+</body>
+</html>
