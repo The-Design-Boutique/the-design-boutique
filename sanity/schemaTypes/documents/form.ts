@@ -1,15 +1,19 @@
 import { defineField, defineType } from 'sanity'
 
+import { NotificationsInput } from '../../components/NotificationsInput'
+
 /**
  * Forms by Angelo: build a form once, embed it on any page.
  *
  * Ported from the mortgage boilerplate. Three deliberate differences, each
  * because a straight copy would have been wrong for this project:
  *
- *   No API key field. The boilerplate stores a Resend key on the form
- *   document. Documents in this dataset are readable outside the Studio, so a
- *   key here would be a published key. Notification email uses the server's own
- *   credentials instead, set once in the environment.
+ *   No API key field on the form. The boilerplate stores a Resend key on each
+ *   form document. Documents in this dataset are readable outside the Studio,
+ *   so a key here would be a published key, and it would also have to be
+ *   repeated on every form. One encrypted key lives in Site Settings under
+ *   Forms instead, and the Notifications tab below says so plainly when it is
+ *   missing rather than silently sending nothing.
  *
  *   Live email and phone verification is optional rather than assumed. Both use
  *   paid services, so each field can ask for it but nothing happens unless a key
@@ -418,8 +422,11 @@ export const form = defineType({
       type: 'object',
       group: 'notifications',
       options: { collapsible: false },
+      // Warns when no Resend key is saved, because an unsent notification looks
+      // exactly like a form nobody has filled in.
+      components: { input: NotificationsInput },
       description:
-        'Every submission is saved in the Studio under Form Submissions whether or not anybody is emailed. These settings only control who gets told about it.',
+        'Every submission is saved in the Studio under Form Submissions whether or not anybody is emailed. These settings only control who gets told about it. Sending email requires a Resend key in Site Settings under Forms.',
       fields: [
         defineField({
           name: 'recipients',
@@ -439,18 +446,40 @@ export const form = defineType({
           name: 'webhooks',
           title: 'Send to another system',
           type: 'array',
-          description: 'Optional. Forwards each submission to a CRM or automation tool.',
+          description:
+            'Optional, and most sites never need it. As well as emailing people, every submission can be handed straight to another piece of software the moment it arrives: a CRM such as HubSpot or Salesforce, or an automation tool such as Zapier or Make. That other system gives you a web address to send to; you paste it in below. Nothing happens here unless you add one, and adding one does not stop the emails.',
           of: [
             {
               type: 'object',
               fields: [
-                defineField({ name: 'url', title: 'URL', type: 'url', validation: (rule) => rule.required() }),
-                defineField({ name: 'label', title: 'Label', type: 'string', description: 'For your reference, such as HubSpot.' }),
-                defineField({ name: 'method', title: 'Method', type: 'string', options: { list: ['POST', 'PUT'] }, initialValue: 'POST' }),
+                defineField({
+                  name: 'url',
+                  title: 'Web address to send to',
+                  type: 'url',
+                  description:
+                    'Provided by the system receiving the submissions. In Zapier this is the "Catch Hook" URL you are shown when you set up a Webhooks trigger. Treat it as private: anyone with it can send data into your CRM.',
+                  validation: (rule) => rule.required(),
+                }),
+                defineField({
+                  name: 'label',
+                  title: 'What is this?',
+                  type: 'string',
+                  description: 'For your own reference, such as "HubSpot" or "Zapier: add to mailing list". Nobody outside sees it.',
+                }),
+                defineField({
+                  name: 'method',
+                  title: 'Method',
+                  type: 'string',
+                  options: { list: ['POST', 'PUT'] },
+                  initialValue: 'POST',
+                  description: 'Leave this as POST unless the receiving system has specifically asked for PUT. Almost all of them want POST.',
+                }),
                 defineField({
                   name: 'fieldMappings',
                   title: 'Rename fields for this system',
                   type: 'array',
+                  description:
+                    'Only needed when the other system insists on its own names. If your form asks for "Your email" but the CRM expects that to arrive as "email_address", set that here. Leave empty and the fields keep the names they have on the form.',
                   of: [
                     {
                       type: 'object',
@@ -470,7 +499,8 @@ export const form = defineType({
                   title: 'Send every field',
                   type: 'boolean',
                   initialValue: true,
-                  description: 'Turn off to send only the fields you renamed above.',
+                  description:
+                    'On by default, which sends the whole submission and is what you usually want. Turn it off to send only the fields you renamed above, which is worth doing when the form collects something the other system has no business storing.',
                 }),
               ],
               preview: { select: { title: 'label', subtitle: 'url' } },

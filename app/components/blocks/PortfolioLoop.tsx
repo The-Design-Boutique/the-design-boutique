@@ -1,5 +1,5 @@
 import { Section } from '../Section'
-import { client } from '@/sanity/lib/client'
+import { getClient } from '@/app/lib/sanityFetch'
 import { urlFor } from '@/sanity/lib/image'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -10,7 +10,7 @@ export async function PortfolioLoop({ block }: { block: any }) {
   const query = categoryId
     ? `*[_type == "client" && category._ref == $categoryId] | order(_createdAt desc)[0...$limit]{ title, "slug": slug.current, logo }`
     : `*[_type == "client"] | order(_createdAt desc)[0...$limit]{ title, "slug": slug.current, logo }`
-  const clients: any[] = await client.fetch(query, categoryId ? { categoryId, limit } : { limit })
+  const clients: any[] = await (await getClient()).fetch(query, categoryId ? { categoryId, limit } : { limit })
 
   if (!clients?.length) return null
   return (

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Forms: How They Work and How to Build One</title>
+<style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  figure { margin: 14px 0 18px; page-break-inside: avoid; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #333; display: block; }
+  figcaption { font-size: 8.6pt; color: #777; margin-top: 6px; font-style: italic; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .example { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 4px; padding: 10px 13px;
+             margin: 10px 0 13px; font-size: 9.3pt; }
+  .example .lbl { color: #777; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+  .arrow { text-align: center; color: #999; font-size: 12pt; margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>Forms</h1>
+<p class="sub">How they work and how to build one &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  Forms are built in the editor rather than in code. You create a form once, choose which questions
+  it asks, and then place it on as many pages as you like. Change a question and it changes
+  everywhere the form appears.
+</p>
+
+<div class="where">
+  <strong>Where:</strong> <strong>Forms by Angelo</strong> in the left-hand list, for building them.
+  To put one on a page, add a <strong>Form</strong> block to that page.
+</div>
+
+<div class="box ok">
+  <strong class="hd">The contact form already works this way</strong>
+  <p style="margin-bottom:0">
+    Every contact form across the site now uses one shared form called <strong>Contact</strong>. If
+    you want to add a question to the contact form, change it in that one place and it updates on
+    every page at once.
+  </p>
+</div>
+
+<h2>Building a form</h2>
+
+<figure>
+  <img src="gf-questions.png" alt="The Questions tab of a form, listing each question in order">
+  <figcaption>The Questions tab. Drag the handles on the left to reorder.</figcaption>
+</figure>
+
+<p>
+  A form has four tabs. Most of the time you will only use the first.
+</p>
+
+<table>
+  <tr><th style="width:26%">Questions</th><td>What the form asks, in order. Drag to reorder.</td></tr>
+  <tr><th>Settings</th><td>Button wording, and what happens after somebody submits.</td></tr>
+  <tr><th>Notifications</th><td>Who gets emailed, and anywhere else the answers should be sent.</td></tr>
+  <tr><th>Step routing</th><td>Only for long forms split into steps. Usually empty.</td></tr>
+</table>
+
+<h3>Question types</h3>
+<p>Add a question and pick its type. The useful ones:</p>
+
+<table>
+  <tr><th style="width:26%">Text, Long text</th><td>A single line, or a bigger box for a message.</td></tr>
+  <tr><th>Email, Phone</th><td>Same as text, but checks what was typed looks right before allowing submission.</td></tr>
+  <tr><th>Dropdown, Radio buttons, Checkboxes</th><td>A fixed set of choices. Dropdown and radio pick one; checkboxes pick any number.</td></tr>
+  <tr><th>Name, Address</th><td>Several boxes grouped together, so you do not have to build them one at a time.</td></tr>
+  <tr><th>ZIP code</th><td>Fills in the city and state automatically once a valid ZIP is typed.</td></tr>
+  <tr><th>Consent</th><td>A tick box with legal wording beside it, for permission to contact somebody.</td></tr>
+  <tr><th>Section heading, Text block</th><td>Not questions. They break a long form up or explain something.</td></tr>
+  <tr><th>Page break</th><td>Everything after it appears on the next step. Use it to turn one long form into a few short ones.</td></tr>
+  <tr><th>Hidden field</th><td>Never shown to the visitor. Records where the enquiry came from, such as which advert brought them.</td></tr>
+</table>
+
+<h3>Settings on every question</h3>
+
+<table>
+  <tr><th style="width:26%">Required</th><td>The form cannot be submitted without an answer.</td></tr>
+  <tr><th>Width</th><td>Full, half or a third, so two short questions can sit side by side.</td></tr>
+  <tr><th>Help text</th><td>A small line under the box explaining what you want.</td></tr>
+  <tr><th>Only show when</th><td>Hides the question until another answer matches. See below.</td></tr>
+</table>
+
+<div class="box">
+  <strong class="hd">Questions that appear only when relevant</strong>
+  <p>
+    Under any question is <strong>Only show when this field</strong>. Point it at another question,
+    choose <em>is</em>, and type the answer that should reveal it.
+  </p>
+  <p style="margin-bottom:0">
+    For example, ask &ldquo;Do you already have a website?&rdquo; and set a follow up question
+    &ldquo;What is the address?&rdquo; to show only when that answer <em>is</em> Yes. Somebody
+    answering No never sees it, and is never asked to fill it in.
+  </p>
+</div>
+
+<h2>What happens when somebody submits</h2>
+
+<p>
+  Every submission is saved in the editor under <strong>Form Submissions</strong>, whether or not
+  anybody is emailed. That is the record, and it cannot be lost by an email going astray.
+</p>
+<p>
+  Under <strong>Notifications</strong> you can add email addresses to be told about each one. Leave it
+  empty and submissions are still saved, just silently.
+</p>
+<p>
+  Under <strong>Settings</strong> you choose what the visitor sees afterwards: a thank you message, or
+  being sent to another page such as the Thank You page.
+</p>
+
+<div class="box warn">
+  <strong class="hd">Email needs to be switched on once, for the whole site</strong>
+  <p>
+    A website cannot send email by itself. It has to hand each message to a service that does, and
+    that service has to be told the site is allowed to send using your domain name. Until that is set
+    up, the addresses under Notifications are just a list: nobody is emailed.
+  </p>
+  <p style="margin-bottom:0">
+    This is a one time job, covered in the separate <strong>Setting Up Email</strong> guide. If it has
+    not been done, the Notifications tab tells you so in an orange panel at the top. Nothing is lost
+    in the meantime, because every submission is still saved.
+  </p>
+</div>
+
+<h2 class="pagebreak">Sending answers to another system</h2>
+
+<p>
+  Most sites never need this section. Emailing the enquiry, and having it saved in the editor, is
+  enough. Skip this unless somebody has specifically asked you to connect the forms to another
+  piece of software.
+</p>
+
+<p>
+  Under <strong>Notifications</strong>, below the email addresses, is
+  <strong>Send to another system</strong>. It does exactly what it says: as well as emailing people,
+  every submission can be handed straight to another program the moment it arrives, without anyone
+  copying and pasting it.
+</p>
+
+<h3>What this is actually for</h3>
+
+<p>Three situations come up in practice:</p>
+
+<table>
+  <tr>
+    <th style="width:22%">A CRM</th>
+    <td>
+      Software that keeps a record of every customer and enquiry, such as HubSpot, Salesforce or
+      Zoho. Connecting the form means a new enquiry becomes a new contact in the CRM automatically,
+      already filled in, rather than somebody retyping it from an email.
+    </td>
+  </tr>
+  <tr>
+    <th>An automation tool</th>
+    <td>
+      Zapier and Make are services that sit between programs and pass information along. You tell
+      Zapier &ldquo;when the website form is submitted, add a row to this spreadsheet, then send a
+      text message to the office&rdquo;. They are useful precisely because they connect to thousands
+      of other programs, so you are not limited to what this website knows how to talk to.
+    </td>
+  </tr>
+  <tr>
+    <th>A mailing list</th>
+    <td>
+      Adding somebody to Mailchimp or a similar newsletter tool the moment they tick the consent box,
+      instead of exporting a list once a month.
+    </td>
+  </tr>
+</table>
+
+<h3>The word &ldquo;webhook&rdquo;</h3>
+
+<p>
+  You will meet this word as soon as you set one of these up, and it sounds far more technical than
+  it is. A webhook is simply <strong>a private web address that a program gives you so other programs
+  can send it information</strong>. Think of it as a post box: the receiving program hands you the
+  address of its post box, and anything you post there arrives instantly inside that program.
+</p>
+
+<p>
+  You never have to build one or understand how it works. The receiving program creates it and shows
+  it to you. Your only job is to copy it and paste it into the <strong>Web address to send to</strong>
+  box. In Zapier, for instance, you create a new Zap, choose &ldquo;Webhooks&rdquo; as the trigger,
+  pick &ldquo;Catch Hook&rdquo;, and Zapier displays an address for you to copy.
+</p>
+
+<div class="box warn">
+  <strong class="hd">Treat that address like a password</strong>
+  <p style="margin-bottom:0">
+    Anybody who has the address can send information into your CRM or spreadsheet. It is not secret
+    in the way a password is, but it should not be posted publicly or shared more widely than
+    necessary. If one is ever misused, the receiving program can issue a new address and you paste
+    the new one in.
+  </p>
+</div>
+
+<h3>What actually gets sent</h3>
+
+<p>
+  Every time somebody submits the form, the answers are bundled up and posted to that address. The
+  bundle is sometimes called the <strong>payload</strong>, which is just a name for &ldquo;the
+  information being delivered&rdquo;. It contains the answers to the questions, plus which form it
+  came from and the date and time.
+</p>
+
+<div class="example">
+  <div class="lbl">Somebody fills in the contact form</div>
+  <table style="margin:0">
+    <tr><th style="width:30%">Your name</th><td>Jane Whitfield</td></tr>
+    <tr><th>Your email</th><td>jane@whitfieldco.com</td></tr>
+    <tr><th>How can we help?</th><td>Looking for a brand refresh.</td></tr>
+  </table>
+  <div class="arrow">&#8595;</div>
+  <div class="lbl">What arrives in the other system</div>
+  <table style="margin:0">
+    <tr><th style="width:30%">form</th><td>contact</td></tr>
+    <tr><th>submittedAt</th><td>2026-07-28, 2:14pm</td></tr>
+    <tr><th>Your name</th><td>Jane Whitfield</td></tr>
+    <tr><th>Your email</th><td>jane@whitfieldco.com</td></tr>
+    <tr><th>How can we help?</th><td>Looking for a brand refresh.</td></tr>
+  </table>
+</div>
+
+<p>
+  Nothing else is included. There is no hidden tracking, no visitor history, and nothing the form did
+  not ask for.
+</p>
+
+<h3>Renaming fields, and when you need to</h3>
+
+<p>
+  The questions arrive under the names they have on the form. Usually that is fine: Zapier and most
+  CRMs will show you the list and let you decide where each one goes at their end.
+</p>
+<p>
+  Occasionally the receiving system is fussy and insists on its own names. It might refuse anything
+  that is not called <code>email_address</code>, when your question is called &ldquo;Your
+  email&rdquo;. That is what <strong>Rename fields for this system</strong> is for: on the left the
+  name as it appears on your form, on the right the name that system demands. If nobody has told you
+  a system needs this, leave it empty.
+</p>
+
+<h3>The remaining two settings</h3>
+
+<table>
+  <tr>
+    <th style="width:26%">Method</th>
+    <td>Leave as <strong>POST</strong>. Almost every system wants POST, and the one that does not will
+    tell you so explicitly.</td>
+  </tr>
+  <tr>
+    <th>Send every field</th>
+    <td>
+      On by default, which sends the whole submission and is normally what you want. Turn it off to
+      send only the fields you renamed above. That is worth doing when the form asks something the
+      other system has no business storing, such as a free text message containing personal details.
+    </td>
+  </tr>
+</table>
+
+<div class="box">
+  <strong class="hd">Adding one does not switch anything else off</strong>
+  <p style="margin-bottom:0">
+    Connecting another system is additional. Emails still go out, submissions are still saved in the
+    editor, and you can add several destinations at once. If the other system is down or the address
+    is wrong, the submission is still saved and the emails are still sent: the handover simply does
+    not happen, and nothing is lost.
+  </p>
+</div>
+
+<h2>Putting a form on a page</h2>
+
+<ol>
+  <li>Open the page and add a <strong>Form</strong> block where you want it.</li>
+  <li>Choose which form.</li>
+  <li>Pick a style: two columns with an introduction beside it, centred, or plain.</li>
+</ol>
+<p>
+  The two-column style is the one used across the site today, with the heading, bullet points and
+  address on the left and the form on the right.
+</p>
+
+<h2>Questions you might have</h2>
+
+<h3>I changed the contact form. Do I need to update every page?</h3>
+<p>No. Every page using that form updates at once.</p>
+
+<h3>Can I have two different forms?</h3>
+<p>
+  Yes. Create as many as you like and choose which one each Form block uses. A short newsletter
+  signup and a long enquiry form can live side by side.
+</p>
+
+<h3>Where do the answers go?</h3>
+<p>
+  Form Submissions in the editor, always. Email notifications are optional and additional.
+</p>
+
+<h3>Somebody said the form did not work.</h3>
+<p>
+  Check Form Submissions first. If their answer is there, the form worked and the problem is with the
+  notification email. If it is not there, note what they were trying to do and pass it on.
+</p>
+
+<h3>Nobody is getting the notification emails.</h3>
+<p>
+  Open the form and look at the <strong>Notifications</strong> tab. If email has not been set up for
+  the site, an orange panel at the top says so and tells you what is missing. See the
+  <strong>Setting Up Email</strong> guide. The submissions themselves are safe either way.
+</p>
+
+<h3>Do I need Zapier or a CRM?</h3>
+<p>
+  No. They are entirely optional. The site emails you and keeps every submission on its own.
+</p>
+
+<div class="foot">
+  <p>
+    Submissions are validated both in the visitor&rsquo;s browser and again on the server, so a form
+    cannot be bypassed. Correct as of July 2026.
+  </p>
+</div>
+
+</body>
+</html>

@@ -12,3 +12,14 @@ export const client = createClient({
   useCdn: false,
   token: process.env.SANITY_API_WRITE_TOKEN,
 })
+
+/**
+ * The same client, showing unpublished edits.
+ *
+ * Used only when preview has been switched on from the Studio. Everything a
+ * visitor sees comes from the client above, which returns published documents
+ * because that is the default for this API version. This is opt in on purpose:
+ * a preview client used by mistake publishes someone's half finished draft to
+ * the world.
+ */
+export const draftClient = client.withConfig({ perspective: 'drafts' })

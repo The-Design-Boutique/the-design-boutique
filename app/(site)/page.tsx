@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { client } from '@/sanity/lib/client'
+import { getClient } from '@/app/lib/sanityFetch'
 import { PAGE_BY_SLUG_QUERY, SITE_DEFAULTS_QUERY } from '@/sanity/lib/queries'
 import { BlockRenderer } from '@/app/components/BlockRenderer'
 import { buildMetadata, buildJsonLd, jsonLdString } from '@/app/lib/pageMeta'
@@ -9,16 +9,16 @@ import { buildMetadata, buildJsonLd, jsonLdString } from '@/app/lib/pageMeta'
 export const dynamic = 'force-dynamic'
 
 async function getHome() {
-  return client.fetch(PAGE_BY_SLUG_QUERY, { slug: 'home' })
+  return (await getClient()).fetch(PAGE_BY_SLUG_QUERY, { slug: 'home' })
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [page, defaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  const [page, defaults] = await Promise.all([getHome(), (await getClient()).fetch(SITE_DEFAULTS_QUERY)])
   return buildMetadata(page, { path: '', siteDefaults: defaults?.settings })
 }
 
 export default async function HomePage() {
-  const [page, defaults] = await Promise.all([getHome(), client.fetch(SITE_DEFAULTS_QUERY)])
+  const [page, defaults] = await Promise.all([getHome(), (await getClient()).fetch(SITE_DEFAULTS_QUERY)])
   const siteDefaults = defaults?.settings
   const office = defaults?.office
   if (!page) return null

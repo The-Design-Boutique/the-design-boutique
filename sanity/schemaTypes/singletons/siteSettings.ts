@@ -58,6 +58,74 @@ export const siteSettings = defineType({
     defineField({ name: 'postSidebarItems', title: 'Post sidebar items', type: 'array', of: [{ type: 'text', rows: 2 }], group: 'blog', description: 'One line per service, e.g. "SEO: Drive Explosive Traffic & Real Results."' }),
     defineField({ name: 'postSidebarCta', title: 'Post sidebar button', type: 'link', group: 'blog' }),
     defineField({ name: 'relatedHeading', title: 'Related posts heading', type: 'string', group: 'blog', initialValue: 'More from The Design Boutique Blog' }),
+    // How notification emails physically leave the site.
+    //
+    // A website cannot send email by itself; it has to hand the message to a
+    // service that does. Resend is that service here. Until a key is saved,
+    // every form still works and every submission is still stored, but nobody
+    // is emailed about it. That failure is silent by nature, which is why it is
+    // spelled out on this field, on the form's own Notifications tab, and in
+    // the submission record itself.
+    defineField({
+      name: 'emailDelivery',
+      title: 'Sending email (Resend)',
+      type: 'object',
+      group: 'forms',
+      options: { collapsible: false },
+      description:
+        'Required before any form can email anyone. Without a key here, submissions are still saved and can still be read under Form Submissions, but no notification is sent and nothing warns the person who filled the form in. Resend is free for the volumes this site sends.',
+      fields: [
+        defineField({
+          name: 'key',
+          title: 'Resend API key',
+          type: 'object',
+          components: {
+            input: makeEncryptedKeyInput({
+              service: 'resend',
+              serviceLabel: 'Resend',
+              signupUrl: 'https://resend.com/signup',
+            }),
+          },
+          description: 'Stored encrypted. Only the first few characters are ever shown again.',
+          fields: [
+            defineField({ name: 'ciphertext', type: 'string', readOnly: true }),
+            defineField({ name: 'hint', type: 'string', readOnly: true }),
+            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true }),
+          ],
+        }),
+        defineField({
+          name: 'fromEmail',
+          title: 'Send notifications from',
+          type: 'string',
+          description:
+            'The address these emails appear to come from, such as website@thedesignboutique.com. It does not need to be a real inbox, but the part after the @ must be a domain verified inside Resend, otherwise the emails will be refused. The Resend setup guide covers verifying the domain.',
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true
+              return /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(value) ? true : 'That does not look like an email address.'
+            }),
+        }),
+        defineField({
+          name: 'fromName',
+          title: 'Sender name',
+          type: 'string',
+          initialValue: 'The Design Boutique',
+          description: 'The name shown in the inbox beside the address above.',
+        }),
+        defineField({
+          name: 'replyTo',
+          title: 'Replies go to',
+          type: 'string',
+          description:
+            'Optional. If set, hitting reply on a notification writes to this address instead of the sending address above.',
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true
+              return /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(value) ? true : 'That does not look like an email address.'
+            }),
+        }),
+      ],
+    }),
     // Optional form verification services. Both are off unless a key is saved,
     // and a form works normally without them: the difference is whether a typo
     // in an email or phone number is caught at the point of entry.
