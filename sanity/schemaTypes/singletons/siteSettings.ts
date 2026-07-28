@@ -78,9 +78,9 @@ export const siteSettings = defineType({
             input: makeEncryptedKeyInput({ service: 'mailverify', serviceLabel: 'MailVerify', signupUrl: 'https://mailverify.ai' }),
           },
           fields: [
-            defineField({ name: 'ciphertext', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'hint', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true, hidden: true }),
+            defineField({ name: 'ciphertext', type: 'string', readOnly: true }),
+            defineField({ name: 'hint', type: 'string', readOnly: true }),
+            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true }),
           ],
         }),
         defineField({
@@ -91,9 +91,9 @@ export const siteSettings = defineType({
             input: makeEncryptedKeyInput({ service: 'numverify', serviceLabel: 'NumVerify', signupUrl: 'https://numverify.com' }),
           },
           fields: [
-            defineField({ name: 'ciphertext', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'hint', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true, hidden: true }),
+            defineField({ name: 'ciphertext', type: 'string', readOnly: true }),
+            defineField({ name: 'hint', type: 'string', readOnly: true }),
+            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true }),
           ],
         }),
       ],
@@ -146,9 +146,9 @@ export const siteSettings = defineType({
           description: 'Stored encrypted. Only the first few characters are ever shown again.',
           fields: [
             // Written by the key field's own controls, never typed into directly.
-            defineField({ name: 'ciphertext', title: 'Encrypted key', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'hint', title: 'Masked key', type: 'string', readOnly: true, hidden: true }),
-            defineField({ name: 'updatedAt', title: 'Last updated', type: 'datetime', readOnly: true, hidden: true }),
+            defineField({ name: 'ciphertext', title: 'Encrypted key', type: 'string', readOnly: true }),
+            defineField({ name: 'hint', title: 'Masked key', type: 'string', readOnly: true }),
+            defineField({ name: 'updatedAt', title: 'Last updated', type: 'datetime', readOnly: true }),
           ],
         }),
       ],

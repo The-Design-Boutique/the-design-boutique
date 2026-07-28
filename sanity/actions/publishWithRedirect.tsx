@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { Box, Card, Checkbox, Code, Flex, Stack, Text } from '@sanity/ui'
+import { Card, Checkbox, Code, Flex, Stack, Text } from '@sanity/ui'
 import { useClient, useCurrentUser, type DocumentActionComponent, type DocumentActionProps } from 'sanity'
 import { normalisePath } from '../../app/lib/redirects'
 
@@ -111,11 +111,7 @@ export function withRedirectPrompt(Original: DocumentActionComponent): DocumentA
         ? {
             type: 'confirm',
             tone: makeRedirect ? 'primary' : 'caution',
-            confirmButtonText: working
-              ? 'Publishing'
-              : makeRedirect
-                ? 'Create redirect and publish'
-                : 'Publish anyway',
+            confirmButtonText: working ? 'Publishing' : makeRedirect ? 'Redirect and publish' : 'Publish anyway',
             cancelButtonText: 'Cancel',
             onConfirm: confirm,
             onCancel: () => setOpen(false),
@@ -127,19 +123,22 @@ export function withRedirectPrompt(Original: DocumentActionComponent): DocumentA
                 </Text>
 
                 <Card padding={3} radius={2} tone="transparent" border>
-                  <Stack space={3}>
-                    <Box>
+                  <Stack space={4}>
+                    {/* Each label and value needs its own Stack: Code renders a
+                        pre element whose margins otherwise collapse into the
+                        label above it and overlap the text. */}
+                    <Stack space={2}>
                       <Text size={0} muted>
                         Old address
                       </Text>
                       <Code size={1}>{oldPath}</Code>
-                    </Box>
-                    <Box>
+                    </Stack>
+                    <Stack space={2}>
                       <Text size={0} muted>
                         New address
                       </Text>
                       <Code size={1}>{newPath}</Code>
-                    </Box>
+                    </Stack>
                   </Stack>
                 </Card>
 
