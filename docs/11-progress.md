@@ -34,11 +34,14 @@ CI still pending Angelo's workflow-scope auth. Sequencing: strictly linear by ph
 ## Needed from Angelo to unblock (you provide access)
 
 0. **Search Console credentials for the deployed cron.** The panel's search section
-   is built but dark. It needs `GSC_CLIENT_ID`, `GSC_CLIENT_SECRET` and
-   `GSC_REFRESH_TOKEN` in the environment. Recommendation: use a Google service
-   account added as a Search Console user, not a personal OAuth token. All tooling
-   becomes the client's property on final payment, and an integration resting on
-   Angelo's personal Google account breaks the day he stops maintaining it.
+   is built but dark. The route is a Google service account created in Laney's own
+   Google Cloud account and added to the Search Console property as a **Full** user
+   (Full, not Restricted: URL Inspection needs it). Verified July 28, 2026 that a
+   service account email can be added as a Search Console user. Instructions for
+   Laney are written up as `Search Console Access.pdf`. A personal OAuth token would
+   also work and was rejected: all tooling becomes the client's property on final
+   payment, and an integration resting on a personal Google account breaks at
+   handover.
 
 1. Sanity CORS: MOSTLY RESOLVED. `http://localhost:3333` is already an allowed origin, so run the
    dev server on that port (`PORT=3333 npm run dev`) and the Studio connects. Other ports do not.
@@ -244,8 +247,16 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
 
 ## Phase 5 — Parity, accessibility, performance QA
 
+**Accessibility decision (July 28, 2026, Angelo): report only, do not fix, in this
+project.** The brief is to reproduce Laney's existing design, and the accessibility
+problems the tooling surfaces are inherited from that design rather than introduced
+by the rebuild. Fixing colour contrast and similar would mean changing her design
+without being asked. They are recorded so she can see them once the site is live,
+and become a maintenance proposal after go live. Do not raise them again as
+in-scope work.
+
 - [ ] Full visual diff pass, all pages/breakpoints
-- [ ] WCAG 2.1 AA audit + fixes
+- [ ] WCAG 2.1 AA audit, findings recorded, **fixes deliberately out of scope** (see above)
 - [ ] Core Web Vitals / Lighthouse pass on staging
 - [ ] Phase 5 QC + review gate
 
