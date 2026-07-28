@@ -1,6 +1,12 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
-/** Blog post, brand-named "Laney Said" on the live site. Routable at /blog/{slug}. */
+/**
+ * Blog post, brand-named "Laney Said" on the live site.
+ *
+ * Routable at /{slug}, at the root, matching the live WordPress site. Not
+ * /blog/{slug}: that address 404s here and 301s to the root on the live site.
+ * /blog is the archive listing, which is a page rather than a post.
+ */
 export const post = defineType({
   name: 'post',
   title: 'Laney Said (Blog)',
@@ -42,6 +48,8 @@ export const post = defineType({
   ],
   preview: {
     select: { title: 'title', slug: 'slug.current', media: 'featuredImage' },
-    prepare: ({ title, slug, media }) => ({ title: title || 'Untitled', subtitle: slug ? `/blog/${slug}` : 'no slug', media }),
+    // The subtitle is the address someone will copy or click, so it has to be
+    // the real one. It said /blog/{slug} here, which does not exist.
+    prepare: ({ title, slug, media }) => ({ title: title || 'Untitled', subtitle: slug ? `/${slug}` : 'no slug', media }),
   },
 })

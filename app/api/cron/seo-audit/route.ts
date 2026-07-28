@@ -45,6 +45,16 @@ const RESERVE_MS = 22_000
  */
 const BATCH_SIZE = 10
 
+/**
+ * How recently a page can have been checked before the Studio's button says no.
+ *
+ * Google refreshes both the index status and the search figures roughly daily,
+ * so pressing the button twice in a row cannot show anything new. Ten minutes is
+ * short enough that a genuine "I just published, check again" works, and long
+ * enough that leaning on the button cannot burn the PageSpeed quota.
+ */
+const MANUAL_RECHECK_THROTTLE_MS = 10 * 60_000
+
 const PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
 const GSC = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect'
 const GSC_ANALYTICS = 'https://searchconsole.googleapis.com/webmasters/v3/sites'
@@ -276,12 +286,40 @@ async function runSearchConsole(path: string, token: string): Promise<SearchResu
 /* ------------------------------------------------------------------ */
 
 export async function GET(request: Request) {
+  const requested = new URL(request.url).searchParams.get('path')
+
   const secret = process.env.CRON_SECRET
-  if (secret) {
-    const auth = request.headers.get('authorization')
-    const isVercelCron = request.headers.get('user-agent')?.includes('vercel-cron')
-    if (!isVercelCron && auth !== `Bearer ${secret}`) {
+  const auth = request.headers.get('authorization')
+  const isVercelCron = request.headers.get('user-agent')?.includes('vercel-cron')
+  const isScheduled = !secret || isVercelCron || auth === `Bearer ${secret}`
+
+  // The "Check with Google" button runs in a browser and cannot send the cron
+  // secret, because putting it there would publish it. It used to be locked out
+  // with a 401 the moment CRON_SECRET was set, so the button never worked and
+  // reported it as Google being unreachable, which was not true.
+  //
+  // An unsigned call is now allowed for one page at a time, throttled here on
+  // the server. Whole-site runs still require the secret: they cost forty
+  // PageSpeed calls and are nobody's idea of a button.
+  if (!isScheduled) {
+    if (!requested) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const path = requested.startsWith('/') ? requested : `/${requested}`
+    const last = await client.fetch<string | null>(
+      `*[_type == "seoAudit" && path == $path][0].lastAttemptAt`,
+      { path },
+    )
+    const age = last ? Date.now() - new Date(last).getTime() : Infinity
+    if (age < MANUAL_RECHECK_THROTTLE_MS) {
+      const wait = Math.ceil((MANUAL_RECHECK_THROTTLE_MS - age) / 60_000)
+      return NextResponse.json(
+        {
+          error: `This page was checked less than ${MANUAL_RECHECK_THROTTLE_MS / 60_000} minutes ago. Google updates these once a day, so checking again now cannot show anything newer. Try again in ${wait} minute${wait === 1 ? '' : 's'}.`,
+          throttled: true,
+        },
+        { status: 429 },
+      )
     }
   }
 
@@ -292,8 +330,6 @@ export async function GET(request: Request) {
   }
 
   // One explicit path wins, otherwise take whatever has gone longest unchecked.
-  const requested = new URL(request.url).searchParams.get('path')
-
   let paths: string[]
   if (requested) {
     paths = [requested.startsWith('/') ? requested : `/${requested}`]

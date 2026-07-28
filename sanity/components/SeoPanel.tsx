@@ -1,12 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge, Box, Button, Card, Container, Flex, Stack, Text } from '@sanity/ui'
-import { useClient } from 'sanity'
 import type { UserViewComponent } from 'sanity/structure'
 import { analyseSeo, type CheckResult, type SeoAnalysis } from '../../app/lib/seo'
-import { buildIssueList, type SeoIssue } from '../../app/lib/seoIssues'
+import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
+import { IssueRow, Section, pathForDoc, useSeoAudit } from './seoShared'
 
 type Tone = 'default' | 'primary' | 'positive' | 'caution' | 'critical'
 
@@ -99,138 +99,30 @@ function CheckRow({ check }: { check: CheckResult }) {
   )
 }
 
-function IssueRow({ issue }: { issue: SeoIssue }) {
-  const tone: Tone = issue.severity === 'error' ? 'critical' : issue.severity === 'warning' ? 'caution' : 'default'
-  return (
-    <Card padding={3} radius={2} tone="transparent" border>
-      <Stack space={2}>
-        <Flex align="center" gap={2}>
-          <Badge tone={tone} fontSize={0} mode="outline">
-            {issue.severity === 'error' ? 'Fix' : issue.severity === 'warning' ? 'Check' : 'Note'}
-          </Badge>
-          <Text size={1} weight="semibold">{issue.title}</Text>
-        </Flex>
-        {issue.detail ? <Text size={1} muted>{issue.detail}</Text> : null}
-      </Stack>
-    </Card>
-  )
-}
-
-function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <Stack space={3}>
-      <Stack space={2}>
-        <Text size={2} weight="semibold">
-          {title}
-        </Text>
-        {subtitle ? (
-          <Text size={1} muted>
-            {subtitle}
-          </Text>
-        ) : null}
-      </Stack>
-      {children}
-    </Stack>
-  )
-}
-
-/** Where a document of each type lives, mirroring the catch-all route. */
-const PATH_PREFIX: Record<string, string> = { page: '', post: '', goldEvent: 'gold/', client: 'portfolio/' }
-
-function pathForDoc(type: string, slug?: string): string | null {
-  if (!slug) return null
-  const prefix = PATH_PREFIX[type]
-  if (prefix === undefined) return null
-  return slug === 'home' ? '/' : `/${prefix}${slug}`
-}
-
-interface AuditDoc {
-  fetchedAt?: string
-  lighthouseSeoScore?: number
-  lighthouseAccessibilityScore?: number
-  lighthouseBestPracticesScore?: number
-  lighthouseFailures?: Array<{ id: string; title: string; description: string; category: string }>
-  lighthouseError?: string
-  indexVerdict?: string
-  indexStatus?: string
-  robotsState?: string
-  canonicalGoogle?: string
-  lastCrawledAt?: string
-  clicks?: number
-  impressions?: number
-  position?: number
-  topQueries?: Array<{ query: string; clicks: number; impressions: number; position: number }>
-  searchConsoleError?: string
-}
-
 /**
  * The SEO panel shown beside every page, post, client and event.
  *
  * Two halves. The on-page checks are computed from the document in front of you
  * and recompute as you type: nothing is fetched and nothing costs anything. The
- * technical and search sections come from Google, collected once a day by a
- * scheduled job and cached, so opening this panel never waits on Google and no
- * API key is ever near the browser (ruleset 03, rule 7).
+ * Technical section comes from Google, collected once a day by a scheduled job
+ * and cached, so opening this panel never waits on Google and no API key is
+ * ever near the browser (ruleset 03, rule 7).
+ *
+ * How the published page performs in search lives on its own Search tab. It
+ * reads the same cached record through useSeoAudit, but it answers a different
+ * question: this panel is a checklist you act on while writing, that one is a
+ * report on results you cannot change today.
  */
 export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaType }) {
   const doc = useDebounced(document?.displayed, 400)
-  const client = useClient({ apiVersion: '2025-02-19' })
 
   const path = pathForDoc(schemaType?.name || '', (doc as any)?.slug?.current)
-  const [audit, setAudit] = useState<AuditDoc | null>(null)
-  const [auditLoaded, setAuditLoaded] = useState(false)
-  const [rechecking, setRechecking] = useState(false)
-  const [recheckNote, setRecheckNote] = useState<string | null>(null)
 
-  const loadAudit = useCallback(async () => {
-    if (!path) {
-      setAuditLoaded(true)
-      return
-    }
-    try {
-      const row = await client.fetch<AuditDoc | null>(
-        `*[_type == "seoAudit" && path == $path][0]{
-           fetchedAt, lighthouseSeoScore, lighthouseAccessibilityScore, lighthouseBestPracticesScore,
-           lighthouseFailures, lighthouseError, indexVerdict, indexStatus, robotsState, canonicalGoogle,
-           lastCrawledAt, clicks, impressions, position, topQueries, searchConsoleError
-         }`,
-        { path },
-      )
-      setAudit(row || null)
-    } catch {
-      setAudit(null)
-    } finally {
-      setAuditLoaded(true)
-    }
-  }, [client, path])
-
-  useEffect(() => {
-    loadAudit()
-  }, [loadAudit])
-
-  /**
-   * Re-check (ruleset 03, rules 10 and 11). The on-page checks have already
-   * re-run by the time this is pressed, because they recompute as you type. The
-   * button exists for the Google-sourced half, which has to be fetched.
-   */
-  const recheck = useCallback(async () => {
-    if (!path) return
-    setRechecking(true)
-    setRecheckNote(null)
-    try {
-      const res = await fetch(`/api/cron/seo-audit?path=${encodeURIComponent(path)}`)
-      if (!res.ok) {
-        setRecheckNote('Could not reach Google just now. The on-page checks above are still up to date.')
-      } else {
-        await loadAudit()
-        setRecheckNote('Updated.')
-      }
-    } catch {
-      setRecheckNote('Could not reach the server. The on-page checks above are still up to date.')
-    } finally {
-      setRechecking(false)
-    }
-  }, [path, loadAudit])
+  // Shared with the Search tab, which reads the same stored record. The on-page
+  // checks below need none of this: they recompute from the document as you
+  // type and never wait on anything (ruleset 03, rules 10 and 11). The button
+  // exists for the Google-sourced Technical section.
+  const { audit, auditLoaded, rechecking, recheckNote, recheck } = useSeoAudit(path)
 
   const analysis = useMemo(() => {
     try {
@@ -265,7 +157,7 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaT
     indexingAllowed: false,
   })
   const technicalIssues = allIssues.filter((i) => i.group === 'technical')
-  const searchIssues = allIssues.filter((i) => i.group === 'search')
+  // Search-group issues are shown on the Search tab, not here.
   const needsAttention = checks.filter((c) => c.status === 'fail' || c.status === 'warn')
   const passing = checks.filter((c) => c.status === 'pass')
   const skipped = checks.filter((c) => c.status === 'skipped')
@@ -415,56 +307,6 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, schemaT
                   ))}
                 </Stack>
               )}
-            </Stack>
-          )}
-        </Section>
-
-        <Section
-          title="Search presence"
-          subtitle="What Google reports about this page. Only meaningful once the site is live."
-        >
-          {!auditLoaded ? (
-            <Text size={1} muted>Loading</Text>
-          ) : !audit || (!audit.indexVerdict && !audit.searchConsoleError) ? (
-            <Card padding={3} radius={2} tone="transparent" border>
-              <Text size={1} muted>
-                Not connected to Search Console yet, so there is nothing to show here. Everything else on
-                this panel works without it.
-              </Text>
-            </Card>
-          ) : audit.searchConsoleError ? (
-            <Card padding={3} radius={2} tone="caution" border>
-              <Text size={1}>Google could not be reached for this page: {audit.searchConsoleError}</Text>
-            </Card>
-          ) : (
-            <Stack space={3}>
-              <Flex gap={4} wrap="wrap">
-                <Text size={1} muted>Clicks: <strong>{audit.clicks ?? 0}</strong></Text>
-                <Text size={1} muted>Impressions: <strong>{audit.impressions ?? 0}</strong></Text>
-                {audit.position ? (
-                  <Text size={1} muted>Average position: <strong>{audit.position.toFixed(1)}</strong></Text>
-                ) : null}
-                {audit.lastCrawledAt ? (
-                  <Text size={1} muted>Last visited by Google {timeAgo(audit.lastCrawledAt)}</Text>
-                ) : null}
-              </Flex>
-              {searchIssues.map((i) => (
-                <IssueRow key={i.id} issue={i} />
-              ))}
-              {audit.topQueries?.length ? (
-                <Stack space={2}>
-                  <Text size={1} weight="semibold">What people searched to find this page</Text>
-                  {audit.topQueries.slice(0, 5).map((q, n) => (
-                    <Text key={n} size={1} muted>
-                      {q.query} ({q.clicks} click{q.clicks === 1 ? '' : 's'}, position {q.position.toFixed(1)})
-                    </Text>
-                  ))}
-                  <Text size={1} muted>
-                    These will not add up to the totals above. Google keeps rare searches private, so
-                    it counts them in the totals but will not tell anyone the words that were typed.
-                  </Text>
-                </Stack>
-              ) : null}
             </Stack>
           )}
         </Section>
