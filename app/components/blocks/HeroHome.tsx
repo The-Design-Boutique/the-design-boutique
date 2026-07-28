@@ -1,4 +1,5 @@
 import { CtaLink } from '../CtaLink'
+import { HeroVideo } from '../HeroVideo'
 import { urlFor } from '@/sanity/lib/image'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -15,6 +16,7 @@ function ytId(url: string): string | null {
 export function HeroHome({ block }: { block: any }) {
   const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2560).quality(85).url() : undefined
   const poster = block.posterImage?.asset ? urlFor(block.posterImage).width(320).url() : undefined
+  const framePoster = block.posterImage?.asset ? urlFor(block.posterImage).width(1200).quality(70).url() : undefined
   const vid = block.videoUrl ? ytId(block.videoUrl) : null
   const style = bg
     ? {
@@ -40,14 +42,7 @@ export function HeroHome({ block }: { block: any }) {
 
         {vid ? (
           <div className="hero-video">
-            <div className="hero-video-frame">
-              <iframe
-                src={`https://www.youtube.com/embed/${vid}?autoplay=1&mute=1&loop=1&playlist=${vid}&controls=0&playsinline=1&rel=0&modestbranding=1`}
-                title="The Design Boutique"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
-            </div>
+            <HeroVideo videoId={vid} poster={framePoster} />
             <a className="play-badge" href={`https://www.youtube.com/watch?v=${vid}`} target="_blank" rel="noopener noreferrer" aria-label="Play video">
               {poster ? <img className="play-badge-photo" src={poster} alt="" /> : null}
               <span className="play-badge-triangle" aria-hidden="true" />

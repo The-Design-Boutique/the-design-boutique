@@ -10,11 +10,11 @@ function toEmbed(url: string): string | null {
   try {
     const u = new URL(url)
     if (u.hostname.includes('youtube.com')) {
-      if (u.pathname.startsWith('/shorts/')) return `https://www.youtube.com/embed/${u.pathname.split('/')[2]}`
+      if (u.pathname.startsWith('/shorts/')) return `https://www.youtube-nocookie.com/embed/${u.pathname.split('/')[2]}`
       if (u.pathname.startsWith('/embed/')) return `https://www.youtube.com${u.pathname}`
-      return `https://www.youtube.com/embed/${u.searchParams.get('v')}`
+      return `https://www.youtube-nocookie.com/embed/${u.searchParams.get('v')}`
     }
-    if (u.hostname.includes('youtu.be')) return `https://www.youtube.com/embed/${u.pathname.slice(1)}`
+    if (u.hostname.includes('youtu.be')) return `https://www.youtube-nocookie.com/embed/${u.pathname.slice(1)}`
     if (u.hostname.includes('vimeo.com')) return `https://player.vimeo.com/video/${u.pathname.split('/').filter(Boolean).pop()}`
     return url
   } catch {
