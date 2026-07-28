@@ -1,12 +1,13 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Badge, Box, Button, Card, Container, Flex, Grid, Stack, Text } from '@sanity/ui'
 import type { UserViewComponent } from 'sanity/structure'
 import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
 import { IssueRow, Section, pathForDoc, useSeoAudit, type Tone } from './seoShared'
 import { liveSearchUrl } from '../../app/lib/seo/liveUrl'
+import { INDEXNOW_ENGINES as INDEXNOW_ENGINE_NAMES } from '../../app/lib/indexNow'
 
 /**
  * The live site, which is what Search Console reports on.
@@ -35,24 +36,6 @@ function inspectInSearchConsole(path: string): string {
   const url = liveSearchUrl(LIVE_SITE, path)
   return `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(LIVE_SITE)}&id=${encodeURIComponent(url)}`
 }
-
-/**
- * What Google reports about this page, on its own tab.
- *
- * Separated from the SEO tab because the two answer different questions and are
- * read at different moments. The SEO tab is a checklist you work through while
- * writing, and it recomputes as you type. This is a report on how the published
- * page is actually doing in search, which changes once a day and cannot be
- * affected by anything you do in the next five minutes.
- *
- * Everything here describes the live thedesignboutique.com. The staging build is
- * deliberately hidden from Google, so it has no search presence of its own.
- *
- * On the styling: every colour comes from Sanity's own tone system rather than
- * a hex value, so the panel follows the Studio into light or dark mode without
- * a second palette to maintain. Tones are used for meaning only, never
- * decoration, so that a splash of amber always means the same thing.
- */
 
 /** Roughly where a position lands, in the terms people actually think in. */
 function positionBand(position: number): { tone: Tone; label: string; page: number } {
@@ -168,6 +151,152 @@ function QueryRow({
   )
 }
 
+/**
+ * What you can actually do about a page Google is not showing.
+ *
+ * Two routes, and they are not equivalent, so they are not presented as though
+ * they are. Google is the one that matters and it is manual: Google publishes
+ * no way for another program to request indexing, so the honest offering is a
+ * link to their own screen plus the three steps to follow once there.
+ *
+ * IndexNow is genuinely automatic but reaches Bing, Yandex, Naver, Seznam, Yep
+ * and Amazon, never Google. It is also only permitted for addresses on the host
+ * that serves the key file, so while these figures describe the live WordPress
+ * site it cannot be used at all. Rather than show a button that always fails,
+ * the panel explains why it is unavailable and shows it once it works.
+ */
+function RequestIndexing({ path }: { path: string }) {
+  const liveUrl = liveSearchUrl(LIVE_SITE, path)
+  const [indexNow, setIndexNow] = useState<{
+    ready: boolean
+    host?: string
+    engines?: readonly string[]
+    reason?: string
+  } | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [note, setNote] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/indexnow')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled && d) setIndexNow(d)
+      })
+      .catch(() => {
+        // Nothing said rather than a wrong explanation.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  let liveHost = ''
+  try {
+    liveHost = new URL(liveUrl).host
+  } catch {
+    liveHost = ''
+  }
+  const indexNowUsable = Boolean(indexNow?.ready && indexNow.host && indexNow.host === liveHost)
+
+  const submit = useCallback(async () => {
+    setSubmitting(true)
+    setNote(null)
+    try {
+      const res = await fetch('/api/indexnow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls: [liveUrl] }),
+      })
+      const body = await res.json().catch(() => null)
+      setNote(
+        res.ok && body?.ok
+          ? `Sent to ${(body.engines || []).join(', ')}. Google is not among them.`
+          : body?.reason || 'The submission was not accepted.',
+      )
+    } catch {
+      setNote('Could not reach the server.')
+    } finally {
+      setSubmitting(false)
+    }
+  }, [liveUrl])
+
+  return (
+    <Stack space={4}>
+      <Stack space={2}>
+        <Text size={1} weight="semibold">Ask Google to look at this page</Text>
+        <Text size={0} muted>
+          Google publishes no way for another program to do this, so it is three presses in their own
+          tool rather than a button here. It is a request, not a guarantee, and usually takes a few
+          days.
+        </Text>
+        <Box>
+          <Button
+            as="a"
+            href={inspectInSearchConsole(path)}
+            target="_blank"
+            rel="noreferrer"
+            text="Open this page in Search Console"
+            mode="ghost"
+            fontSize={1}
+          />
+        </Box>
+        <Stack space={1} paddingTop={1}>
+          <Text size={0} muted>1. Sign in with the Google account that has access to the site.</Text>
+          <Text size={0} muted>2. Wait for it to finish testing the address, then press <strong>Request Indexing</strong>.</Text>
+          <Text size={0} muted>3. Close the tab. Nothing else is needed, and asking twice does not help.</Text>
+        </Stack>
+      </Stack>
+
+      <Stack space={2}>
+        <Text size={1} weight="semibold">Tell the other search engines now</Text>
+        {indexNowUsable ? (
+          <>
+            <Text size={0} muted>
+              Sends this address straight to {(indexNow?.engines || []).join(', ')}. Not Google, which
+              does not take part in this.
+            </Text>
+            <Box>
+              <Button
+                text={submitting ? 'Sending' : 'Submit to IndexNow'}
+                mode="ghost"
+                fontSize={1}
+                disabled={submitting}
+                onClick={submit}
+              />
+            </Box>
+          </>
+        ) : (
+          <Text size={0} muted>
+            IndexNow can notify {(indexNow?.engines || INDEXNOW_ENGINE_NAMES).join(', ')} instantly, but
+            never Google. It only accepts addresses on the site holding its key file, and these figures
+            describe {liveHost || 'the live site'}, which this build does not serve yet. It becomes
+            available on its own at go live.
+          </Text>
+        )}
+        {note ? <Text size={0} muted>{note}</Text> : null}
+      </Stack>
+    </Stack>
+  )
+}
+
+/**
+ * What Google reports about this page, on its own tab.
+ *
+ * Separated from the SEO tab because the two answer different questions and are
+ * read at different moments. The SEO tab is a checklist you work through while
+ * writing, and it recomputes as you type. This is a report on how the published
+ * page is actually doing in search, which changes once a day and cannot be
+ * affected by anything you do in the next five minutes.
+ *
+ * Everything here describes the live thedesignboutique.com. The staging build is
+ * deliberately hidden from Google, so it has no search presence of its own.
+ *
+ * On the styling: every colour comes from Sanity's own tone system rather than a
+ * hex value, so the panel follows the Studio into light or dark mode without a
+ * second palette to maintain. Tones carry meaning only, never decoration, so
+ * that a splash of amber always means the same thing.
+ */
 export const SearchPanel: UserViewComponent = function SearchPanel({ document, schemaType }) {
   const doc = document?.displayed as any
   const path = pathForDoc(schemaType?.name || '', doc?.slug?.current)
@@ -250,27 +379,7 @@ export const SearchPanel: UserViewComponent = function SearchPanel({ document, s
                     ) : null}
                   </Flex>
 
-                  {!indexed && path ? (
-                    <Stack space={2}>
-                      <Box>
-                        <Button
-                          as="a"
-                          href={inspectInSearchConsole(path)}
-                          target="_blank"
-                          rel="noreferrer"
-                          text="Open in Search Console"
-                          mode="ghost"
-                          fontSize={1}
-                        />
-                      </Box>
-                      <Text size={0} muted>
-                        Google does not let another program ask for a page to be indexed, so there is
-                        no button here that can do it. This opens Google&rsquo;s own screen for this
-                        page, where <strong>Request Indexing</strong> is one press. It is a request
-                        rather than a guarantee, and it usually takes a few days.
-                      </Text>
-                    </Stack>
-                  ) : null}
+                  {!indexed && path ? <RequestIndexing path={path} /> : null}
                 </Stack>
               </Card>
 
