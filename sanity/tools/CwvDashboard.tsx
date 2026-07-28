@@ -8,6 +8,11 @@ import {
   bandFor, formatMetric, daysSince,
   type Band, type MetricKey,
 } from '../../app/lib/cwv'
+import {
+  buildSeries, filterRange, hasGranularityShift, trendDirection,
+  type RangeKey,
+} from '../../app/lib/cwvTrend'
+import { CwvTrendChart } from '../components/CwvTrendChart'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -87,6 +92,10 @@ export function CwvDashboard() {
   const [lab, setLab] = useState<any | null>(null)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
+  // Historical trending (ruleset 05 section 9).
+  const [range, setRange] = useState<RangeKey>(90)
+  const [trendSource, setTrendSource] = useState<'field' | 'lab'>('field')
+  const [allSnaps, setAllSnaps] = useState<any[] | null>(null)
 
   const load = useCallback(async () => {
     const rows = await client.fetch(
@@ -103,6 +112,16 @@ export function CwvDashboard() {
       { ff: formFactor },
     )
     setLab(labRow || null)
+    // Everything with a reading, for the trend charts. Ordered oldest first so
+    // the seeded weekly points lead into the daily ones.
+    const everything = await client.fetch(
+      `*[_type == "cwvSnapshot" && formFactor == $ff && hasData == true]
+        | order(coalesce(periodEnd, fetchedAt) asc)[0...500]{
+          source, lcp, inp, cls, periodEnd, fetchedAt, hasData, seeded
+        }`,
+      { ff: formFactor },
+    )
+    setAllSnaps(everything || [])
   }, [client, formFactor])
 
   useEffect(() => { load() }, [load])
@@ -110,6 +129,25 @@ export function CwvDashboard() {
   const latest = snaps?.[0]
   const history = useMemo(() => (snaps ? [...snaps].filter((s) => s.hasData).reverse() : []), [snaps])
   const age = daysSince(latest?.fetchedAt)
+
+  // --- Historical trending (ruleset 05 section 9) ---
+  const fieldSnaps = useMemo(() => (allSnaps || []).filter((r) => r.source !== 'lab'), [allSnaps])
+  const labSnaps = useMemo(() => (allSnaps || []).filter((r) => r.source === 'lab'), [allSnaps])
+  const fieldHasHistory = useMemo(
+    () => METRICS.some((m) => buildSeries(fieldSnaps, m.key).length >= 2),
+    [fieldSnaps],
+  )
+  const labHasHistory = useMemo(
+    () => METRICS.some((m) => buildSeries(labSnaps, m.key).length >= 2),
+    [labSnaps],
+  )
+  // Land on whichever source actually has something to show.
+  useEffect(() => {
+    if (allSnaps === null) return
+    if (!fieldHasHistory && labHasHistory) setTrendSource('lab')
+  }, [allSnaps, fieldHasHistory, labHasHistory])
+
+  const trendSnaps = trendSource === 'lab' ? labSnaps : fieldSnaps
 
   // "Refresh now" is throttled: CrUX itself only updates once a day, so a
   // faster refresh cannot produce newer numbers.
@@ -234,6 +272,113 @@ export function CwvDashboard() {
               Based on visits up to {latest.periodEnd}. Google refreshes this once a day.
             </p>
           ) : null}
+        </>
+      )}
+
+      <h2 style={{ ...S.h2, marginTop: 38 }}>History</h2>
+      <p style={S.sectionNote}>
+        How each measurement has moved over time. The coloured bands behind each line are
+        Google&rsquo;s own thresholds: inside the green band is good, the amber band needs
+        improvement, the red band is poor.
+      </p>
+
+      <div style={S.bar}>
+        <div style={S.toggle} role="group" aria-label="Period">
+          {([30, 90, 'all'] as const).map((r) => (
+            <button key={String(r)} type="button" style={S.tab(range === r)} onClick={() => setRange(r)}>
+              {r === 'all' ? 'All time' : `${r} days`}
+            </button>
+          ))}
+        </div>
+        <div style={S.toggle} role="group" aria-label="Data source">
+          {(['field', 'lab'] as const).map((src) => (
+            <button
+              key={src}
+              type="button"
+              style={S.tab(trendSource === src)}
+              onClick={() => setTrendSource(src)}
+            >
+              {src === 'field' ? 'Real visitors' : 'Lab test'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {allSnaps === null ? (
+        <p style={{ color: '#8a8a8a' }}>Loading&#8230;</p>
+      ) : trendSource === 'field' && !fieldHasHistory ? (
+        <div style={S.notice('info')}>
+          <strong>No history from real visitors yet.</strong>
+          <br />
+          Google has no Chrome UX Report data for this site, so there is nothing to chart here. That
+          needs more visitors, not a change to the site.
+          {labHasHistory ? ' The lab test does have history: switch to it above.' : ''}
+        </div>
+      ) : trendSource === 'lab' && !labHasHistory ? (
+        <div style={S.notice('info')}>
+          <strong>Not enough lab tests yet.</strong>
+          <br />
+          A chart needs at least two runs. One happens automatically each day.
+        </div>
+      ) : (
+        <>
+          {trendSource === 'lab' ? (
+            <div style={S.notice('info')}>
+              Lab results move around more than real-visitor data, because each run is a fresh test
+              on shared equipment. Read the shape over weeks rather than any single point, and
+              remember these do not count towards search rankings.
+            </div>
+          ) : null}
+
+          <div style={{ display: 'grid', gap: 16 }}>
+            {METRICS.map((m) => {
+              const all = buildSeries(trendSnaps, m.key)
+              const points = filterRange(all, range)
+              const fmt = (v: number) => formatMetric(m.key as MetricKey, v)
+              const summary = trendDirection(points, {
+                label: m.label,
+                format: fmt,
+                // Lab readings are noisier, so demand a bigger move before
+                // calling it a trend.
+                noiseFloor: trendSource === 'lab' ? 0.15 : 0.1,
+              })
+              const mixed = hasGranularityShift(points)
+              const trendColor =
+                summary?.direction === 'improving'
+                  ? BAND_COLOR.good
+                  : summary?.direction === 'degrading'
+                    ? BAND_COLOR.poor
+                    : '#9a9a9a'
+              return (
+                <div key={m.key} style={S.card}>
+                  <p style={S.metricLabel}>{m.key.toUpperCase()}</p>
+                  <p style={S.metricName}>{m.label}</p>
+                  {points.length < 2 ? (
+                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                      No readings in this period. Try a longer range.
+                    </p>
+                  ) : (
+                    <>
+                      <CwvTrendChart points={points} good={m.good} poor={m.poor} format={fmt} />
+                      <p style={{ ...S.blurb, color: trendColor, fontWeight: 600 }}>
+                        {summary
+                          ? summary.sentence
+                          : `Not enough readings yet to say which way ${m.label} is going.`}
+                      </p>
+                      {mixed ? (
+                        <p style={S.blurb}>
+                          The earlier part of this chart is one reading per week, backfilled from
+                          Google&rsquo;s history. The later part is one per day. The line gets busier
+                          at that point because readings became more frequent, not because the site
+                          changed.
+                        </p>
+                      ) : null}
+                    </>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </>
       )}
 

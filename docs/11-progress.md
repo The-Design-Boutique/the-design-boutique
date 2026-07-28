@@ -182,7 +182,16 @@ Output location and naming (fixed, do not change):
       when a live page changes address, and a daily prune holding the log to 1,000
       distinct paths. Chain flattening and loop prevention are covered by 25 tests
       (`npm test`), which now runs something real instead of exiting 1.
-    - [ ] §9 CWV trending charts
+    - [x] §9 CWV trending charts. Per metric, per device, with Google's thresholds
+      shaded behind the line, 30/90/all-time ranges, and a plain-English trend
+      sentence. Backfilled weekly points and daily ones are visually distinguished
+      and the handover labelled, per rule 24. Seeding route added for the CrUX
+      History API. Two facts worth recording: the History API returns 25 weekly
+      periods, not the ~40 rule 23 assumes; and it returns 404 for
+      thedesignboutique.com, so there is no field history to seed until the site
+      gets more traffic. The charts fall back to the daily lab readings, clearly
+      labelled as not counting towards rankings. Seeding and chart logic were
+      verified end to end against a control origin with real history.
     - Worth knowing: the dataset ACL reads as "public", but only `siteSettings`,
       `navigation`, `officeLocation` and the asset types are actually readable
       without a token. `page`, `post`, `client`, `goldEvent`, `redirect` and
