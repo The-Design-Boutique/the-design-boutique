@@ -1,5 +1,6 @@
 import type { DefaultDocumentNodeResolver, StructureResolver } from 'sanity/structure'
 import { SeoPanel } from './components/SeoPanel'
+import { SearchPanel } from './components/SearchPanel'
 
 /** Document types that are real, routable pages and so get the SEO panel. */
 const ROUTABLE_TYPES = ['page', 'post', 'client', 'goldEvent']
@@ -11,9 +12,15 @@ const ROUTABLE_TYPES = ['page', 'post', 'client', 'goldEvent']
  */
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, { schemaType }) => {
   if (!ROUTABLE_TYPES.includes(schemaType)) return S.document().views([S.view.form()])
+  // Three tabs rather than two. The SEO tab is a checklist you work through
+  // while writing and recomputes as you type; Search is a report on how the
+  // published page is doing in Google, which changes once a day. Different
+  // questions, different moments, and buried together the search figures were
+  // easy to miss below a long list of checks.
   return S.document().views([
     S.view.form().title('Edit'),
     S.view.component(SeoPanel).title('SEO').id('seo'),
+    S.view.component(SearchPanel).title('Search').id('search'),
   ])
 }
 
