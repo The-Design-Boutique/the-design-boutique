@@ -14,9 +14,9 @@ function ytId(url: string): string | null {
 }
 
 export function HeroHome({ block }: { block: any }) {
-  const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(2560).quality(85).url() : undefined
+  const bg = block.backgroundImage?.asset ? urlFor(block.backgroundImage).width(1920).quality(72).url() : undefined
   const poster = block.posterImage?.asset ? urlFor(block.posterImage).width(320).url() : undefined
-  const framePoster = block.posterImage?.asset ? urlFor(block.posterImage).width(1200).quality(70).url() : undefined
+  const framePoster = block.posterImage?.asset ? urlFor(block.posterImage).width(640).quality(55).url() : undefined
   const vid = block.videoUrl ? ytId(block.videoUrl) : null
   const style = bg
     ? {

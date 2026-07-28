@@ -121,7 +121,7 @@ main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) {
   color: var(--tdb-white);
   background:
     linear-gradient(rgba(7, 7, 7, 0.55), rgba(7, 7, 7, 0.7)),
-    url('https://cdn.sanity.io/images/inapmf9l/production/178e2334e02bba7e7069abb11ba3b4f1c1988d20-2560x908.jpg');
+    url('https://cdn.sanity.io/images/inapmf9l/production/178e2334e02bba7e7069abb11ba3b4f1c1988d20-2560x908.jpg?w=1600&q=70&auto=format');
   background-size: cover;
   background-position: center;
 }
@@ -129,7 +129,7 @@ main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) {
 /* Leaves motif (service media sections) */
 .bg-leaves {
   color: var(--tdb-white);
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/ec081471fe26e09ffc9bc28f521684368edad81f-1478x1049.png') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/ec081471fe26e09ffc9bc28f521684368edad81f-1478x1049.png?w=800&q=70&auto=format') no-repeat center / contain;
   background-color: var(--tdb-black);
 }
 
@@ -170,7 +170,7 @@ main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) {
   content: '';
   position: absolute; top: 50%; right: -30px; transform: translateY(-50%);
   width: 726px; height: 920px; max-width: 55%;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png?w=800&q=70&auto=format') no-repeat center / contain;
   opacity: 0.5; pointer-events: none; z-index: 0;
 }
 .services-section > .container { position: relative; z-index: 1; }
@@ -278,7 +278,7 @@ a.service-card:hover .service-text { color: #fff; }
 .about-card { position: relative; background: var(--tdb-dark); padding: 1.85rem; overflow: hidden; }
 .about-card::after {
   content: ''; position: absolute; top: 1.5rem; right: 1.5rem; width: 58px; height: 24px;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png?w=380&q=75&auto=format') no-repeat center / contain;
 }
 .about-card h3 { margin: 0 0 0.85rem; padding-right: 3.5rem; }
 .about-card p { margin: 0; color: var(--tdb-offwhite); }
@@ -321,7 +321,7 @@ a.service-card:hover .service-text { color: #fff; }
 .bg-leaf::before, .with-leaf::before {
   content: ''; position: absolute; left: -80px; top: 50%; transform: translateY(-50%);
   width: 620px; height: 760px; max-width: 50%;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/a0289ede76893701a44477927c7e12159b9c198e-1269x1085.webp') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/a0289ede76893701a44477927c7e12159b9c198e-1269x1085.webp?w=800&q=70&auto=format') no-repeat center / contain;
   opacity: 0.5; z-index: 0; pointer-events: none;
 }
 .bg-leaf > .container, .with-leaf > .container { position: relative; z-index: 1; }
@@ -333,7 +333,7 @@ a.service-card:hover .service-text { color: #fff; }
 .testimonial-section { position: relative; }
 .testimonial-section::after {
   content: ''; position: absolute; right: 5%; bottom: 2.5rem; width: 150px; height: 42px;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png?w=380&q=75&auto=format') no-repeat center / contain;
 }
 @media (max-width: 991px) { .testimonial-section::after { display: none; } }
 .testimonial .h2 { margin-bottom: 2.5rem; }
@@ -509,7 +509,7 @@ a.service-card:hover .service-text { color: #fff; }
 .rt-leaf-right::before {
   content: ''; position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
   width: 660px; height: 840px; max-width: 48%;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png') no-repeat center / contain;
+  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png?w=800&q=70&auto=format') no-repeat center / contain;
   opacity: 0.5; z-index: 0; pointer-events: none;
 }
 .rt-leaf-right > .container { position: relative; z-index: 1; }
