@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { AiKeyInput, AiModelInput } from '../../components/AiAssistInputs'
 
 /** Global site configuration (singleton). One document, pinned in the desk. */
 export const siteSettings = defineType({
@@ -11,6 +12,7 @@ export const siteSettings = defineType({
     { name: 'social', title: 'Social' },
     { name: 'seo', title: 'SEO & Analytics' },
     { name: 'blog', title: 'Blog' },
+    { name: 'ai', title: 'Writing assistant' },
   ],
   fields: [
     defineField({ name: 'siteName', title: 'Site name', type: 'string', group: 'general', initialValue: 'The Design Boutique' }),
@@ -54,6 +56,61 @@ export const siteSettings = defineType({
     defineField({ name: 'postSidebarItems', title: 'Post sidebar items', type: 'array', of: [{ type: 'text', rows: 2 }], group: 'blog', description: 'One line per service, e.g. "SEO: Drive Explosive Traffic & Real Results."' }),
     defineField({ name: 'postSidebarCta', title: 'Post sidebar button', type: 'link', group: 'blog' }),
     defineField({ name: 'relatedHeading', title: 'Related posts heading', type: 'string', group: 'blog', initialValue: 'More from The Design Boutique Blog' }),
+    // Optional AI writing assistance. The SEO checks and readability panel are
+    // always on and cost nothing; everything in this group is additive, off by
+    // default, and billed to whichever account the key belongs to.
+    defineField({
+      name: 'aiAssist',
+      title: 'Writing assistant',
+      type: 'object',
+      group: 'ai',
+      description:
+        'Adds an optional "Suggest" button to the SEO panel that can draft a meta description or tighten a paragraph. The SEO score and readability checks do not use this and keep working whether it is on or off.',
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Turn the Suggest button on',
+          type: 'boolean',
+          initialValue: false,
+          description: 'Off by default. Nothing is ever sent to a provider, and nothing is billed, until this is on and a key is saved.',
+        }),
+        defineField({
+          name: 'provider',
+          title: 'Provider',
+          type: 'string',
+          initialValue: 'anthropic',
+          description: 'Use whichever account you already have. The two are interchangeable here.',
+          options: {
+            list: [
+              { title: 'Anthropic (Claude)', value: 'anthropic' },
+              { title: 'OpenAI', value: 'openai' },
+            ],
+            layout: 'radio',
+          },
+        }),
+        defineField({
+          name: 'model',
+          title: 'Model',
+          type: 'string',
+          initialValue: 'claude-opus-5',
+          components: { input: AiModelInput },
+        }),
+        defineField({
+          name: 'key',
+          title: 'API key',
+          type: 'object',
+          components: { input: AiKeyInput },
+          description: 'Stored encrypted. Only the first few characters are ever shown again.',
+          fields: [
+            // Written by the key field's own controls, never typed into directly.
+            defineField({ name: 'ciphertext', title: 'Encrypted key', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'hint', title: 'Masked key', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'updatedAt', title: 'Last updated', type: 'datetime', readOnly: true, hidden: true }),
+          ],
+        }),
+      ],
+    }),
   ],
   preview: { prepare: () => ({ title: 'Site Settings' }) },
 })
