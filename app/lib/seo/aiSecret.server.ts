@@ -87,8 +87,11 @@ export function decryptKey(stored: string): string {
  */
 export function looksLikeKey(provider: string, key: string): { ok: true } | { ok: false; reason: string } {
   const k = key.trim()
-  if (k.length < 20) return { ok: false, reason: 'That looks too short to be an API key.' }
   if (/\s/.test(k)) return { ok: false, reason: 'An API key should not contain spaces or line breaks.' }
+  // Verification services issue shorter keys than the AI providers do, so the
+  // minimum length is per service rather than one number for everything.
+  const minimum = provider === 'mailverify' || provider === 'numverify' ? 12 : 20
+  if (k.length < minimum) return { ok: false, reason: 'That looks too short to be an API key.' }
   if (provider === 'anthropic' && !k.startsWith('sk-ant-')) {
     return { ok: false, reason: 'An Anthropic key starts with "sk-ant-". Check you copied the whole key.' }
   }

@@ -881,3 +881,64 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
 /* Category archive */
 .category-label { margin: 0.6rem 0 0; font-size: 19.2px; font-weight: 700; color: var(--tdb-accent); text-align: center; }
 .category-empty { color: var(--tdb-offwhite); text-align: center; }
+
+/* ── Forms by Angelo ─────────────────────────────────────────────────────
+   Layout and states for CMS-built forms. Field appearance itself is
+   inherited from .contact-form above, so a built form matches the hand
+   built one without a second set of input styles to keep in sync. */
+.fba-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.25rem; }
+.fba-w-full { grid-column: span 6; }
+.fba-w-half { grid-column: span 3; }
+.fba-w-third { grid-column: span 2; }
+@media (max-width: 720px) {
+  .fba-w-half, .fba-w-third { grid-column: span 6; }
+}
+
+.fba-field { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
+.fba-label { font-size: 0.95rem; color: var(--tdb-offwhite); }
+.fba-help { font-size: 0.85rem; color: var(--tdb-offwhite); opacity: 0.75; margin: 0; }
+.fba-error { font-size: 0.85rem; color: #ff6b5e; margin: 0; }
+.fba-field.has-error input,
+.fba-field.has-error select,
+.fba-field.has-error textarea { border-color: #ff6b5e; }
+.fba-form-error { color: #ff6b5e; margin: 0.5rem 0 0; }
+
+.fba-step:focus { outline: none; }
+.fba-actions { display: flex; gap: 1rem; align-items: center; margin-top: 1.75rem; }
+
+.fba-choices { display: flex; flex-direction: column; gap: 0.6rem; }
+.fba-choice { display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; }
+.fba-choice input { width: auto; margin-top: 0.25rem; flex: none; }
+.fba-choice--all { padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.15); margin-bottom: 0.2rem; }
+.fba-consent span p { margin: 0; }
+
+.fba-subfields { display: flex; gap: 0.75rem; }
+.fba-subfields > * { flex: 1; min-width: 0; }
+.fba-subfields--stack { flex-direction: column; }
+
+.fba-section-heading { margin: 1rem 0 0.25rem; font-size: 1.25rem; }
+.fba-section-description { margin: 0; color: var(--tdb-offwhite); opacity: 0.8; }
+.fba-copy p { margin: 0 0 0.75rem; }
+
+.fba-success { padding: 1.5rem 0; font-size: 1.1rem; }
+
+.fba-progress-fraction { color: var(--tdb-offwhite); margin: 0 0 1.5rem; }
+.fba-progress-bar { height: 4px; background: rgba(255,255,255,0.15); margin-bottom: 1.75rem; }
+.fba-progress-bar span { display: block; height: 100%; background: var(--tdb-accent); transition: width 0.25s ease; }
+.fba-progress-steps { list-style: none; display: flex; gap: 1.25rem; padding: 0; margin: 0 0 1.75rem; flex-wrap: wrap; }
+.fba-progress-steps li { display: flex; align-items: center; gap: 0.5rem; opacity: 0.45; }
+.fba-progress-steps li.is-current, .fba-progress-steps li.is-done { opacity: 1; }
+.fba-step-number {
+  width: 26px; height: 26px; border-radius: 999px; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 0.85rem;
+  border: 1px solid currentColor;
+}
+.fba-progress-steps li.is-current .fba-step-number { background: var(--tdb-accent); border-color: var(--tdb-accent); }
+.fba-progress-steps li.is-done .fba-step-number { border-color: var(--tdb-accent); color: var(--tdb-accent); }
+
+.fba-embed--card { background: rgba(255,255,255,0.04); padding: 2.5rem; }
+
+.fba-visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

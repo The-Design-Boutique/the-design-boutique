@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 import { AiKeyInput, AiModelInput } from '../../components/AiAssistInputs'
+import { makeEncryptedKeyInput } from '../../components/EncryptedKeyInput'
 
 /** Global site configuration (singleton). One document, pinned in the desk. */
 export const siteSettings = defineType({
@@ -13,6 +14,7 @@ export const siteSettings = defineType({
     { name: 'seo', title: 'SEO & Analytics' },
     { name: 'blog', title: 'Blog' },
     { name: 'ai', title: 'Writing assistant' },
+    { name: 'forms', title: 'Forms' },
   ],
   fields: [
     defineField({ name: 'siteName', title: 'Site name', type: 'string', group: 'general', initialValue: 'The Design Boutique' }),
@@ -56,6 +58,46 @@ export const siteSettings = defineType({
     defineField({ name: 'postSidebarItems', title: 'Post sidebar items', type: 'array', of: [{ type: 'text', rows: 2 }], group: 'blog', description: 'One line per service, e.g. "SEO: Drive Explosive Traffic & Real Results."' }),
     defineField({ name: 'postSidebarCta', title: 'Post sidebar button', type: 'link', group: 'blog' }),
     defineField({ name: 'relatedHeading', title: 'Related posts heading', type: 'string', group: 'blog', initialValue: 'More from The Design Boutique Blog' }),
+    // Optional form verification services. Both are off unless a key is saved,
+    // and a form works normally without them: the difference is whether a typo
+    // in an email or phone number is caught at the point of entry.
+    defineField({
+      name: 'formVerification',
+      title: 'Checking email addresses and phone numbers',
+      type: 'object',
+      group: 'forms',
+      options: { collapsible: false },
+      description:
+        'Optional paid services that check whether an address or number is real before a form is submitted, which cuts down on junk enquiries. Forms already check that what was typed looks correct; these check that it actually exists. Leave both empty to skip this entirely.',
+      fields: [
+        defineField({
+          name: 'mailverify',
+          title: 'MailVerify (email addresses)',
+          type: 'object',
+          components: {
+            input: makeEncryptedKeyInput({ service: 'mailverify', serviceLabel: 'MailVerify', signupUrl: 'https://mailverify.ai' }),
+          },
+          fields: [
+            defineField({ name: 'ciphertext', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'hint', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true, hidden: true }),
+          ],
+        }),
+        defineField({
+          name: 'numverify',
+          title: 'NumVerify (phone numbers)',
+          type: 'object',
+          components: {
+            input: makeEncryptedKeyInput({ service: 'numverify', serviceLabel: 'NumVerify', signupUrl: 'https://numverify.com' }),
+          },
+          fields: [
+            defineField({ name: 'ciphertext', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'hint', type: 'string', readOnly: true, hidden: true }),
+            defineField({ name: 'updatedAt', type: 'datetime', readOnly: true, hidden: true }),
+          ],
+        }),
+      ],
+    }),
     // Optional AI writing assistance. The SEO checks and readability panel are
     // always on and cost nothing; everything in this group is additive, off by
     // default, and billed to whichever account the key belongs to.

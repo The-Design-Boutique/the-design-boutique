@@ -4,6 +4,7 @@ import { aboutSection } from './aboutSection'
 import { industriesSection } from './industriesSection'
 import { workShowcase } from './workShowcase'
 import { richText } from './richText'
+import { formEmbed } from './formEmbed'
 import { ctaBand } from './ctaBand'
 import { videoEmbed } from './videoEmbed'
 import { htmlEmbed } from './htmlEmbed'
@@ -35,6 +36,7 @@ import { postGrid } from './postGrid'
 
 /** All page-builder blocks, in a sensible insert-menu order. */
 export const blocks = [
+  formEmbed,
   // hero / banners
   heroHome,
   subpageBanner,
