@@ -50,7 +50,32 @@ export const siteSettings = defineType({
       options: { hotspot: true },
       description: 'Used when a page has no share image of its own. Recommended 1200 x 630.',
     }),
-    defineField({ name: 'gtmId', title: 'Google Tag Manager ID', type: 'string', group: 'seo', description: 'For example GTM-XXXXXX.' }),
+    defineField({
+      name: 'gtmId',
+      title: 'Google Tag Manager ID',
+      type: 'string',
+      group: 'seo',
+      description:
+        'For example GTM-XXXXXX. Leave empty and no tracking of any kind is loaded. Anything you add inside Tag Manager runs on every page of this site, so it is worth keeping the container sparse: this site is fast, and tracking is the usual reason a site stops being fast.',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true
+          // Catching the shape here is kinder than a container that silently
+          // never fires because somebody pasted a GA id or the whole snippet.
+          return /^GTM-[A-Z0-9]+$/i.test(value.trim())
+            ? true
+            : 'A Tag Manager ID looks like GTM-XXXXXX. A GA4 id (G-XXXX) goes inside Tag Manager, not here.'
+        }),
+    }),
+    defineField({
+      name: 'gtmOnPreview',
+      title: 'Also load it on the preview site',
+      type: 'boolean',
+      group: 'seo',
+      initialValue: false,
+      description:
+        'Off by default, and worth leaving off. While this build is a preview, loading Tag Manager here would record our own testing as if it were real visitors, and that cannot be cleaned out of the figures afterwards. Turn it on only to check the container is firing, then turn it off again. At go-live this setting stops mattering.',
+    }),
     // The promo card shown in the sidebar of every blog post.
     defineField({ name: 'blogEyebrow', title: 'Blog eyebrow', type: 'string', group: 'blog', initialValue: 'The Design Boutique', description: 'Small line above the blog name on post pages.' }),
     defineField({ name: 'blogName', title: 'Blog name', type: 'string', group: 'blog', initialValue: 'Laney Said' }),
