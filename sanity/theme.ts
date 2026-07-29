@@ -52,8 +52,21 @@ const ink = {
  */
 const hairline = '#b5ae9f'
 
-/** Molten orange, a little deeper than the site's, which suits a dense UI. */
-const accent = '#e4471b'
+/**
+ * Burnt orange, deeper than the website's own.
+ *
+ * Depth chosen by measurement, because this colour has a second job most
+ * accents do not: Sanity fills the whole row with it when a document is
+ * selected, and then writes the title and the slug on top. At the site's
+ * brighter #e4471b the slug landed at 2.65 contrast, which is genuinely hard to
+ * read and was reported as such.
+ *
+ * Darkening lifts both. This value puts the title at 5.62 and the slug at 4.09,
+ * against Sanity's own default of 4.29 and 2.65, so the selected row is more
+ * legible here than in an unthemed Studio. The cost is a less vivid orange on
+ * buttons, which is a fair trade for a row you have to read.
+ */
+const accent = '#a8300c'
 
 /**
  * Signal colours, kept conventional and taken from the same palette so they sit
