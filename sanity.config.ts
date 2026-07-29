@@ -11,6 +11,7 @@ import { CwvDashboard } from './sanity/tools/CwvDashboard'
 import { NotFoundMonitor } from './sanity/tools/NotFoundMonitor'
 import { SearchFiles } from './sanity/tools/SearchFiles'
 import { About } from './sanity/tools/About'
+import { Analytics } from './sanity/tools/Analytics'
 import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
 import { viewPageAction } from './sanity/actions/viewPage'
 import { tdbTheme } from './sanity/theme'
@@ -99,6 +100,11 @@ export default defineConfig({
       name: 'core-web-vitals',
       title: 'Site Speed',
       component: CwvDashboard,
+    },
+    {
+      name: 'analytics',
+      title: 'Analytics',
+      component: Analytics,
     },
     {
       name: 'dead-links',
