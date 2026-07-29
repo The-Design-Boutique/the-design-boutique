@@ -140,5 +140,7 @@ export const LAYOUT_QUERY = defineQuery(`{
     headerCta{ label, link${linkProjection} },
     footerColumns[]{ title, links[]${linkProjection} }
   },
-  "settings": *[_id == "siteSettings"][0]{ siteName, logo, logoSecondary, footerLogo, googleBadgeUrl, email, phone, address, defaultShareImage, gtmId, gtmOnPreview, socialLinks[]{ platform, url } }
+  "settings": *[_id == "siteSettings"][0]{ siteName, logo, logoSecondary, footerLogo, googleBadgeUrl, email, phone, address, defaultShareImage, gtmId, gtmOnPreview, socialLinks[]{ platform, url },
+    privacy{ enabled, heading, body, policyVersion, cookieDays, honorGpc, offerSessionRecording, privacyPolicyUrl, cookiePolicyUrl, linkText, extraBlocklist, healthIntentPaths }
+  }
 }`)

@@ -14,35 +14,65 @@ import {
 } from '../../app/lib/cwvTrend'
 import { CwvTrendChart } from '../components/CwvTrendChart'
 import { timeAgo } from '../../app/lib/timeAgo'
+import { BAND_VAR, useBandVars } from '../lib/bandColors'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const BAND_COLOR: Record<Band, string> = {
-  good: '#0cce6b',
-  'needs-improvement': '#ffa400',
-  poor: '#ff4e42',
-}
+const BAND_COLOR: Record<Band, string> = BAND_VAR
 
+/**
+ * Every colour here comes from the Studio's own theme rather than a literal.
+ *
+ * This panel was written against a dark theme and used near-black cards with
+ * pale grey text. When the Studio was rethemed to warm paper, all of it became
+ * dark-on-light and effectively unreadable: the text was still there, and
+ * nobody could see it.
+ *
+ * The variables below are set by Sanity on every Card, so they follow light and
+ * dark automatically and will keep following any future retheme. The rule for
+ * anything added here is simply not to write a hex value: if a colour is needed
+ * that is not in this list, it probably wants a Sanity UI component instead.
+ *
+ * The performance bands are the one thing not taken from Sanity, because green,
+ * amber and red are what the numbers mean rather than decoration. They still do
+ * not appear here as hex values: Google's published colours are unreadable on a
+ * light background, so each scheme gets its own shade of the same hue. See
+ * bandColors.
+ */
 const S: Record<string, any> = {
   wrap: { padding: '28px 32px', maxWidth: 1100, margin: '0 auto', fontFamily: 'inherit' },
-  h1: { fontSize: 24, fontWeight: 700, margin: '0 0 4px' },
-  sub: { color: '#8a8a8a', fontSize: 14, margin: '0 0 22px' },
-  h2: { fontSize: 17, fontWeight: 700, margin: '0 0 4px' },
-  sectionNote: { color: '#8a8a8a', fontSize: 13, margin: '0 0 16px', maxWidth: 760, lineHeight: 1.55 },
+  h1: { fontSize: 24, fontWeight: 700, margin: '0 0 4px', color: 'var(--card-fg-color)' },
+  sub: { color: 'var(--card-muted-fg-color)', fontSize: 14, margin: '0 0 22px' },
+  h2: { fontSize: 17, fontWeight: 700, margin: '0 0 4px', color: 'var(--card-fg-color)' },
+  sectionNote: {
+    color: 'var(--card-muted-fg-color)', fontSize: 13, margin: '0 0 16px',
+    maxWidth: 760, lineHeight: 1.55,
+  },
   bar: { display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 20 },
-  toggle: { display: 'inline-flex', border: '1px solid #333', borderRadius: 4, overflow: 'hidden' },
+  toggle: {
+    display: 'inline-flex', border: '1px solid var(--card-border-color)',
+    borderRadius: 4, overflow: 'hidden',
+  },
   tab: (on: boolean): CSSProperties => ({
     padding: '7px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 0,
-    background: on ? '#f26722' : 'transparent', color: on ? '#fff' : '#bbb',
+    // Selected reverses the card's own colours, which stays legible in either
+    // theme without naming a colour.
+    background: on ? 'var(--card-accent-fg-color)' : 'transparent',
+    color: on ? 'var(--card-bg-color)' : 'var(--card-fg-color)',
   }),
   btn: {
     padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-    background: 'transparent', color: '#ddd', border: '1px solid #333', borderRadius: 4,
+    background: 'transparent', color: 'var(--card-fg-color)',
+    border: '1px solid var(--card-border-color)', borderRadius: 4,
   },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 },
-  card: { border: '1px solid #2a2a2a', borderRadius: 6, padding: '18px 20px', background: '#151515' },
-  metricLabel: { fontSize: 13, color: '#9a9a9a', margin: '0 0 2px' },
-  metricName: { fontSize: 15, fontWeight: 700, margin: '0 0 10px' },
+  card: {
+    border: '1px solid var(--card-border-color)', borderRadius: 6,
+    padding: '18px 20px', background: 'var(--card-bg-color)',
+    color: 'var(--card-fg-color)',
+  },
+  metricLabel: { fontSize: 13, color: 'var(--card-muted-fg-color)', margin: '0 0 2px' },
+  metricName: { fontSize: 15, fontWeight: 700, margin: '0 0 10px', color: 'var(--card-fg-color)' },
   value: { fontSize: 34, fontWeight: 700, lineHeight: 1.1, margin: '0 0 10px' },
   pill: (c: string): CSSProperties => ({
     display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -50,17 +80,22 @@ const S: Record<string, any> = {
     borderRadius: 999, padding: '3px 10px',
   }),
   dot: (c: string): CSSProperties => ({ width: 8, height: 8, borderRadius: 999, background: c }),
-  blurb: { fontSize: 12.5, color: '#8a8a8a', margin: '12px 0 0', lineHeight: 1.5 },
+  blurb: { fontSize: 12.5, color: 'var(--card-muted-fg-color)', margin: '12px 0 0', lineHeight: 1.5 },
   notice: (tone: 'warn' | 'info' | 'error'): CSSProperties => ({
-    border: `1px solid ${tone === 'error' ? '#5a2020' : tone === 'warn' ? '#5a4620' : '#2a2a2a'}`,
-    background: tone === 'error' ? '#241313' : tone === 'warn' ? '#241f13' : '#151515',
+    // Tinted from the band colours so a warning still reads as a warning, but
+    // over the card's own background rather than a hardcoded dark one.
+    border: `1px solid ${
+      tone === 'error' ? BAND_COLOR.poor : tone === 'warn' ? BAND_COLOR['needs-improvement'] : 'var(--card-border-color)'
+    }`,
+    background: 'var(--card-bg-color)',
+    color: 'var(--card-fg-color)',
     borderRadius: 6, padding: '13px 16px', marginBottom: 18, fontSize: 13.5, lineHeight: 1.55,
   }),
   spark: { display: 'block', marginTop: 14 },
 }
 
 function scoreColor(score: number | null | undefined): string {
-  if (score === null || score === undefined) return '#666'
+  if (score === null || score === undefined) return 'var(--card-muted-fg-color)'
   if (score >= 90) return BAND_COLOR.good
   if (score >= 50) return BAND_COLOR['needs-improvement']
   return BAND_COLOR.poor
@@ -78,7 +113,7 @@ function Sparkline({ points, band }: { points: number[]; band: Band | null }) {
       return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`
     })
     .join(' ')
-  const color = band ? BAND_COLOR[band] : '#666'
+  const color = band ? BAND_COLOR[band] : 'var(--card-muted-fg-color)'
   return (
     <svg style={S.spark} width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img" aria-label="Trend over recent weeks">
       <path d={d} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
@@ -88,6 +123,7 @@ function Sparkline({ points, band }: { points: number[]; band: Band | null }) {
 
 export function CwvDashboard() {
   const client = useClient({ apiVersion: '2025-02-19' })
+  const bandVars = useBandVars()
   const [formFactor, setFormFactor] = useState<'PHONE' | 'DESKTOP'>('PHONE')
   const [snaps, setSnaps] = useState<any[] | null>(null)
   const [lab, setLab] = useState<any | null>(null)
@@ -195,7 +231,9 @@ export function CwvDashboard() {
   }
 
   return (
-    <div style={S.wrap}>
+    // The band colours are defined here, at the top, so that everything below
+    // them resolves BAND_VAR, including the SVG in the sparklines and the chart.
+    <div style={{ ...S.wrap, ...bandVars }}>
       <h1 style={S.h1}>Site Speed</h1>
       <p style={S.sub}>
         Two views: how real visitors experience the site, and a lab test you can run any time.
@@ -213,7 +251,7 @@ export function CwvDashboard() {
           {busy ? 'Checking…' : 'Refresh now'}
         </button>
         {latest?.fetchedAt ? (
-          <span style={{ fontSize: 12.5, color: '#8a8a8a' }}>
+          <span style={{ fontSize: 12.5, color: 'var(--card-muted-fg-color)' }}>
             Last checked {timeAgo(latest.fetchedAt)}
           </span>
         ) : null}
@@ -228,7 +266,7 @@ export function CwvDashboard() {
       </p>
 
       {snaps === null ? (
-        <p style={{ color: '#8a8a8a' }}>Loading…</p>
+        <p style={{ color: 'var(--card-muted-fg-color)' }}>Loading…</p>
       ) : !latest ? (
         <div style={S.notice('info')}>
           <strong>No readings yet.</strong>
@@ -264,7 +302,7 @@ export function CwvDashboard() {
               {METRICS.map((m) => {
                 const value = latest[m.key] as number | null
                 const band = bandFor(m.key as MetricKey, value)
-                const color = band ? BAND_COLOR[band] : '#666'
+                const color = band ? BAND_COLOR[band] : 'var(--card-muted-fg-color)'
                 const series = history.map((h) => h[m.key]).filter((v) => typeof v === 'number') as number[]
                 return (
                   <div key={m.key} style={S.card}>
@@ -323,7 +361,7 @@ export function CwvDashboard() {
       </div>
 
       {allSnaps === null ? (
-        <p style={{ color: '#8a8a8a' }}>Loading&#8230;</p>
+        <p style={{ color: 'var(--card-muted-fg-color)' }}>Loading&#8230;</p>
       ) : trendSource === 'field' && !fieldHasHistory ? (
         <div style={S.notice('info')}>
           <strong>No history from real visitors yet.</strong>
@@ -372,7 +410,7 @@ export function CwvDashboard() {
                   ? BAND_COLOR.good
                   : summary?.direction === 'degrading'
                     ? BAND_COLOR.poor
-                    : '#9a9a9a'
+                    : 'var(--card-muted-fg-color)'
               return (
                 <div key={m.key} style={S.card}>
                   <p style={S.metricLabel}>{m.key.toUpperCase()}</p>
@@ -380,14 +418,14 @@ export function CwvDashboard() {
                   {points.length < 2 && trendSource === 'lab' && m.key === 'inp' ? (
                     // Not a gap in the data: INP measures how a page responds to a
                     // real person, and there is nobody in a lab test to do the tapping.
-                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                    <p style={{ color: 'var(--card-muted-fg-color)', fontSize: 13, margin: 0 }}>
                       This one cannot be measured by a lab test. It records how quickly the page
                       responds when somebody taps or clicks, and a lab test has nobody tapping. It
                       appears here once there is enough real visitor data. Total Blocking Time, in
                       the lab section above, is the closest stand-in.
                     </p>
                   ) : points.length < 2 ? (
-                    <p style={{ color: '#8a8a8a', fontSize: 13, margin: 0 }}>
+                    <p style={{ color: 'var(--card-muted-fg-color)', fontSize: 13, margin: 0 }}>
                       No readings in this period. Try a longer range.
                     </p>
                   ) : (
@@ -434,7 +472,7 @@ export function CwvDashboard() {
               <p style={S.metricName}>Performance score</p>
               <p style={{ ...S.value, color: scoreColor(lab.performanceScore) }}>
                 {lab.performanceScore ?? <span style={{ fontSize: 18 }}>No data</span>}
-                {lab.performanceScore == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
+                {lab.performanceScore == null ? null : <span style={{ fontSize: 18, color: 'var(--card-muted-fg-color)' }}> / 100</span>}
               </p>
               <p style={S.blurb}>Google&rsquo;s overall speed rating for this page. 90 and above is good, below 50 is poor.</p>
             </div>
@@ -449,7 +487,7 @@ export function CwvDashboard() {
             <div style={S.card}>
               <p style={S.metricLabel}>TBT</p>
               <p style={S.metricName}>Total Blocking Time</p>
-              <p style={{ ...S.value, color: lab.tbt == null ? '#666' : lab.tbt <= 200 ? BAND_COLOR.good : lab.tbt <= 600 ? BAND_COLOR['needs-improvement'] : BAND_COLOR.poor }}>
+              <p style={{ ...S.value, color: lab.tbt == null ? 'var(--card-muted-fg-color)' : lab.tbt <= 200 ? BAND_COLOR.good : lab.tbt <= 600 ? BAND_COLOR['needs-improvement'] : BAND_COLOR.poor }}>
                 {lab.tbt == null ? 'No data' : `${Math.round(lab.tbt)} ms`}
               </p>
               <p style={S.blurb}>How long the page was busy and unable to respond. A lab stand-in for responsiveness.</p>
@@ -492,7 +530,7 @@ export function CwvDashboard() {
                   <p style={S.metricName}>{c.name}</p>
                   <p style={{ ...S.value, color: scoreColor(v) }}>
                     {v ?? <span style={{ fontSize: 18 }}>No data</span>}
-                    {v == null ? null : <span style={{ fontSize: 18, color: '#8a8a8a' }}> / 100</span>}
+                    {v == null ? null : <span style={{ fontSize: 18, color: 'var(--card-muted-fg-color)' }}> / 100</span>}
                   </p>
                   <p style={S.blurb}>{c.blurb}</p>
                 </div>

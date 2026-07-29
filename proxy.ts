@@ -142,6 +142,20 @@ async function recordHit(record: RedirectRecord): Promise<void> {
   }
 }
 
+/**
+ * Carry on to the page, telling it which path was asked for.
+ *
+ * A server component cannot see the pathname on its own, and the consent gate
+ * needs it: a page that collects health information loads no tracking at all,
+ * and that decision has to be made before the markup is written rather than
+ * corrected afterwards in the browser.
+ */
+function passThrough(request: NextRequest) {
+  const headers = new Headers(request.headers)
+  headers.set('x-pathname', request.nextUrl.pathname)
+  return NextResponse.next({ request: { headers } })
+}
+
 export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const path = normalisePath(request.nextUrl.pathname)
 
@@ -149,11 +163,11 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
   try {
     redirects = await getRedirects()
   } catch {
-    return NextResponse.next()
+    return passThrough(request)
   }
 
   const match = redirects.get(path) || structuralRedirect(path)
-  if (!match) return NextResponse.next()
+  if (!match) return passThrough(request)
 
   const destination = isExternalTarget(match.toPath)
     ? new URL(match.toPath)
@@ -161,7 +175,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
 
   // Never redirect to where we already are.
   if (!isExternalTarget(match.toPath) && normalisePath(destination.pathname) === path) {
-    return NextResponse.next()
+    return passThrough(request)
   }
 
   event.waitUntil(recordHit(match))

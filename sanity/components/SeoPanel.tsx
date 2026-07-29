@@ -6,9 +6,9 @@ import type { UserViewComponent } from 'sanity/structure'
 import { analyseSeo, type CheckResult, type SeoAnalysis } from '../../app/lib/seo'
 import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
-import { IssueRow, Section, pathForDoc, useSeoAudit } from './seoShared'
-import { SuggestControls } from './SuggestControls'
+import { IssueRow, Section, pathForDoc, useSeoAudit, useDebounced } from './seoShared'
 import { SerpPreview } from './SerpPreview'
+import { BAND_VAR, useBandVars } from '../lib/bandColors'
 
 /**
  * The domain a search result would show. The staging build is hidden from
@@ -38,16 +38,6 @@ const STATUS_TONE: Record<CheckResult['status'], Tone> = {
   warn: 'caution',
   fail: 'critical',
   skipped: 'default',
-}
-
-/** Recompute on a short delay so typing stays smooth (ruleset 05, rule 1). */
-function useDebounced<T>(value: T, ms: number): T {
-  const [held, setHeld] = useState(value)
-  useEffect(() => {
-    const t = setTimeout(() => setHeld(value), ms)
-    return () => clearTimeout(t)
-  }, [value, ms])
-  return held
 }
 
 function ScoreHeader({ analysis }: { analysis: SeoAnalysis }) {
@@ -124,6 +114,7 @@ function CheckRow({ check }: { check: CheckResult }) {
  */
 export const SeoPanel: UserViewComponent = function SeoPanel({ document, documentId, schemaType }) {
   const doc = useDebounced(document?.displayed, 400)
+  const bandVars = useBandVars()
 
   const path = pathForDoc(schemaType?.name || '', (doc as any)?.slug?.current)
 
@@ -172,7 +163,8 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
   const skipped = checks.filter((c) => c.status === 'skipped')
 
   return (
-    <Container width={1} paddingX={4} paddingY={5}>
+    // Band colours defined at the top so the scores below resolve them.
+    <Container width={1} paddingX={4} paddingY={5} style={bandVars}>
       <Stack space={5}>
         <ScoreHeader analysis={analysis} />
 
@@ -284,15 +276,6 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
           </Section>
         ) : null}
 
-        {/* Renders nothing unless a key is configured (ruleset 05, rule 20). */}
-        <SuggestControls
-          documentId={documentId}
-          documentType={schemaType?.name || ''}
-          title={(doc as any)?.title}
-          keyword={(doc as any)?.seo?.focusKeyword}
-          prose={analysis.content.text}
-          paragraphs={analysis.content.paragraphs}
-        />
 
         <Section
           title="Technical"
@@ -321,7 +304,19 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
                 ].map(([label, value]) => (
                   <Text key={String(label)} size={1} muted>
                     {label}:{' '}
-                    <span style={{ fontWeight: 600, color: value == null ? undefined : Number(value) >= 90 ? '#0cce6b' : Number(value) >= 50 ? '#ffa400' : '#ff4e42' }}>
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color:
+                          value == null
+                            ? undefined
+                            : Number(value) >= 90
+                              ? BAND_VAR.good
+                              : Number(value) >= 50
+                                ? BAND_VAR['needs-improvement']
+                                : BAND_VAR.poor,
+                      }}
+                    >
                       {value == null ? 'no data' : `${value}/100`}
                     </span>
                   </Text>

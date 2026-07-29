@@ -185,13 +185,18 @@ function RankedList({
               </Text>
             ) : null}
           </Flex>
+          {/* The same accent as the daily chart, at the same strength. It was
+              previously the text colour at a quarter opacity, which on the
+              light theme resolved to a contrast of 1.72 against the card: the
+              bar was there and could not be seen, so the list lost the thing
+              that made it scannable. */}
           <Box
             marginTop={1}
             style={{
               height: 3,
               width: `${(r.value / peak) * 100}%`,
-              background: 'currentColor',
-              opacity: 0.25,
+              background: 'var(--card-accent-fg-color, currentColor)',
+              opacity: 0.75,
               borderRadius: 2,
             }}
           />

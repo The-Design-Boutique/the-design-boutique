@@ -77,6 +77,14 @@ export function Footer({ nav, settings }: { nav?: any; settings?: any }) {
             {siteName}, Inc. &copy; 2026. All Rights Reserved. {'| '}
             <a href="/privacy-policy">Privacy Policy</a> {'| '}
             <a href="/ada-compliance">ADA Compliance</a> {'| '}
+            {/*
+              A named opt-out link, which California asks for specifically: the
+              small floating icon satisfies "reachable" but not "recognisable".
+              It needs no click handler of its own. The consent banner listens
+              for this attribute anywhere on the page, so this stays a plain
+              anchor and the footer imports nothing.
+            */}
+            <a href="#" data-pcgate-open>Your Privacy Choices</a> {'| '}
             Site By Us!
           </p>
         </div>

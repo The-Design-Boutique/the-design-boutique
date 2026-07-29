@@ -6,6 +6,23 @@ import { useClient } from 'sanity'
 import { type SeoIssue } from '../../app/lib/seoIssues'
 
 /**
+ * Recompute on a short delay so typing stays smooth (ruleset 05, rule 1).
+ *
+ * Shared because all three panels beside the editor recompute from the open
+ * document as it is typed into, and three copies of the same four lines is
+ * three places to fix when the delay turns out to be wrong.
+ */
+export function useDebounced<T>(value: T, ms: number): T {
+  const [held, setHeld] = useState(value)
+  useEffect(() => {
+    const t = setTimeout(() => setHeld(value), ms)
+    return () => clearTimeout(t)
+  }, [value, ms])
+  return held
+}
+
+
+/**
  * The pieces shared by the SEO tab and the Search tab.
  *
  * Both read the same stored audit record, so the fetching, the "checked

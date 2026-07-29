@@ -12,6 +12,7 @@ export const siteSettings = defineType({
     { name: 'contact', title: 'Contact' },
     { name: 'social', title: 'Social' },
     { name: 'seo', title: 'SEO & Analytics' },
+    { name: 'privacy', title: 'Cookies & privacy' },
     { name: 'blog', title: 'Blog' },
     { name: 'ai', title: 'Writing assistant' },
     { name: 'forms', title: 'Forms' },
@@ -75,6 +76,115 @@ export const siteSettings = defineType({
       initialValue: false,
       description:
         'Off by default, and worth leaving off. While this build is a preview, loading Tag Manager here would record our own testing as if it were real visitors, and that cannot be cleaned out of the figures afterwards. Turn it on only to check the container is firing, then turn it off again. At go-live this setting stops mattering.',
+    }),
+    // The cookie banner and what it actually enforces.
+    //
+    // Worth knowing what this is before changing anything in it: the banner is
+    // the visible part, but the work happens underneath. Nothing on the list of
+    // known tracking tools is allowed to load at all until somebody agrees to
+    // the category it belongs to, whether it was added through Tag Manager or
+    // pasted into a page. Turning the banner off turns that enforcement off too.
+    defineField({
+      name: 'privacy',
+      title: 'Cookie banner',
+      type: 'object',
+      group: 'privacy',
+      options: { collapsible: false },
+      description:
+        'Asks visitors what tracking they will accept, and holds everything non-essential until they answer. The same logic used on the WordPress sites.',
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Show the cookie banner',
+          type: 'boolean',
+          initialValue: true,
+          description:
+            'When this is off there is no banner and no blocking, so anything in Tag Manager runs for everybody immediately. Only appropriate if the site loads no tracking at all.',
+        }),
+        defineField({
+          name: 'heading',
+          title: 'Banner heading',
+          type: 'string',
+          initialValue: 'Your privacy choices',
+        }),
+        defineField({
+          name: 'body',
+          title: 'Banner text',
+          type: 'text',
+          rows: 3,
+          description:
+            'Leave empty to use the standard wording, which explains that nothing non-essential runs until they choose.',
+        }),
+        defineField({
+          name: 'policyVersion',
+          title: 'Policy version',
+          type: 'number',
+          initialValue: 1,
+          description:
+            'The one setting worth understanding. Every visitor’s answer is stored against the number that was here when they gave it. Raise it by one and everybody is asked again, which is what you do after changing what the site collects. Nothing else re-asks them.',
+          validation: (rule) => rule.min(1).integer(),
+        }),
+        defineField({
+          name: 'cookieDays',
+          title: 'Remember their answer for (days)',
+          type: 'number',
+          initialValue: 180,
+          description: 'After this many days they are asked again. Six months is the usual choice.',
+          validation: (rule) => rule.min(1).max(730).integer(),
+        }),
+        defineField({
+          name: 'honorGpc',
+          title: 'Honour the browser’s own privacy signal',
+          type: 'boolean',
+          initialValue: true,
+          description:
+            'Some browsers send a "do not sell or share my information" signal on the visitor’s behalf. California, Colorado and Connecticut require that signal to be obeyed, so leave this on. Advertising stays off for those visitors even if they click Accept all.',
+        }),
+        defineField({
+          name: 'offerSessionRecording',
+          title: 'Offer the session recording category',
+          type: 'boolean',
+          initialValue: true,
+          description:
+            'Tools that record what a visitor did on the page, such as Hotjar or Microsoft Clarity. Leave the category listed even if none is in use: if one is ever added it is blocked by default rather than silently allowed. Turning this off hides the choice, and those tools stay blocked for everyone.',
+        }),
+        defineField({
+          name: 'privacyPolicyUrl',
+          title: 'Privacy policy link',
+          type: 'string',
+          description: 'Shown in the banner. A path such as /privacy-policy, or a full address.',
+        }),
+        defineField({
+          name: 'cookiePolicyUrl',
+          title: 'Cookie policy link',
+          type: 'string',
+          description: 'Optional. Shown beside the privacy policy link when set.',
+        }),
+        defineField({
+          name: 'linkText',
+          title: 'Footer link wording',
+          type: 'string',
+          initialValue: 'Your Privacy Choices',
+          description:
+            'The permanent link that reopens this. California expects an opt-out to stay reachable, not to disappear once the banner is dismissed.',
+        }),
+        defineField({
+          name: 'extraBlocklist',
+          title: 'Additional tools to block',
+          type: 'text',
+          rows: 4,
+          description:
+            'Only needed for something the site starts using that is not already recognised. One per line, as address = category, for example widget.example.com = functional. Categories: analytics, advertising, functional, session_replay.',
+        }),
+        defineField({
+          name: 'healthIntentPaths',
+          title: 'Pages that collect health information',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description:
+            'One path per line, such as /health-enquiry. On these pages no advertising, analytics or recording runs at all, whatever the visitor previously agreed to, and Tag Manager is not loaded. Leave empty unless a form genuinely asks about health, which for this site it probably does not.',
+        }),
+      ],
     }),
     // The promo card shown in the sidebar of every blog post.
     defineField({ name: 'blogEyebrow', title: 'Blog eyebrow', type: 'string', group: 'blog', initialValue: 'The Design Boutique', description: 'Small line above the blog name on post pages.' }),

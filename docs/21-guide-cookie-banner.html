@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Cookie Banner</title><style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+</style></head>
+<body>
+
+<h1>The Cookie Banner</h1>
+<p class="sub">What it does, and the one setting worth knowing &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  Your website now asks every visitor what tracking they are willing to accept, and holds everything
+  non-essential until they answer. This is the same system running on the WordPress sites, rebuilt for
+  the new site.
+</p>
+
+<p>
+  Most of it needs nothing from you. This guide explains what visitors see, what happens underneath,
+  and the handful of things that are genuinely your decision.
+</p>
+
+<h2>The part that makes this different</h2>
+
+<p>
+  Most cookie banners are a formality. They appear, the visitor clicks something, and the tracking
+  carries on either way, because the banner only ever <em>asked</em> the tracking tools to behave. If a
+  tool ignores the request, or was added to the site by a route the banner does not know about, nothing
+  stops it.
+</p>
+
+<p>
+  This one is built the other way round. It does not ask. It sits in front of the website's connection to
+  the outside world, and when a tracking tool tries to send information anywhere, it refuses to carry the
+  message. The tool is not asked to stand down, it is prevented.
+</p>
+
+<div class="box ok">
+  <strong class="hd">Why that matters to you</strong>
+  <p>
+    If someone adds a Facebook pixel through Tag Manager next year and forgets to tell anyone, it is
+    blocked by default, for everyone, until a visitor agrees to advertising cookies. You do not have to
+    know it was added for it to be handled correctly.
+  </p>
+</div>
+
+<h2>What a visitor sees</h2>
+
+<p>
+  On their first visit, a panel appears at the bottom of the screen with three choices.
+</p>
+
+<table>
+  <tr>
+    <th style="width:26%">Accept all</th>
+    <td>Everything is allowed. This is one click, in the most prominent button, because a consent
+    banner that makes agreeing harder than refusing is itself a problem.</td>
+  </tr>
+  <tr>
+    <th>Reject all</th>
+    <td>Nothing non-essential runs. Equally prominent, and equally one click, which is a legal
+    requirement in several states.</td>
+  </tr>
+  <tr>
+    <th>Manage preferences</th>
+    <td>Opens the list of categories below, so they can allow some and refuse others.</td>
+  </tr>
+</table>
+
+<p>
+  Their answer is remembered for six months. After that, or if you change the policy version (see
+  below), they are asked again. There is a permanent <strong>Your Privacy Choices</strong> link in the
+  footer, and a small shield button in the bottom corner of every page, so they can change their mind at
+  any time. Both are required: California expects the opt-out to stay findable rather than disappearing
+  along with the banner.
+</p>
+
+<h2>The four categories</h2>
+
+<p>
+  Strictly necessary things, such as security and making the contact form work, are always on and are not
+  offered as a choice. They involve no tracking and share nothing with anybody. Everything else is
+  optional, and starts switched off.
+</p>
+
+<table>
+  <tr>
+    <th style="width:26%">Analytics</th>
+    <td>Counting visits and which pages get read. This is Google Analytics. Refusing it means that
+    visitor is not counted in your reports.</td>
+  </tr>
+  <tr>
+    <th>Advertising</th>
+    <td>Advert measurement and audience building, such as Google Ads or a Meta pixel. This is the
+    category that shares information with other companies, which is why it gets the most legal
+    attention.</td>
+  </tr>
+  <tr>
+    <th>Chat and call tracking</th>
+    <td>Helpful extras rather than tracking for its own sake: a live chat window, or a phone number that
+    records which page the call came from.</td>
+  </tr>
+  <tr>
+    <th>Session recording</th>
+    <td>Tools that record what a visitor did on the page, including where they moved and what they
+    typed, and play it back later. Nothing on your site uses this today. The category is listed anyway,
+    so that if one is ever added it is blocked from the start rather than quietly allowed.</td>
+  </tr>
+</table>
+
+<div class="pagebreak"></div>
+
+<h2>The browser signal</h2>
+
+<p>
+  Some browsers now send a "do not sell or share my information" signal on the visitor's behalf, before
+  they have clicked anything. California, Colorado and Connecticut all require that signal to be
+  obeyed, so the site obeys it: advertising stays off for those visitors, and stays off even if they
+  press Accept all, because a browser-level refusal is treated as the more deliberate instruction.
+</p>
+
+<p>
+  They are still shown the banner, and can still switch on the chat widget if they want it. What they
+  cannot accidentally do is undo an opt-out their browser made for them.
+</p>
+
+<h2>Forms</h2>
+
+<p>
+  One more rule, which is separate from cookies but part of the same body of law. Any tick box on a form
+  that signs someone up for marketing, texts, or a newsletter must not arrive already ticked. Agreement
+  has to be something the visitor actively does.
+</p>
+
+<p>
+  The site now enforces this automatically. If a marketing box is ever set up pre-ticked, it is unticked
+  before the visitor sees it. Boxes for terms and conditions or the privacy policy are deliberately left
+  alone, since unticking those would be its own problem.
+</p>
+
+<h2>What you actually control</h2>
+
+<div class="where">
+  <strong>Where:</strong> Sanity, then Site Settings, then the <strong>Cookies &amp; privacy</strong> tab.
+</div>
+
+<p>Most of these you will set once and never touch again.</p>
+
+<div class="step">
+  <strong>Policy version</strong>
+  This is the one worth understanding. Every visitor's answer is filed against the number in this box at
+  the time they gave it. Raise it by one and everybody is asked again, from scratch. That is what you do
+  after changing what the site collects, or adding a new tool that gathers something new. Nothing else
+  re-asks people, so if you make a meaningful change to what you collect and leave this alone, visitors
+  keep operating under the answer they gave to the old question.
+</div>
+
+<div class="step">
+  <strong>Banner heading and text</strong>
+  The wording visitors read. Leave the text empty and it uses the standard wording, which is written to
+  be accurate about what the site does.
+</div>
+
+<div class="step">
+  <strong>Remember their answer for</strong>
+  How long before they are asked again. Six months is the default and the usual choice.
+</div>
+
+<div class="step">
+  <strong>Honour the browser's own privacy signal</strong>
+  Leave this on. It is a legal requirement in three states and switching it off is a decision to ignore
+  them.
+</div>
+
+<div class="step">
+  <strong>Additional tools to block</strong>
+  Only needed if the site starts using a tracking tool the system does not already recognise. It knows
+  about roughly fifty of the common ones, including everything currently on your site. If you ever add
+  something unusual, send it over and it takes a moment to add.
+</div>
+
+<h2>What this does not do</h2>
+
+<div class="box warn">
+  <strong class="hd">Worth being straight about</strong>
+  <ul>
+    <li>
+      This is a technical control, not legal advice, and it is not a claim that the site complies with
+      any particular law. It does the things those laws ask a website to do. Whether your business as a
+      whole complies is a question for a lawyer, and depends on things a website cannot see, such as
+      what you do with the enquiries after they arrive.
+    </li>
+    <li>
+      It governs the tools it knows about. That covers the common advertising, analytics, recording and
+      chat tools, and everything currently running on your site, but it is a list rather than magic. A
+      genuinely obscure tool would need adding, which is the setting above.
+    </li>
+    <li>
+      It does not write your privacy policy. The banner links to it, and the policy still has to say
+      what you actually collect and why.
+    </li>
+  </ul>
+</div>
+
+<h2>If you want to see it working</h2>
+
+<p>
+  Open the site, and when the banner appears choose <strong>Reject all</strong>. Then open the footer link
+  marked Your Privacy Choices and switch Analytics on. Nothing about the page changes visibly, which is
+  the point: the difference is entirely in what the site is and is not allowed to send elsewhere, and it
+  takes effect immediately rather than on the next page.
+</p>
+
+<div class="foot">
+  The Design Boutique &nbsp;|&nbsp; Built by Angelo Marasa &nbsp;|&nbsp; Questions and change requests:
+  angelo@thedesignboutique.com
+</div>
+
+</body></html>
