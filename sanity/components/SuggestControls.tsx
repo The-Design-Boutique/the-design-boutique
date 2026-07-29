@@ -55,16 +55,25 @@ export function SuggestControls({
   title,
   keyword,
   prose,
+  paragraphs = [],
 }: {
   documentId: string
   documentType: string
   title?: string
   keyword?: string
   prose?: string
+  /** Visible paragraphs, longest of which can be offered for shortening. */
+  paragraphs?: string[]
 }) {
   const [availability, setAvailability] = useState<Availability | null>(null)
   const [busy, setBusy] = useState<Task | null>(null)
   const [draft, setDraft] = useState<{ task: Task; text: string } | null>(null)
+  const [tightened, setTightened] = useState<{ before: string; after: string } | null>(null)
+  const [tightening, setTightening] = useState(false)
+
+  // The longest paragraph is the one most likely to need shortening, and picking
+  // it automatically avoids asking somebody to paste text into a box.
+  const longest = [...paragraphs].sort((a, b) => b.length - a.length)[0]
   const [note, setNote] = useState<string | null>(null)
 
   // The published id, because that is what the operation expects; Sanity routes
@@ -111,6 +120,27 @@ export function SuggestControls({
     [title, keyword, prose],
   )
 
+  const tighten = useCallback(async () => {
+    if (!longest) return
+    setTightening(true)
+    setNote(null)
+    setTightened(null)
+    try {
+      const res = await fetch('/api/seo/suggest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: 'tighten', paragraph: longest }),
+      })
+      const body = await res.json()
+      if (body?.ok && body.suggestion) setTightened({ before: longest, after: body.suggestion })
+      else setNote(body?.reason || 'Could not shorten that paragraph.')
+    } catch {
+      setNote('Could not reach the server.')
+    } finally {
+      setTightening(false)
+    }
+  }, [longest])
+
   const accept = useCallback(() => {
     if (!draft) return
     patch.execute([{ set: { [FIELD_FOR_TASK[draft.task]]: draft.text } }])
@@ -149,6 +179,53 @@ export function SuggestControls({
             onClick={() => ask('description')}
           />
         </Flex>
+
+        {longest ? (
+          <Stack space={2}>
+            <Button
+              text={tightening ? 'Rewriting' : 'Shorten the longest paragraph'}
+              mode="ghost"
+              fontSize={1}
+              disabled={Boolean(busy) || tightening}
+              onClick={tighten}
+            />
+            <Text size={0} muted>
+              Rewrites the longest paragraph on the page to say the same thing in fewer words. Copy it
+              in yourself: the assistant does not edit your body copy.
+            </Text>
+          </Stack>
+        ) : null}
+
+        {tightened ? (
+          <Card padding={3} radius={2} tone="transparent" border>
+            <Stack space={3}>
+              <Stack space={2}>
+                <Text size={0} muted style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Now &middot; {tightened.before.length} characters
+                </Text>
+                <Text size={1} muted>{tightened.before}</Text>
+              </Stack>
+              <Stack space={2}>
+                <Text size={0} muted style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Shorter &middot; {tightened.after.length} characters
+                </Text>
+                <Text size={1}>{tightened.after}</Text>
+              </Stack>
+              <Flex gap={2}>
+                <Button
+                  text="Copy the shorter version"
+                  tone="primary"
+                  fontSize={1}
+                  onClick={() => {
+                    navigator.clipboard?.writeText(tightened.after)
+                    setNote('Copied. Paste it over the paragraph on the Edit tab.')
+                  }}
+                />
+                <Button text="Discard" mode="ghost" fontSize={1} onClick={() => setTightened(null)} />
+              </Flex>
+            </Stack>
+          </Card>
+        ) : null}
 
         {draft ? (
           <Card padding={3} radius={2} tone="primary" border>

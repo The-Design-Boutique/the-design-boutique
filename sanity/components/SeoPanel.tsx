@@ -291,6 +291,7 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
           title={(doc as any)?.title}
           keyword={(doc as any)?.seo?.focusKeyword}
           prose={analysis.content.text}
+          paragraphs={analysis.content.paragraphs}
         />
 
         <Section

@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 /** Shared image type with required alt text (accessibility + SEO). */
 export const imageWithAlt = defineType({
@@ -12,6 +13,9 @@ export const imageWithAlt = defineType({
       title: 'Alternative text',
       type: 'string',
       description: 'Describes the image for screen readers and search engines.',
+      // Adds a button that looks at the picture and drafts this, when the
+      // writing assistant is switched on. Renders as a plain field otherwise.
+      components: { input: AltTextInput },
       validation: (Rule) => Rule.required().warning('Add alt text for accessibility and SEO.'),
     }),
     defineField({

@@ -28,7 +28,13 @@ const sanity = createClient({
   token: process.env.SANITY_API_WRITE_TOKEN,
 })
 
-export type SuggestTask = 'description' | 'title'
+export type SuggestTask = 'description' | 'title' | 'alt' | 'faq' | 'tighten'
+
+/** One drafted question and its answer, for the FAQ task. */
+export interface DraftedFaq {
+  question: string
+  answer: string
+}
 
 export interface PageContext {
   /** The document's own title, which is usually the page's h1. */
@@ -37,6 +43,10 @@ export interface PageContext {
   keyword?: string
   /** The visible prose, already extracted from the blocks. */
   prose?: string
+  /** For the alt task: the image to look at. */
+  imageUrl?: string
+  /** For the tighten task: the paragraph to shorten. */
+  paragraph?: string
 }
 
 export interface AiSettings {
@@ -114,6 +124,61 @@ function buildPrompt(task: SuggestTask, page: PageContext): { system: string; us
     'Return only the finished text. No preamble, no quotation marks, no alternatives, no explanation.',
   ].join(' ')
 
+  if (task === 'alt') {
+    return {
+      system: [
+        'You write alternative text for images on a website.',
+        'Describe what is actually in the picture, plainly, in one sentence, as you would to somebody who cannot see it.',
+        'Do not begin with "image of" or "photo of": a screen reader already says it is an image.',
+        'Do not editorialise, do not speculate about mood, and do not repeat the page title.',
+        'If the image is a logo or a piece of text, say whose logo it is or what the text says.',
+        'Under 125 characters. Return only the sentence.',
+      ].join(' '),
+      user: [
+        'Write alternative text for this image.',
+        page.title ? `It appears on a page about: ${page.title}` : '',
+        'Describe the image itself, not the page.',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    }
+  }
+
+  if (task === 'tighten') {
+    return {
+      system: shared,
+      user: [
+        'Rewrite this paragraph so it says the same thing in fewer words.',
+        'Keep every fact and the meaning. Cut hedging, repetition and filler. Do not make it a list.',
+        'Aim for roughly two thirds of the original length. Return only the rewritten paragraph.',
+        '',
+        page.paragraph || '',
+      ].join('\n'),
+    }
+  }
+
+  if (task === 'faq') {
+    return {
+      system: [
+        shared,
+        'Return a JSON array and nothing else. Each item is an object with exactly two string keys: "question" and "answer".',
+        'No markdown, no code fence, no commentary.',
+      ].join(' '),
+      user: [
+        'Write four frequently asked questions and answers for this page.',
+        'They must be questions a real customer would type or say out loud, phrased the way they would phrase them, not the way the business would.',
+        'Answer each in two or three sentences, from what the page actually says. Do not invent prices, timescales, guarantees or credentials.',
+        'If the page does not contain enough to answer a question honestly, leave that question out and return fewer.',
+        keywordLine,
+        '',
+        `Page heading: ${page.title || '(none)'}`,
+        '',
+        'Page content:',
+        (page.prose || '').slice(0, 6000) || '(the page has no body copy yet)',
+      ].join('\n'),
+    }
+  }
+
   if (task === 'title') {
     return {
       system: shared,
@@ -161,13 +226,28 @@ function buildPrompt(task: SuggestTask, page: PageContext): { system: string; us
  */
 const MAX_TOKENS = 2000
 
-async function askAnthropic(settings: AiSettings, prompt: { system: string; user: string }): Promise<string> {
+async function askAnthropic(
+  settings: AiSettings,
+  prompt: { system: string; user: string },
+  imageUrl?: string,
+): Promise<string> {
   const client = new Anthropic({ apiKey: settings.apiKey })
+
+  // Alt text is the one task that cannot be done from the page's words: the
+  // model has to see the picture. Sanity serves every asset from a public CDN,
+  // so the URL is handed over rather than the bytes.
+  const content: Anthropic.ContentBlockParam[] = imageUrl
+    ? [
+        { type: 'image', source: { type: 'url', url: imageUrl } },
+        { type: 'text', text: prompt.user },
+      ]
+    : [{ type: 'text', text: prompt.user }]
+
   const message = await client.messages.create({
     model: settings.model,
     max_tokens: MAX_TOKENS,
     system: prompt.system,
-    messages: [{ role: 'user', content: prompt.user }],
+    messages: [{ role: 'user', content }],
   })
 
   const text = message.content
@@ -213,10 +293,18 @@ async function askOpenAi(settings: AiSettings, prompt: { system: string; user: s
   return String(json?.choices?.[0]?.message?.content || '').trim()
 }
 
-/** The ceiling the SEO panel will mark a field down for exceeding. */
-const MAX_CHARS: Record<SuggestTask, number> = {
+/**
+ * The ceiling a field is marked down for exceeding, where one exists.
+ *
+ * Only the two that feed a length-checked field are capped. Alt text has a
+ * conventional limit rather than an enforced one, and a tightened paragraph is
+ * as long as the paragraph needs; capping either would mean truncating meaning
+ * to satisfy a number.
+ */
+const MAX_CHARS: Partial<Record<SuggestTask, number>> = {
   title: TITLE_CHARS.warnAbove,
   description: DESCRIPTION_CHARS.warnAbove,
+  alt: 125,
 }
 
 function tidy(text: string): string {
@@ -235,7 +323,9 @@ export async function suggest(
 
   const prompt = buildPrompt(task, page)
   const ask = (p: { system: string; user: string }) =>
-    settings.provider === 'openai' ? askOpenAi(settings, p) : askAnthropic(settings, p)
+    settings.provider === 'openai'
+      ? askOpenAi(settings, p)
+      : askAnthropic(settings, p, task === 'alt' ? page.imageUrl : undefined)
 
   try {
     let cleaned = tidy(await ask(prompt))
@@ -251,7 +341,7 @@ export async function suggest(
     // only, and the long version is returned rather than discarded if it misses
     // again: a slightly long draft an editor can trim beats no draft at all.
     const max = MAX_CHARS[task]
-    if (cleaned.length > max) {
+    if (max && cleaned.length > max) {
       const over = cleaned.length - max
       const retry = await ask({
         system: prompt.system,
@@ -274,4 +364,60 @@ export async function suggest(
     const detail = error instanceof Error ? error.message : ''
     return { ok: false, reason: detail || 'The request to the provider failed.' }
   }
+}
+
+/**
+ * Draft a set of questions and answers for a page.
+ *
+ * Separate from suggest() because this one returns structure rather than a
+ * sentence, and because a malformed answer has to fail cleanly: the Studio
+ * turns the result into real FAQ blocks on the page, so half-parsed output is
+ * worse than none.
+ *
+ * The prompt asks for bare JSON, and models mostly comply, but "mostly" is not
+ * a contract. A fenced code block is the usual deviation and is stripped rather
+ * than treated as a failure.
+ */
+export async function suggestFaq(
+  page: PageContext,
+): Promise<{ ok: true; faqs: DraftedFaq[] } | { ok: false; reason: string }> {
+  const raw = await suggest('faq', page)
+  if (!raw.ok) return raw
+
+  const text = raw.suggestion
+    .replace(/^\s*```(?:json)?/i, '')
+    .replace(/```\s*$/, '')
+    .trim()
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    return { ok: false, reason: 'The questions came back in a form we could not read. Try again.' }
+  }
+
+  if (!Array.isArray(parsed)) {
+    return { ok: false, reason: 'The questions came back in a form we could not read. Try again.' }
+  }
+
+  const faqs = parsed
+    .filter(
+      (f): f is DraftedFaq =>
+        Boolean(f) &&
+        typeof (f as DraftedFaq).question === 'string' &&
+        typeof (f as DraftedFaq).answer === 'string' &&
+        (f as DraftedFaq).question.trim().length > 0 &&
+        (f as DraftedFaq).answer.trim().length > 0,
+    )
+    .map((f) => ({ question: f.question.trim(), answer: f.answer.trim() }))
+
+  if (!faqs.length) {
+    return {
+      ok: false,
+      reason:
+        'No questions could be drafted from this page. That usually means there is not enough on it yet to answer anything honestly.',
+    }
+  }
+
+  return { ok: true, faqs }
 }
