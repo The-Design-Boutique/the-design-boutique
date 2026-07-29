@@ -66,14 +66,25 @@ export function buildMetadata(doc: any, opts: { path?: string; siteDefaults?: an
   // Empty canonical means "this page is its own canonical", the normal case.
   const canonical = seo.canonicalUrl || absoluteUrl(path)
 
+  // Only present when this page overrides the site default.
+  //
+  // The key has to be absent, not undefined. Next merges metadata by key, and a
+  // key that exists with the value undefined replaces the parent's value rather
+  // than inheriting it. Returning `robots: undefined` here therefore deleted the
+  // root layout's site-wide noindex from every page that uses this function,
+  // which was every content page: /studio still carried noindex and nothing else
+  // did. robots.txt was the only thing left holding staging out of search, and
+  // that stops crawling without stopping a URL being indexed from a link.
+  const pageRobots =
+    seo.robots && (seo.robots.index === false || seo.robots.follow === false)
+      ? { index: seo.robots.index !== false, follow: seo.robots.follow !== false }
+      : null
+
   return {
     title,
     description,
     alternates: canonical ? { canonical } : undefined,
-    robots:
-      seo.robots && (seo.robots.index === false || seo.robots.follow === false)
-        ? { index: seo.robots.index !== false, follow: seo.robots.follow !== false }
-        : undefined,
+    ...(pageRobots ? { robots: pageRobots } : {}),
     openGraph: {
       title: shareTitle,
       description: shareDescription,
