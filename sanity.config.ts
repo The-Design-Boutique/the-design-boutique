@@ -16,6 +16,7 @@ import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
 import { viewPageAction } from './sanity/actions/viewPage'
 import { tdbTheme } from './sanity/theme'
 import { StudioLogo } from './sanity/components/StudioLogo'
+import { ToolMenu } from './sanity/components/ToolMenu'
 
 const singletonSet: readonly string[] = SINGLETONS
 
@@ -73,12 +74,12 @@ export default defineConfig({
   // Restrained on purpose: only the neutrals and the accent are ours, so that
   // green still means success and amber still means caution.
   theme: tdbTheme,
-  studio: { components: { logo: StudioLogo } },
+  studio: { components: { logo: StudioLogo, toolMenu: ToolMenu } },
   projectId,
   dataset,
   schema,
   plugins: [
-    structureTool({ structure, defaultDocumentNode }),
+    structureTool({ structure, defaultDocumentNode, title: 'CMS' }),
     // Adds a Preview tab beside the fields, and a Preview tool in the sidebar,
     // showing the page as it will look with the current unpublished edits.
     presentationTool({

@@ -70,23 +70,29 @@ function change(m: Metric): { text: string; tone: 'positive' | 'critical' | 'def
 function MetricCard({ metric }: { metric: Metric }) {
   const delta = change(metric)
   return (
-    <Card padding={3} radius={2} tone="transparent" border>
-      <Stack space={2}>
+    // height 100% so every card matches the tallest in the row. Without it a
+    // card whose comparison is one line instead of a badge sits visibly short,
+    // which reads as a rendering fault rather than as less to say.
+    <Card padding={3} radius={2} tone="transparent" border style={{ height: '100%' }}>
+      <Flex direction="column" gap={2} style={{ height: '100%' }}>
         <Text size={0} muted style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           {metric.label}
         </Text>
         <Text size={4} weight="semibold" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {formatValue(metric)}
         </Text>
+        {/* Pushed to the bottom, so the comparison line sits on the same
+            baseline across the row however long the label above it is. */}
+        <Box flex={1} />
         {delta ? (
-          <Flex align="center" gap={2}>
+          <Flex align="center" gap={2} wrap="wrap">
             <Badge tone={delta.tone} fontSize={0} mode="outline">{delta.text}</Badge>
             <Text size={0} muted>vs the period before</Text>
           </Flex>
         ) : (
           <Text size={0} muted>no earlier period to compare</Text>
         )}
-      </Stack>
+      </Flex>
     </Card>
   )
 }
@@ -275,7 +281,7 @@ export function Analytics() {
 
         {data ? (
           <>
-            <Flex gap={2} wrap="wrap">
+            <Flex gap={2} wrap="wrap" align="stretch">
               {data.metrics.map((m) => (
                 <Box key={m.label} flex={1} style={{ minWidth: 150 }}>
                   <MetricCard metric={m} />
