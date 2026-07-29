@@ -193,16 +193,6 @@ export function About() {
           </Card>
         </Stack>
 
-        <Card padding={3} radius={2} tone="caution" border>
-          <Stack space={2}>
-            <Text size={1} weight="semibold">One thing deliberately left out</Text>
-            <Text size={1}>
-              Accessibility problems inherited from the existing design are reported by the tooling
-              but were not fixed, because the brief was to reproduce the design rather than change it.
-              They are recorded and worth revisiting; they are not oversights.
-            </Text>
-          </Stack>
-        </Card>
       </Stack>
     </Container>
   )

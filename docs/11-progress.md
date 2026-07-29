@@ -466,6 +466,21 @@ in-scope work.
 
 ## Backlog — suggestions to raise with Laney
 
+- **Analytics, goals and Google Tag Manager.** Nothing is tracked today: no Google
+  Analytics, no Tag Manager container. Questions for Laney are written up as
+  `Measuring What Matters.pdf` (source `docs/19-guide-measuring-what-matters.html`),
+  covering what counts as a win, whether some enquiries are worth more than others,
+  which three services she wants to grow, what she wants to know monthly, who reads
+  it, whether any analytics exists already, and whether there are targets.
+
+  **Worth knowing before building any of it: `siteSettings.gtmId` exists and is
+  wired to nothing.** Nothing in `app/` reads it, so entering a container ID there
+  today has no effect. The field is a trap for whoever tries it first and should
+  either be wired up or removed as part of this work.
+
+  Deliberately not built on assumptions. Measuring everything produces a dashboard
+  nobody reads, and the answers decide what is worth surfacing in the Studio.
+
 - **Full content audit and rewrite pass.** An automatic check of all 115 documents ran on
   July 28, 2026 and is written up for the client as `Content Findings.pdf` (source:
   `docs/14-guide-content-findings.html`). It found one page still carrying Latin filler
