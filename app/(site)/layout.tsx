@@ -6,6 +6,7 @@ import { Footer } from '@/app/components/Footer'
 import { BackToTop } from '@/app/components/BackToTop'
 import { DraftBanner } from '@/app/components/DraftBanner'
 import { TagManager } from '@/app/components/TagManager'
+import { PhoneClickTracker } from '@/app/components/PhoneClickTracker'
 
 export default async function SiteLayout({ children }: { children: ReactNode }) {
   const data = await (await getClient()).fetch(LAYOUT_QUERY)
@@ -19,6 +20,8 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <main>{children}</main>
       <Footer nav={data?.nav} settings={data?.settings} />
       <BackToTop />
+      {/* One delegated listener, so numbers added later are caught too. */}
+      <PhoneClickTracker />
       {/* Renders nothing unless preview is on. */}
       <DraftBanner />
     </>
