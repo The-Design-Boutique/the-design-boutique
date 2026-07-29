@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Measuring What Matters</title><style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  figure { margin: 14px 0 18px; page-break-inside: avoid; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #333; display: block; }
+  figcaption { font-size: 8.6pt; color: #777; margin-top: 6px; font-style: italic; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .example { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 4px; padding: 10px 13px;
+             margin: 10px 0 13px; font-size: 9.3pt; }
+  .example .lbl { color: #777; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+  .arrow { text-align: center; color: #999; font-size: 12pt; margin: 4px 0; }
+</style></head>
+<body>
+
+<h1>Measuring What Matters</h1>
+<p class="sub">Questions before we set up tracking &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  The new site can measure almost anything. That is exactly the problem: measuring everything produces
+  a dashboard nobody reads, and the useful version of this is short.
+</p>
+<p>
+  So before anything is set up, this asks what actually counts as a good day for the business. Your
+  answers decide what gets tracked, what appears in the editor, and what is deliberately left out.
+  There are no wrong answers here and several of the questions may not have one yet, which is itself
+  useful to know.
+</p>
+
+<div class="box">
+  <strong class="hd">Where things stand today</strong>
+  <p style="margin-bottom:0">
+    The site records every form submission and keeps it in the editor, so no enquiry is being lost
+    right now. What it does not do is tell you where those people came from, which pages did the
+    persuading, or how many people nearly enquired and did not. That is what this is about.
+  </p>
+</div>
+
+<h2>1. What counts as a win?</h2>
+
+<p>
+  Everything else follows from this. The obvious candidates for this site:
+</p>
+<ul>
+  <li>Somebody submits the contact form</li>
+  <li>Somebody taps the phone number</li>
+  <li>Somebody clicks an email address</li>
+  <li>Somebody signs up to the newsletter</li>
+  <li>Somebody books or registers for a Gold event</li>
+</ul>
+<p><strong>Which of those genuinely matter, and are any of them not worth counting?</strong></p>
+<p>
+  It is worth being ruthless. A newsletter signup and an enquiry from a law firm are not the same
+  event, and if they are counted together the number stops meaning anything.
+</p>
+
+<h2>2. Are some enquiries worth much more than others?</h2>
+<p>
+  A branding project and a question about a podcast episode both arrive as a form submission. If one is
+  worth twenty times the other, the site should be able to tell them apart, which usually means asking
+  one extra question on the form.
+</p>
+<p><strong>Is there a rough sense of what a good enquiry is worth, even as a range?</strong></p>
+<p>
+  This is not for a report. It decides what is worth optimising: it is only worth improving a page if
+  you know whether the traffic it brings is valuable.
+</p>
+
+<h2>3. Which services do you actually want more of?</h2>
+<p>
+  The site has ten service pages. They will not all matter equally to the business, and the ones that
+  matter most should be the ones we watch, write about, and improve first.
+</p>
+<p><strong>If you could only grow three of them, which three?</strong></p>
+
+<h2 class="pagebreak">4. What do you want to know each month?</h2>
+<p>
+  Imagine an email on the first of the month with five lines in it. What are the five lines?
+</p>
+<p>Some options, to react to rather than choose from:</p>
+<table>
+  <tr><th style="width:36%">How many enquiries came in</th><td>The simplest and probably the most important.</td></tr>
+  <tr><th>Where they came from</th><td>Google, direct, social, a referral.</td></tr>
+  <tr><th>Which pages led to them</th><td>Which page somebody read before they enquired.</td></tr>
+  <tr><th>How the site is doing in search</th><td>Already visible per page in the editor; could be summarised.</td></tr>
+  <tr><th>What people searched to find you</th><td>Also already available, and often the most interesting.</td></tr>
+</table>
+
+<h2>5. Who reads it?</h2>
+<p>
+  A number that goes to you is a different thing from a number that goes to a client or to the whole
+  team. It changes how it should be worded and how often it should arrive.
+</p>
+<p><strong>Is this for you, for the team, or for reporting outward?</strong></p>
+
+<h2>6. Is anything being tracked today?</h2>
+<p>
+  As far as we can see, the site has no analytics running: no Google Analytics, and no Google Tag
+  Manager container. If something exists that we have not found, knowing about it saves setting up a
+  duplicate and splitting the history in two.
+</p>
+<p><strong>Is there an existing Google Analytics account, or has there been one in the past?</strong></p>
+
+<div class="box">
+  <strong class="hd">A note on Google Tag Manager, since it will come up</strong>
+  <p>
+    Tag Manager is a container that sits on the site and lets tracking be added or changed without a
+    developer. It is not analytics itself: it is the thing analytics, ad pixels and similar are loaded
+    through.
+  </p>
+  <p style="margin-bottom:0">
+    It is worth having because it means you never have to ask us to add a tracking code again. It is
+    also worth being careful with, because everything loaded through it runs on your site and slows it
+    down, and this site is currently fast. We would set it up, connect analytics through it, and keep
+    the container deliberately sparse.
+  </p>
+</div>
+
+<h2>7. Are there targets already?</h2>
+<p>
+  A number is much more useful with something to compare it against.
+</p>
+<p><strong>Is there a figure in mind, such as a number of enquiries a month, or a service you want to
+double?</strong> If there is not, that is a perfectly good answer and we can set a baseline from the
+first few months instead.</p>
+
+<h2>What happens with your answers</h2>
+<ol>
+  <li>We set up analytics and a Tag Manager container, connected properly and kept lean.</li>
+  <li>We mark the things you called wins so they are counted as such rather than as page views.</li>
+  <li>We surface the few numbers you said you cared about inside the editor, beside the content they
+      describe, so you do not need a separate login to see how a page is doing.</li>
+  <li>Anything you did not ask for is left out. It can always be added later; a dashboard that gets
+      ignored is very hard to un-ignore.</li>
+</ol>
+
+<div class="box ok">
+  <strong class="hd">Nothing here blocks anything</strong>
+  <p style="margin-bottom:0">
+    The site works and records every enquiry without any of this. It can be set up before launch or
+    afterwards. The only argument for doing it sooner is that measurement only tells you about the
+    period after you started measuring.
+  </p>
+</div>
+
+<div class="foot">
+  <p>
+    Answer in whatever form is easiest, including a voice note or a reply with rough notes. Partial
+    answers are more useful than none.
+  </p>
+</div>
+
+</body></html>
