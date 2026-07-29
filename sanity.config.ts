@@ -10,6 +10,7 @@ import { structure, defaultDocumentNode } from './sanity/structure'
 import { CwvDashboard } from './sanity/tools/CwvDashboard'
 import { NotFoundMonitor } from './sanity/tools/NotFoundMonitor'
 import { SearchFiles } from './sanity/tools/SearchFiles'
+import { About } from './sanity/tools/About'
 import { withRedirectPrompt } from './sanity/actions/publishWithRedirect'
 import { viewPageAction } from './sanity/actions/viewPage'
 import { tdbTheme } from './sanity/theme'
@@ -110,6 +111,12 @@ export default defineConfig({
       component: SearchFiles,
     },
     ...prev,
+    // Last, because it is a reference rather than a place you work.
+    {
+      name: 'about',
+      title: 'About',
+      component: About,
+    },
   ],
   document: {
     // Singletons cannot be created from the global "new document" menu...
