@@ -6,8 +6,7 @@ import type { UserViewComponent } from 'sanity/structure'
 import { analyseSeo, type CheckResult, type SeoAnalysis } from '../../app/lib/seo'
 import { buildIssueList } from '../../app/lib/seoIssues'
 import { timeAgo } from '../../app/lib/timeAgo'
-import { IssueRow, Section, pathForDoc, useSeoAudit } from './seoShared'
-import { SuggestControls } from './SuggestControls'
+import { IssueRow, Section, pathForDoc, useSeoAudit, useDebounced } from './seoShared'
 import { SerpPreview } from './SerpPreview'
 import { BAND_VAR, useBandVars } from '../lib/bandColors'
 
@@ -39,16 +38,6 @@ const STATUS_TONE: Record<CheckResult['status'], Tone> = {
   warn: 'caution',
   fail: 'critical',
   skipped: 'default',
-}
-
-/** Recompute on a short delay so typing stays smooth (ruleset 05, rule 1). */
-function useDebounced<T>(value: T, ms: number): T {
-  const [held, setHeld] = useState(value)
-  useEffect(() => {
-    const t = setTimeout(() => setHeld(value), ms)
-    return () => clearTimeout(t)
-  }, [value, ms])
-  return held
 }
 
 function ScoreHeader({ analysis }: { analysis: SeoAnalysis }) {
@@ -287,15 +276,6 @@ export const SeoPanel: UserViewComponent = function SeoPanel({ document, documen
           </Section>
         ) : null}
 
-        {/* Renders nothing unless a key is configured (ruleset 05, rule 20). */}
-        <SuggestControls
-          documentId={documentId}
-          documentType={schemaType?.name || ''}
-          title={(doc as any)?.title}
-          keyword={(doc as any)?.seo?.focusKeyword}
-          prose={analysis.content.text}
-          paragraphs={analysis.content.paragraphs}
-        />
 
         <Section
           title="Technical"

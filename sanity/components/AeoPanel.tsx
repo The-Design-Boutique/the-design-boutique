@@ -4,8 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Badge, Box, Card, Container, Flex, Stack, Text } from '@sanity/ui'
 import type { UserViewComponent } from 'sanity/structure'
 import { analyseAeo, type AeoCheck } from '../../app/lib/aeo'
-import { Section, type Tone } from './seoShared'
-import { FaqDrafter } from './FaqDrafter'
+import { Section, type Tone, useDebounced } from './seoShared'
 
 /**
  * AEO: whether this page is ready to be used in an AI answer.
@@ -44,15 +43,6 @@ const STATUS_MARK: Record<AeoCheck['status'], string> = {
 
 /** Further reading, written for people who are not developers. */
 const EXPLAINER_URL = 'https://angelomarasa.com/blog/seo-aeo-geo-how-people-find-you-now'
-
-function useDebounced<T>(value: T, ms: number): T {
-  const [held, setHeld] = useState(value)
-  useEffect(() => {
-    const t = setTimeout(() => setHeld(value), ms)
-    return () => clearTimeout(t)
-  }, [value, ms])
-  return held
-}
 
 function CheckRow({ check }: { check: AeoCheck }) {
   return (
@@ -162,17 +152,6 @@ export const AeoPanel: UserViewComponent = function AeoPanel({ document, documen
           </Card>
         )}
 
-        {/* Renders nothing unless the assistant is switched on. Sits here
-            because the FAQ check is usually the first thing in the list above,
-            and it is the hardest one to act on from a blank start. */}
-        <FaqDrafter
-          documentId={documentId}
-          documentType={schemaType?.name || ''}
-          title={doc?.title}
-          keyword={doc?.seo?.focusKeyword}
-          prose={analysis.content.text}
-          hasFaq={analysis.checks.find((c) => c.id === 'faq')?.status === 'pass'}
-        />
 
         {passing.length > 0 ? (
           <Section title={`Already good (${passing.length})`}>
