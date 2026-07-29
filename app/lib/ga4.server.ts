@@ -32,6 +32,8 @@ export interface Row {
   value: number
   /** Optional second column, such as sessions beside users. */
   secondary?: number
+  /** Where the row can be opened, for rows that are pages. */
+  href?: string
 }
 
 export interface AnalyticsSummary {
@@ -122,6 +124,24 @@ function pageLabel(path: string): string {
   return path.replace(/\/$/, '')
 }
 
+/**
+ * The address a reported page can actually be opened at.
+ *
+ * The live site, not this deployment, because these figures describe the live
+ * site. Opening a preview URL from a report about real traffic would show a
+ * different page and quietly mislead. Analytics reports paths only, so anything
+ * that is not a path is skipped rather than guessed at.
+ */
+const LIVE_ORIGIN = 'https://thedesignboutique.com'
+
+function pageHref(path: string): string | undefined {
+  if (!path || !path.startsWith('/')) return undefined
+  // Strip any query string: the report groups by path, and a link carrying one
+  // page's parameters would be a different page.
+  const clean = path.split('?')[0]
+  return `${LIVE_ORIGIN}${clean === '/' ? '' : clean}`
+}
+
 export async function analyticsSummary(days = 28): Promise<AnalyticsSummary> {
   const propertyId = process.env.GA_PROPERTY_ID
   if (!propertyId) throw new Error('No Google Analytics property is configured.')
@@ -209,11 +229,15 @@ export async function analyticsSummary(days = 28): Promise<AnalyticsSummary> {
       value: num(r.metricValues[0]?.value),
       secondary: num(r.metricValues[1]?.value),
     })),
-    topPages: (pages.rows || []).map((r) => ({
-      label: pageLabel(r.dimensionValues[0]?.value || ''),
-      value: num(r.metricValues[0]?.value),
-      secondary: num(r.metricValues[1]?.value),
-    })),
+    topPages: (pages.rows || []).map((r) => {
+      const path = r.dimensionValues[0]?.value || ''
+      return {
+        label: pageLabel(path),
+        value: num(r.metricValues[0]?.value),
+        secondary: num(r.metricValues[1]?.value),
+        href: pageHref(path),
+      }
+    }),
     devices: (devices.rows || []).map((r) => ({
       label: r.dimensionValues[0]?.value || 'Unknown',
       value: num(r.metricValues[0]?.value),

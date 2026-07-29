@@ -31,6 +31,7 @@ interface Row {
   label: string
   value: number
   secondary?: number
+  href?: string
 }
 interface Summary {
   propertyId: string
@@ -146,7 +147,28 @@ function RankedList({
         <Box key={r.label}>
           <Flex align="center" gap={3}>
             <Box flex={1} style={{ minWidth: 0 }}>
-              <Text size={1} textOverflow="ellipsis">{r.label}</Text>
+              <Text size={1} textOverflow="ellipsis">
+                {r.href ? (
+                  // Opens the live page, since these figures describe the live
+                  // site. The label stays plain text and the icon carries the
+                  // link, so a long path never becomes a long link to mis-click.
+                  <>
+                    {r.label}{' '}
+                    <a
+                      href={r.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={`Open ${r.href} in a new tab`}
+                      aria-label={`Open ${r.label} in a new tab`}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      ↗
+                    </a>
+                  </>
+                ) : (
+                  r.label
+                )}
+              </Text>
             </Box>
             <Text size={1} weight="semibold" style={{ fontVariantNumeric: 'tabular-nums' }}>
               {r.value.toLocaleString()}
