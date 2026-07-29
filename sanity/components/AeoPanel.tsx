@@ -5,6 +5,7 @@ import { Badge, Box, Card, Container, Flex, Stack, Text } from '@sanity/ui'
 import type { UserViewComponent } from 'sanity/structure'
 import { analyseAeo, type AeoCheck } from '../../app/lib/aeo'
 import { Section, type Tone } from './seoShared'
+import { FaqDrafter } from './FaqDrafter'
 
 /**
  * AEO: whether this page is ready to be used in an AI answer.
@@ -74,7 +75,7 @@ function CheckRow({ check }: { check: AeoCheck }) {
   )
 }
 
-export const AeoPanel: UserViewComponent = function AeoPanel({ document, schemaType }) {
+export const AeoPanel: UserViewComponent = function AeoPanel({ document, documentId, schemaType }) {
   const doc = useDebounced(document?.displayed, 400) as any
 
   const analysis = useMemo(() => {
@@ -160,6 +161,18 @@ export const AeoPanel: UserViewComponent = function AeoPanel({ document, schemaT
             <Text size={1}>Every check passes. This page is as quotable as we can make it from here.</Text>
           </Card>
         )}
+
+        {/* Renders nothing unless the assistant is switched on. Sits here
+            because the FAQ check is usually the first thing in the list above,
+            and it is the hardest one to act on from a blank start. */}
+        <FaqDrafter
+          documentId={documentId}
+          documentType={schemaType?.name || ''}
+          title={doc?.title}
+          keyword={doc?.seo?.focusKeyword}
+          prose={analysis.content.text}
+          hasFaq={analysis.checks.find((c) => c.id === 'faq')?.status === 'pass'}
+        />
 
         {passing.length > 0 ? (
           <Section title={`Already good (${passing.length})`}>
