@@ -3,6 +3,7 @@
 import { useId } from 'react'
 import type { TrendPoint } from '../../app/lib/cwvTrend'
 import { seededBoundary } from '../../app/lib/cwvTrend'
+import { BAND_VAR } from '../lib/bandColors'
 
 /**
  * A single metric's history, with Google's thresholds shaded behind the line
@@ -13,14 +14,29 @@ import { seededBoundary } from '../../app/lib/cwvTrend'
  * matters, which is the question an editor is actually asking.
  */
 
+/**
+ * The bands are Google's green, amber and red, taken from the shared band
+ * colours rather than written out here. They are not decoration: they are what
+ * the numbers mean. Using the shared values keeps a zone in this chart the same
+ * colour as the pill sitting beside it, which stopped being true once the
+ * published colours had to be deepened to stay readable on a light background.
+ *
+ * They resolve from custom properties set by the dashboard that renders this
+ * chart, which is the only place it appears.
+ *
+ * Everything else comes from the Studio's theme. The trend line in particular
+ * used to be near-white, which was correct on a dark card and invisible the
+ * moment the Studio was rethemed to paper. A chart nobody can see is worse than
+ * no chart, because the empty space looks like missing data.
+ */
 const COLOR = {
-  good: '#0cce6b',
-  needsImprovement: '#ffa400',
-  poor: '#ff4e42',
-  line: '#e6e6e6',
-  seeded: '#8a8a8a',
-  axis: '#3a3a3a',
-  text: '#8a8a8a',
+  good: BAND_VAR.good,
+  needsImprovement: BAND_VAR['needs-improvement'],
+  poor: BAND_VAR.poor,
+  line: 'var(--card-fg-color)',
+  seeded: 'var(--card-muted-fg-color)',
+  axis: 'var(--card-border-color)',
+  text: 'var(--card-muted-fg-color)',
 }
 
 interface Props {
