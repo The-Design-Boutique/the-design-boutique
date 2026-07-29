@@ -14,6 +14,7 @@ import {
   type FormValues,
   type RoutingRule,
 } from '@/app/lib/formLogic'
+import { trackFormSubmit } from '@/app/lib/analytics'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -199,6 +200,13 @@ export function FormRenderer({ form }: { form: FormDoc }) {
           setStatus('error')
           return
         }
+        // Recorded here, after the server has accepted it and before either
+        // success path runs. Placing it after the redirect branch would miss
+        // every form that sends people to a thank-you page, which is most of
+        // them. Google's tag sends events with sendBeacon, so one fired
+        // immediately before a navigation still arrives.
+        trackFormSubmit({ slug: form.slug, title: form.title })
+
         if (data.successAction === 'redirect' && data.redirectUrl) {
           window.location.href = data.redirectUrl
           return
