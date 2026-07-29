@@ -248,8 +248,22 @@ so updated versions of 2.2 and 2.4 have to be handed over and dropped in by hand
       `production` dataset is **public**: an unauthenticated API request returns
       documents, so a raw key in a document would be a published key. Only
       ciphertext plus a masked hint are stored. Ships dark per rule 21.
-    - [ ] §7 the AI suggest route itself. Needs `SEO_AI_SECRET` on Vercel, and
-      rule 21's "whose key and whose budget" recorded in ruleset 05 before enabling.
+    - [x] §7 the AI suggest route itself. Built, tested live against Anthropic
+      and documented (`Writing Assistant.pdf`, source
+      `docs/18-guide-writing-assistant.html`). One route, server side, so the key
+      never reaches a browser; the control renders nothing unless a key is saved;
+      and nothing is written to a document until an editor presses Use this,
+      per rule 20.
+
+      Two defects were only found by running it against the real provider, which
+      is the argument for not trusting plumbing tests. The token ceiling was 400,
+      which sounds generous for a one sentence answer and is not, because the
+      model reasons before writing and those tokens share the budget: on a thin
+      page the reasoning consumed it all and the reply was never written, coming
+      back as a thinking block with no text block. And the character limits were
+      requested but not enforced, so a description arrived at 171 against a
+      stated 160, which the panel would then have marked down. Both fixed;
+      verified at 12 of 12 suggestions within limits across six pages.
     - [x] §4 redirect manager + 404 monitor. `redirect` and `notFoundEntry` types,
       runtime redirects in `proxy.ts` (Next 16's replacement for middleware) reading
       a 60s-cached, authenticated map from Sanity and failing open, a Dead Links tool that
