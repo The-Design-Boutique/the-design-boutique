@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tag Manager and Analytics</title><style>
+  @page { size: Letter; margin: 17mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+         font-size: 10.3pt; line-height: 1.52; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 9.5pt; margin: 0; }
+  .rule { height: 3px; background: #f26722; width: 54px; margin: 13px 0 20px; }
+  h2 { font-size: 13pt; margin: 24px 0 8px; padding-bottom: 5px; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 10.8pt; margin: 16px 0 5px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 9px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 13px; font-size: 9.2pt; }
+  th, td { border: 1px solid #d8d8d8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-weight: 600; }
+  .box { border: 1px solid #ddd; border-left: 3px solid #f26722; background: #fbfbfb;
+         padding: 11px 14px; margin: 13px 0; }
+  .box.warn { border-left-color: #c0392b; background: #fdf6f5; }
+  .box.ok { border-left-color: #1e8449; background: #f5faf6; }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .box strong.hd { display: block; margin-bottom: 4px; font-size: 10pt; }
+  .good { color: #1e8449; font-weight: 600; }
+  .mid  { color: #b7791f; font-weight: 600; }
+  .bad  { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 26px; padding-top: 9px; border-top: 1px solid #ddd; font-size: 8.4pt; color: #777; }
+  .step { border: 1px solid #e2e2e2; border-radius: 4px; padding: 11px 14px; margin: 0 0 9px; background: #fcfcfc; }
+  .step strong { display: block; margin-bottom: 3px; }
+  .pagebreak { page-break-before: always; }
+  figure { margin: 14px 0 18px; page-break-inside: avoid; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #333; display: block; }
+  figcaption { font-size: 8.6pt; color: #777; margin-top: 6px; font-style: italic; }
+  .where { background: #f4f4f4; border-left: 3px solid #bbb; padding: 8px 12px; margin: 0 0 12px; font-size: 9.4pt; }
+  .where strong { color: #444; }
+  code { background: #f1f1f1; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  .example { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 4px; padding: 10px 13px;
+             margin: 10px 0 13px; font-size: 9.3pt; }
+  .example .lbl { color: #777; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+  .arrow { text-align: center; color: #999; font-size: 12pt; margin: 4px 0; }
+</style></head>
+<body>
+
+<h1>Tag Manager &amp; Analytics</h1>
+<p class="sub">What they are and how they fit together &nbsp;|&nbsp; The Design Boutique &nbsp;|&nbsp; July 2026</p>
+<div class="rule"></div>
+
+<p>
+  Two Google products with confusingly similar names, doing completely different jobs. Almost all the
+  confusion around them comes from assuming they are the same thing, so it is worth two minutes to get
+  the difference straight.
+</p>
+
+<table>
+  <tr>
+    <th style="width:30%">Google Analytics</th>
+    <td><strong>The report.</strong> It counts visitors, records what they looked at, and shows it back
+    to you. This is where you go to find out what happened.</td>
+  </tr>
+  <tr>
+    <th>Google Tag Manager</th>
+    <td><strong>The switchboard.</strong> It does not count anything. It is a box on the website that
+    other tools get plugged into, so that adding or changing one never needs a developer.</td>
+  </tr>
+</table>
+
+<div class="box">
+  <strong class="hd">An analogy that holds up</strong>
+  <p style="margin-bottom:0">
+    Tag Manager is a power strip. Analytics is one of the things plugged into it. The power strip does
+    not do anything on its own; it just means you can plug something else in later without rewiring the
+    house. If you ever add a Facebook pixel, a LinkedIn tag or a chat widget, they go into the same
+    strip.
+  </p>
+</div>
+
+<h2>Why bother with the switchboard at all?</h2>
+
+<p>
+  Because otherwise every small measurement change is a development job. Without Tag Manager, adding a
+  tracking code means editing the website, testing it and deploying it. With it, that becomes a change
+  inside Google, and the website is untouched.
+</p>
+<p>
+  It is set up once. After that it should mostly be left alone.
+</p>
+
+<div class="box warn">
+  <strong class="hd">The one thing to be careful about</strong>
+  <p>
+    Everything plugged into Tag Manager runs on your website, in your visitors&rsquo; browsers. Each
+    one makes the site a little slower.
+  </p>
+  <p style="margin-bottom:0">
+    This matters here more than it might elsewhere, because a lot of work went into making this site
+    fast: it went from 57 to 91 out of 100 on a phone. A container stuffed with a dozen marketing tags
+    is the single most common way a fast site quietly becomes a slow one. The rule of thumb is that
+    anything added should have somebody who can say what it is for.
+  </p>
+</div>
+
+<h2>What is set up right now</h2>
+
+<table>
+  <tr><th style="width:34%">Tag Manager container</th><td>Created and connected to the site. It loads after the page has appeared, so it does not delay anything a visitor is waiting for.</td></tr>
+  <tr><th>Google Analytics</th><td>Plugged into it, recording visits on every page.</td></tr>
+  <tr><th>Form submissions</th><td>The site tells Analytics whenever somebody successfully sends a form, and which form it was.</td></tr>
+  <tr><th>Phone taps</th><td>The site tells Analytics whenever somebody taps a phone number, and where on the page they tapped it.</td></tr>
+</table>
+
+<div class="box">
+  <strong class="hd">Why the form tracking had to be built rather than switched on</strong>
+  <p>
+    Tag Manager can usually detect a form being sent all by itself. It does that by noticing the page
+    reloading, which is what an old-fashioned form does.
+  </p>
+  <p style="margin-bottom:0">
+    The forms on this site do not reload the page, which is why they feel instant. So the usual
+    detection would have found nothing, while appearing to be set up correctly, and you would have had
+    a report showing zero enquiries forever. Instead the site announces each submission directly, at
+    the moment the server accepts it. As a side benefit, that means a submission that failed
+    validation is never counted as an enquiry.
+  </p>
+</div>
+
+<h2 class="pagebreak">The one thing still missing</h2>
+
+<p>
+  Analytics knows those events are happening. It does not yet know that they <em>matter</em>.
+</p>
+<p>
+  In Analytics, an action you care about is called a <strong>key event</strong>, and it has to be
+  ticked as such by hand. Until that is done, a form submission is recorded the same way as somebody
+  scrolling: as a thing that happened, not as a result.
+</p>
+<p>
+  It is deliberately left undone, because the answer depends on which actions the business counts as a
+  win, and that is the subject of the separate <strong>Measuring What Matters</strong> questions.
+  Ticking the wrong things is worse than ticking nothing: once a number is being reported as
+  &ldquo;conversions&rdquo; and it includes newsletter signups, nobody trusts it again.
+</p>
+
+<h2>Where to look at the numbers</h2>
+
+<p>
+  There is an <strong>Analytics</strong> tab in the editor, in the top row beside Site Speed. It shows
+  the numbers most worth looking at regularly, on one screen, with each one compared against the same
+  stretch of time immediately before it.
+</p>
+<ul>
+  <li>How many people came, and whether that is up or down</li>
+  <li>Whether they stayed</li>
+  <li>Where they came from: Google, direct, social, a link elsewhere</li>
+  <li>Which pages they read</li>
+  <li>What they did, once actions are marked as mattering</li>
+</ul>
+<p>
+  It is deliberately not a rebuild of Analytics. For anything beyond those questions there is a link
+  through to Google Analytics itself, where every report lives.
+</p>
+
+<div class="box ok">
+  <strong class="hd">Why a tab in the editor rather than only a dashboard</strong>
+  <p style="margin-bottom:0">
+    Because the moment you want to know how a page is doing is usually the moment you are editing it.
+    Every page also has its own <strong>Search</strong> tab showing how that specific page performs in
+    Google. A separate dashboard tends to get looked at when somebody remembers to; a tab next to the
+    content gets looked at while the decision is being made.
+  </p>
+</div>
+
+<h2>Questions you might have</h2>
+
+<h3>Do I need to log in to Tag Manager?</h3>
+<p>
+  Almost certainly never. It is infrastructure. If something needs adding to it, ask rather than
+  experiment: a wrong change there affects every page at once.
+</p>
+
+<h3>Is this collecting personal information?</h3>
+<p>
+  Analytics records behaviour rather than identity: pages, sources, devices, roughly where in the world
+  somebody is. It does not know names, and it is not told what anybody typed into a form. When a form
+  is submitted, the site reports only that a submission happened and which form it was.
+</p>
+
+<h3>Why does today never show any figures?</h3>
+<p>
+  Analytics finishes counting a day a few hours after it ends, so the most recent complete day is
+  yesterday. A missing today is normal and not a fault.
+</p>
+
+<h3>Can I add a Facebook or LinkedIn pixel later?</h3>
+<p>
+  Yes, and that is exactly what the container is for. Ask before adding one: it is a two-minute job to
+  do properly and a very easy one to do in a way that slows the site down or double-counts everything.
+</p>
+
+<div class="foot">
+  <p>
+    The container loads nothing at all until the new site goes live, so none of the figures in the
+    editor include anybody testing the preview. Correct as of July 2026.
+  </p>
+</div>
+
+</body></html>
