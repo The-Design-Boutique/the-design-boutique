@@ -313,6 +313,10 @@ a.service-card:hover .service-text { color: #fff; }
 
 /* Work showcase (See, feel, and practically smell the difference) */
 .section-heading--wide { max-width: none; }
+/* On live, the section heading directly under a subpage banner (Solutions, Programs) is the light cut,
+   and the Solutions subtitle a step up; headings further down the same pages stay bold. */
+.subpage-banner + .section .section-heading .h2 { font-weight: 300; }
+main[data-path^="/solutions"] .subpage-banner + .section .section-heading .lead { font-size: 20px; line-height: 1.4; }
 .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; align-items: start; }
 @media (max-width: 991px) { .work-grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; } }
 .work-card { display: block; text-decoration: none; color: var(--tdb-white); }
@@ -467,10 +471,7 @@ a.service-card:hover .service-text { color: #fff; }
 .subpage-banner-title { text-align: center; }
 .subpage-banner-title--left { text-align: left; }
 .subpage-banner-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: center; }
-@media (max-width: 991px) {
-  .subpage-banner-grid { grid-template-columns: 1fr; gap: 0; }
-  .subpage-banner-media { position: absolute; top: 0; right: var(--gutter); width: 205px; }
-}
+@media (max-width: 991px) { .subpage-banner-grid { grid-template-columns: 1fr; gap: 0; } }
 /* Service banner media: tree-shaped mask + redwood branch overlay (matches live) */
 .subpage-banner-media { position: relative; }
 .subpage-banner-media img {
@@ -486,6 +487,10 @@ a.service-card:hover .service-text { color: #fff; }
   content: ''; position: absolute; inset: -6% -14% -6% -22%;
   background: url('https://cdn.sanity.io/images/inapmf9l/production/d03cb1c1f8c10e72da7493dd636bcc250080ae91-1402x1116.png') no-repeat center / contain;
   opacity: 0.85; pointer-events: none; z-index: 1;
+}
+/* Small screens: live pins the tree cutout at the top right, over the banner, rather than stacking it. */
+@media (max-width: 991px) {
+  .subpage-banner .subpage-banner-media { position: absolute; top: 0; right: var(--gutter); width: 205px; }
 }
 .subpage-banner-subtitle { max-width: 100%; margin: 52px 0 16px; }
 .subpage-banner-cta { margin-top: 73px; }
@@ -661,6 +666,14 @@ a.service-card:hover .service-text { color: #fff; }
 .tier-meta { margin: 0 0 0.35rem; color: var(--tdb-white); }
 .tier-meta strong { font-weight: 700; }
 .tier-casestudy { display: inline-block; margin: 1rem 0 1.5rem; color: var(--tdb-white); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.tier-card .btn, .tier-card a.btn {
+  margin-top: auto; align-self: center; padding: 120px 0 0; background: transparent; border: 0;
+  font-size: 48px; font-weight: 400; letter-spacing: 0.05em; line-height: 1.23; color: var(--tdb-white);
+  text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px;
+}
+.tier-card .btn:hover { color: var(--tdb-accent); background: transparent; }
+.tier-card .btn-plus { display: none; }
+@media (max-width: 575px) { .tier-card .btn { font-size: 32px; padding-top: 48px; } }
 a.tier-casestudy:hover { color: var(--tdb-accent); }
 .tier-features { list-style: none; margin: 0 0 2rem; padding: 0; }
 .tier-item { margin: 0.55rem 0 0.2rem; color: var(--tdb-white); }

@@ -42,7 +42,9 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         <TagManager gtmId={data?.settings?.gtmId} allowOnPreview={data?.settings?.gtmOnPreview} />
       )}
       <Header nav={data?.nav} settings={data?.settings} />
-      <main>{children}</main>
+      {/* The path on main lets stylesheet rules follow live's per-page choices, such as which
+          section headings are set in the light cut, without a content change. */}
+      <main data-path={pathname}>{children}</main>
       <Footer nav={data?.nav} settings={data?.settings} />
       <BackToTop />
       {/* One delegated listener, so numbers added later are caught too. */}
