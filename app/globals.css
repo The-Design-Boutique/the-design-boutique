@@ -560,15 +560,16 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 /* Rich text: wide with side leaf (About bio) */
 .rt-leaf-right { position: relative; overflow: hidden; }
 .rt-leaf-right::before {
-  content: ''; position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
-  width: 660px; height: 840px; max-width: 48%;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png?w=800&q=70&auto=format') no-repeat center / contain;
-  opacity: 0.5; z-index: 0; pointer-events: none;
+  /* Live: the fern is 806px wide, flush right, its base 170px below the section edge. */
+  content: ''; position: absolute; right: 0; top: auto; bottom: -170px;
+  width: 806px; height: 1230px; max-width: none;
+  background: url('/redwood-fern.png') no-repeat right bottom / 806px auto;
+  opacity: 1; z-index: 0; pointer-events: none;
 }
 .rt-leaf-right > .container { position: relative; z-index: 1; }
 /* On long legal pages the leaf is anchored to the top, not centred down the page. */
 .rt-leaf-right--top::before { top: 0; transform: none; }
-.prose--about { max-width: 620px; }
+.prose--about { max-width: 900px; }
 .prose--about .prose-img { max-width: 600px; }
 /* CTA band underlined action line (e.g. "Let's Go!") */
 .cta-underline { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px; }
@@ -824,9 +825,14 @@ main[data-path="/testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; 
 @media (max-width: 991px) { .post-masthead { padding-top: 150px; } .post-masthead-name { font-size: 36px; } }
 
 /* Two-column body: article left, promo card right (roughly 2:1 on the live site). */
-.post-main { padding-top: 56px; }
-.post-main > .container { padding-inline: 30px; }
-.post-layout { display: grid; grid-template-columns: minmax(0, 897fr) minmax(0, 414fr); gap: 30px; align-items: start; }
+.post-main { padding-top: 115px; }
+/* Live insets post and event content 60px inside the 1440 frame (sidebar ends at 1380). */
+.post-main > .container { padding-inline: 60px; }
+@media (max-width: 991px) { .post-main > .container { padding-inline: var(--gutter); } }
+/* Gold events carry a taller masthead: eyebrow at 296, title 140px below the series name. */
+main[data-path^="/gold/"] .post-masthead { padding-top: 296px; }
+main[data-path^="/gold/"] .post-main { padding-top: 140px; }
+.post-layout { display: grid; grid-template-columns: minmax(0, 1fr) 354px; gap: 60px; align-items: start; }
 .post-title { font-size: 54.4px; font-weight: 700; line-height: 1.23; margin: 0 0 1rem; }
 .post-meta { display: flex; flex-wrap: wrap; gap: 1.75rem; margin: 0 0 2.5rem; font-size: 16px; font-weight: 700; color: #e3e3e3; }
 .post-meta-item { display: inline-flex; align-items: center; gap: 0.45rem; }
@@ -867,7 +873,10 @@ main[data-path="/testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; 
 
 /* "More from The Design Boutique Blog" cards. */
 .post-related-heading { font-size: 35.2px; font-weight: 700; line-height: 1.23; text-align: center; margin: 0 0 2.5rem; }
-.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.post-related > .container { padding-inline: 30px; }
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.post-related .event-grid { column-gap: 30px; }
+.post-related .event-card { padding: 40px 80px 120px; }
 .related-card { display: block; background: #363636; border: 1px solid #070707; text-decoration: none; }
 .related-card img { display: block; width: 100%; aspect-ratio: 553 / 292; object-fit: cover; }
 .related-card-placeholder { display: block; width: 100%; aspect-ratio: 553 / 292; background: #202020; }
