@@ -886,7 +886,7 @@ main[data-path^="/gold/"] .post-main { padding-top: 140px; }
 /* Post body copy is lighter and tighter than the marketing prose. */
 .post-body p, .post-body li { font-size: 16px; font-weight: 300; line-height: 27.2px; color: var(--tdb-white); }
 /* Live post images sit at 600px inside the 906px column, 16px above the copy. */
-.post-body .post-body-img { max-width: 600px; margin-bottom: 16px; }
+.post-body .post-body-img { max-width: min(600px, 100%); margin-bottom: 16px; }
 .post-body a { color: var(--tdb-accent); font-weight: 700; text-decoration: none; }
 .post-body a:hover { text-decoration: underline; }
 .post-body-img { max-width: 100%; height: auto; margin: 1.75rem 0; }
@@ -909,7 +909,7 @@ main[data-path^="/gold/"] .post-main { padding-top: 140px; }
 .post-promo-btn { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
 
 @media (max-width: 991px) {
-  .post-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .post-layout { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
   .post-title { font-size: 38px; }
 }
 
