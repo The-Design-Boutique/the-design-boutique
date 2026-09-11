@@ -4,7 +4,7 @@ import './globals.css'
 
 const signika = Signika({
   subsets: ['latin'],
-  weight: ['400', '600', '700'],
+  weight: ['300', '400', '600', '700'], // 300: live body copy and section headings are the light cut
   variable: '--font-signika',
   display: 'swap',
 })

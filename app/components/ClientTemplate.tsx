@@ -64,15 +64,16 @@ export function ClientTemplate({ client }: { client: any }) {
                 )
               ) : null}
 
-              {gallery.length ? (
-                <div className="client-gallery">
-                  {gallery.map((g: any, i: number) => (
-                    <img key={i} src={urlFor(g).width(900).url()} alt={g.alt || ''} loading="lazy" />
-                  ))}
-                </div>
-              ) : null}
             </article>
           </div>
+          {/* Full width below the rail and copy, as on the live site. */}
+          {gallery.length ? (
+            <div className="client-gallery">
+              {gallery.map((g: any, i: number) => (
+                <img key={i} src={urlFor(g).width(1300).url()} alt={g.alt || ''} loading="lazy" />
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 

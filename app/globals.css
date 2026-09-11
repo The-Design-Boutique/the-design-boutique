@@ -44,9 +44,9 @@ body {
   background: var(--tdb-black);
   color: var(--tdb-white);
   font-family: var(--font-sans);
-  font-weight: var(--fw-regular);
+  font-weight: 300; /* live body copy is the light cut */
   -webkit-font-smoothing: antialiased;
-  line-height: 1.5;
+  line-height: 1.7; /* 27.2px at 16px, as live */
 }
 
 a {
@@ -56,7 +56,8 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--fw-bold);
-  line-height: 1.1;
+  line-height: 1.23;
+  letter-spacing: 0.05em;
   margin: 0;
 }
 
@@ -68,7 +69,9 @@ button,
   border: 1px solid var(--tdb-accent);
   background: var(--tdb-accent);
   color: var(--tdb-white);
-  padding: 0.9rem 1.6rem;
+  padding: 24px 34px 21px 46px;
+  font-size: 19.2px;
+  line-height: 1;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
@@ -82,7 +85,7 @@ img {
 }
 
 @media (max-width: 575px) {
-  :root { --gutter: 20px; }
+  :root { --gutter: 30px; }
 }
 
 /* ============================================================
@@ -90,9 +93,14 @@ img {
    ============================================================ */
 
 /* Layout */
-.container { max-width: 1200px; margin-inline: auto; padding-inline: var(--gutter); }
+/* Decorative overhangs (the redwood fern, the tree cutout) must never give a phone a sideways scroll. */
+main { overflow-x: clip; }
+
+/* Full-bleed: live's content column is the viewport minus the gutters (1340 at 1440). */
+.container { max-width: none; margin-inline: auto; padding-inline: var(--gutter); }
 .container--wide { max-width: 1440px; }
 .container--narrow { max-width: 820px; }
+main[data-path="/privacy-policy"] .prose--wide, main[data-path="/ada-compliance"] .prose--wide { max-width: 1050px; }
 
 .section { padding-block: 96px; }
 .section[data-pt='none'] { padding-top: 0; }
@@ -105,10 +113,10 @@ img {
 /* Pages that open with a content section instead of a hero must clear the fixed header. */
 main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 225px; }
 /* The long legal pages sit a little lower still, matching the live site. */
-main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 300px; }
+main > .section.rt-leaf-right--top:first-of-type:not(.hero):not(.subpage-banner) { padding-top: 300px; }
 @media (max-width: 991px) {
   main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 160px; }
-  main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 190px; }
+  main > .section.rt-leaf-right--top:first-of-type:not(.hero):not(.subpage-banner) { padding-top: 190px; }
 }
 
 /* Backgrounds */
@@ -125,20 +133,32 @@ main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) {
   background-size: cover;
   background-position: center;
 }
-.section.bg-forest { padding-block: 150px; }
+/* 496px tall on live: 181px either side of the 48px heading. */
+.section.bg-forest { padding-block: 181px; }
 /* Leaves motif (service media sections) */
 .bg-leaves {
   color: var(--tdb-white);
   background: url('https://cdn.sanity.io/images/inapmf9l/production/ec081471fe26e09ffc9bc28f521684368edad81f-1478x1049.png?w=800&q=70&auto=format') no-repeat center / contain;
   background-color: var(--tdb-black);
 }
+/* The programme video section on live: 92px above, 60px between heading and poster, 208px below. */
+.section.bg-leaves { padding: 92px 0 208px; }
+.bg-leaves .section-heading { margin-bottom: 60px; }
+@media (max-width: 767px) {
+  /* Live on phones: 50px above the heading, the poster 330x410 flush to the section bottom. */
+  .section.bg-leaves { padding: 50px 0 0; }
+  .bg-leaves .section-heading { margin-bottom: 30px; }
+  .bg-leaves .video-frame .video-poster { aspect-ratio: 330 / 410; }
+}
 
 /* Typography */
 .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 1.05rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.9rem; }
-.h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; }
-.h2 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; }
-.h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.2; }
-.lead { font-size: 1.15rem; color: var(--tdb-offwhite); max-width: 60ch; }
+.h1 { font-size: 54.4px; line-height: 1.23; }
+.h2 { font-size: 48px; line-height: 1.23; }
+.h3 { font-size: 36px; line-height: 1.3; }
+.lead { font-size: 16px; line-height: 1.7; font-weight: 300; color: var(--tdb-white); max-width: none; }
+.subpage-banner .lead, .subpage-banner-footnote { font-size: 25px; line-height: 1.25; font-weight: 300; color: var(--tdb-white); max-width: none; }
+@media (max-width: 575px) { .h1 { font-size: 35px; } .h2 { font-size: 30px; } .subpage-banner .lead, .subpage-banner-footnote { font-size: 16px; line-height: 1.7; } }
 .section-heading { text-align: center; margin: 0 auto 2.5rem; max-width: 40ch; }
 .section-heading .lead { margin-inline: auto; }
 
@@ -193,21 +213,21 @@ a.service-card:hover { border-color: #ffffff; }
 a.service-card:hover .service-card-hover { opacity: 1; }
 .service-card-body { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; flex: 1; }
 .service-icon { width: 48px; height: 48px; margin-bottom: 1rem; }
-.service-title { display: block; margin-bottom: 0.75rem; }
+.service-title { display: block; font-size: 19.2px; font-weight: 700; line-height: 1; margin-bottom: 0.75rem; }
 .service-text { display: block; color: var(--tdb-offwhite); }
 a.service-card:hover .service-text { color: #fff; }
 
 /* Header */
 .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: transparent; transition: background 0.3s ease; }
 .site-header--solid { background: rgba(7, 7, 7, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a; }
-.site-header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 96px; }
-.site-logo { display: inline-flex; align-items: center; gap: 0.5rem; }
-.site-logo img { height: 56px; width: auto; display: block; }
-.site-nav { display: flex; gap: 1.75rem; align-items: center; }
-.site-nav a { color: var(--tdb-white); font-weight: 600; }
+.site-header-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; padding-top: 32px; }
+.site-logo { display: inline-flex; align-items: center; gap: 10px; }
+.site-logo img { height: 66px; width: auto; display: block; }
+.site-nav { display: flex; gap: 1.75rem; align-items: center; padding-top: 41px; }
+.site-nav a { color: var(--tdb-white); font-weight: 400; font-size: 16px; }
 .site-nav a:hover { color: var(--tdb-accent); }
-.site-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
-.site-header-phone { color: var(--tdb-white); font-weight: 700; font-size: 1.05rem; }
+.site-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
+.site-header-phone { color: var(--tdb-white); font-weight: 400; font-size: 24px; line-height: 1.8; }
 .site-nav-toggle { display: none; background: transparent; border: 0; color: var(--tdb-white); font-size: 1.5rem; cursor: pointer; padding: 0.25rem 0.5rem; }
 .site-nav-mobile { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.5rem var(--gutter) 1rem; background: rgba(7, 7, 7, 0.97); }
 .site-nav-mobile a { color: var(--tdb-white); padding: 0.5rem 0; }
@@ -217,6 +237,9 @@ a.service-card:hover .service-text { color: #fff; }
   .site-header { background: rgba(7, 7, 7, 0.95); }
   .site-nav, .site-header-right { display: none !important; }
   .site-nav-toggle { display: inline-block !important; }
+  /* Live shows only the primary mark on small screens, 41px from the top. */
+  .site-header-inner { padding-top: 41px; align-items: center; }
+  .site-logo img + img { display: none; }
 }
 
 /* Hero */
@@ -271,7 +294,8 @@ a.service-card:hover .service-text { color: #fff; }
 .about-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 3.5rem; align-items: center; }
 @media (max-width: 991px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .about-media img { display: block; width: 100%; height: auto; }
-.about-content .h2 { margin-bottom: 1.25rem; }
+.about-content .h2, .about-content .prose h2 { font-size: 48px; font-weight: 300; line-height: 1.23; margin-bottom: 1.25rem; }
+@media (max-width: 991px) { .about-content .h2 { font-size: 30px; font-weight: 700; } .about-cards .h3, .about-cards h3 { font-size: 24px; } }
 .about-body { max-width: 62ch; margin: 0 0 2.25rem; }
 .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
 @media (max-width: 575px) { .about-cards { grid-template-columns: 1fr; } }
@@ -301,6 +325,10 @@ a.service-card:hover .service-text { color: #fff; }
 
 /* Work showcase (See, feel, and practically smell the difference) */
 .section-heading--wide { max-width: none; }
+/* On live, the section heading directly under a subpage banner (Solutions, Programs) is the light cut,
+   and the Solutions subtitle a step up; headings further down the same pages stay bold. */
+.subpage-banner + .section .section-heading .h2 { font-weight: 300; }
+main[data-path^="/solutions"] .subpage-banner + .section .section-heading .lead { font-size: 20px; line-height: 1.4; }
 .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; align-items: start; }
 @media (max-width: 991px) { .work-grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; } }
 .work-card { display: block; text-decoration: none; color: var(--tdb-white); }
@@ -336,7 +364,7 @@ a.service-card:hover .service-text { color: #fff; }
   background: url('https://cdn.sanity.io/images/inapmf9l/production/7732aab64e97ac69b16ca5155757eed55121d010-380x156.png?w=380&q=75&auto=format') no-repeat center / contain;
 }
 @media (max-width: 991px) { .testimonial-section::after { display: none; } }
-.testimonial .h2 { margin-bottom: 2.5rem; }
+.testimonial .h2 { font-size: 35.2px; margin-bottom: 2.5rem; }
 .testimonial-body { display: grid; grid-template-columns: auto 1fr; gap: 2.5rem; align-items: start; }
 .testimonial-mark { color: var(--tdb-white); font-size: 9rem; line-height: 0.72; font-weight: 700; font-family: Georgia, 'Times New Roman', serif; }
 .testimonial-content { margin: 0; }
@@ -356,7 +384,17 @@ a.service-card:hover .service-text { color: #fff; }
 .faq-answer { padding: 0 1.5rem 1.25rem 3.5rem; color: var(--tdb-offwhite); }
 
 /* Contact + algorithms (two-column) */
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+/* Live: 620px intro column, 70px gap, 650px form column; 35.2px intro heading, 19.2px light lead, 25px form heading. */
+.section--contact { padding-block: 179px 181px; }
+@media (max-width: 991px) { .section--contact { padding-block: 96px; } }
+.contact-grid { display: grid; grid-template-columns: 620fr 650fr; gap: 70px; align-items: start; }
+.contact-grid .contact-intro .h2 { font-size: 35.2px; line-height: 1.23; margin-bottom: 27px; }
+.contact-grid .contact-intro .lead { font-size: 19.2px; font-weight: 300; line-height: 1.23; }
+.contact-grid .contact-form-heading .h2 { font-size: 25px; line-height: 1.23; }
+@media (max-width: 991px) {
+  .contact-grid .contact-intro .h2 { font-size: 25px; }
+  .contact-grid .contact-form-heading .h2 { font-size: 30px; }
+}
 @media (max-width: 991px) { .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .contact-intro .lead { margin-bottom: 1.5rem; }
 .contact-bullets { list-style: none; padding: 0; margin: 0 0 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
@@ -380,6 +418,35 @@ a.service-card:hover .service-text { color: #fff; }
 .contact-form select:focus,
 .contact-form textarea:focus { outline: none; border-color: var(--tdb-accent); }
 .btn--send { width: 100%; padding: 1.15rem; font-size: 1.05rem; }
+
+/* Contact page (centred form): live is an 800px column, eyebrow at 225 from the top,
+   14.4px light labels, 38px dark fields on an 86px row pitch, a 38px full-width button. */
+main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
+.contact-centered { max-width: 800px; margin-inline: auto; }
+.contact-centered .contact-form-heading { margin-bottom: 103px; }
+.contact-centered .contact-form-heading .eyebrow { font-size: 19.2px; line-height: 1.23; margin-bottom: 16px; }
+.contact-centered .contact-form-heading .h2 { font-size: 54.4px; line-height: 1.23; margin-bottom: 16px; }
+.contact-centered .contact-form-heading .lead { margin: 0; }
+.contact-form .fba-grid { gap: 22px 30px; }
+.contact-form .fba-field { gap: 0; }
+.contact-form .fba-label { font-size: 14.4px; font-weight: 300; line-height: 26px; color: var(--tdb-white); }
+.contact-form input:not([type="checkbox"]):not([type="radio"]),
+.contact-form select,
+.contact-form textarea {
+  width: 100%; box-sizing: border-box; height: 38px; padding: 0 8px; margin: 0;
+  font-family: inherit; font-size: 14.4px; font-weight: 300; line-height: 36px; color: var(--tdb-white);
+  background: rgba(7, 7, 7, 0.7); border: 1px solid #363636; border-radius: 0; appearance: none; -webkit-appearance: none;
+}
+.contact-form select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f26722' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.contact-form textarea { height: 208px; padding: 7px 8px; line-height: 21px; resize: vertical; }
+.contact-form .fba-actions { margin-top: 22px; }
+.contact-form .btn--send { height: 38px; padding: 0; font-size: 19.2px; line-height: 38px; border-radius: 0; }
+@media (max-width: 991px) {
+  main[data-path="/contact"] > .section:first-of-type { padding-top: 175px; }
+  main[data-path="/contact"] .container .container { padding-inline: 0; }
+  .contact-centered .contact-form-heading { margin-bottom: 40px; }
+  .contact-centered .contact-form-heading .h2 { font-size: 35px; }
+}
 .btn--send:hover { background: #ffffff; color: var(--tdb-accent); border-color: var(--tdb-accent); }
 
 /* Split row (media + text) */
@@ -402,9 +469,15 @@ a.service-card:hover .service-text { color: #fff; }
 }
 
 /* Footer */
-.site-footer { background: var(--tdb-black); padding-block: 4rem 2rem; }
+/* Live's footer runs about 630px tall; ours was 432. */
+.site-footer { background: var(--tdb-black); padding-block: 108px 30px; }
 .site-footer .container--wide { max-width: 1640px; }
-.footer-top { display: grid; grid-template-columns: auto 1.7fr 0.7fr 1.05fr 1.15fr 1.25fr; gap: 1.75rem; align-items: start; }
+/* Live footer: four fixed columns (290/490/224/176) inset 8px, then the connect and newsletter
+   blocks wrap to a second row 30px below, spanning the first two and last two columns. */
+.footer-top { display: grid; grid-template-columns: 290px 490px 224px 176px; gap: 30px 0; align-items: start; padding-left: 8px; }
+.footer-top > .footer-col:nth-child(5) { grid-column: 1 / 3; }
+.footer-top > .footer-newsletter { grid-column: 3 / 5; }
+@media (max-width: 1200px) { .footer-top { padding-left: 0; } .footer-top > .footer-col:nth-child(5), .footer-top > .footer-newsletter { grid-column: auto; } }
 @media (max-width: 1200px) { .footer-top { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 767px) {
   .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -419,18 +492,18 @@ a.service-card:hover .service-text { color: #fff; }
 .footer-social a:hover { color: var(--tdb-accent); }
 .footer-google { display: inline-flex; text-decoration: none; }
 .footer-google img { width: 85px; height: auto; display: block; }
-.footer-col-title { font-size: 1.1rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 1.1rem; white-space: nowrap; }
+.footer-col-title { font-size: 16px; font-weight: 700; color: var(--tdb-white); margin: 0 0 1.1rem; white-space: nowrap; }
 .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.9rem; }
-.footer-links a { color: var(--tdb-white); font-weight: 700; font-size: 1rem; }
+.footer-links a { color: var(--tdb-white); font-weight: 700; font-size: 14.4px; line-height: 26.66px; }
 .footer-links a:hover { color: var(--tdb-accent); }
 .footer-col--wide .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.25rem; }
-.footer-col--wide .footer-links a { font-weight: 300; font-size: 0.95rem; white-space: nowrap; }
+.footer-col--wide .footer-links a { font-weight: 300; font-size: 14.4px; line-height: 26.66px; white-space: nowrap; }
 .footer-contact-line { display: block; color: var(--tdb-white); margin: 0 0 0.9rem; white-space: nowrap; }
 .footer-subscribe { display: flex; flex-direction: column; gap: 0.85rem; }
 .footer-subscribe input { padding: 0.85rem 1rem; background: transparent; border: 1px solid #5a5a5a; color: var(--tdb-white); font-family: inherit; font-size: 1rem; }
 .footer-subscribe input::placeholder { color: var(--tdb-accent); opacity: 1; }
 .footer-subscribe .btn { width: 100%; }
-.footer-bottom { margin-top: 3rem; padding-top: 1.75rem; border-top: 1px solid #333; }
+.footer-bottom { margin-top: 27px; padding-top: 30px; border-top: 1px solid #333; }
 .footer-bottom p { margin: 0; color: var(--tdb-offwhite); font-size: 0.95rem; }
 .footer-bottom a { color: var(--tdb-white); text-decoration: underline; }
 
@@ -445,17 +518,17 @@ a.service-card:hover .service-text { color: #fff; }
 }
 
 /* Subpage banner (first section under the fixed header) */
-.subpage-banner { padding: 150px 0 90px; }
-@media (max-width: 991px) { .subpage-banner { padding: 120px 0 64px; } }
+.subpage-banner { position: relative; overflow: hidden; padding: 236px 0 52px; }
 /* Full-width hero variant (no side image): tall, content weighted to the lower third */
-.subpage-banner--hero { min-height: 540px; display: flex; align-items: flex-end; padding: 190px 0 48px; }
-.subpage-banner--hero .container { width: 100%; }
-@media (max-width: 991px) { .subpage-banner--hero { min-height: 420px; padding: 130px 0 44px; } }
+.subpage-banner--hero { padding: 236px 0 52px; }
+.subpage-banner + .section { padding-top: 32px; }
+/* Live's plain-variant H1 (Trusted, More Testimonials) is one step smaller. */
+.subpage-banner--plain .h1 { font-size: 48px; }
 .subpage-banner-footnote { text-align: left; max-width: 62rem; margin: 2.25rem 0 0; color: var(--tdb-offwhite); }
 .subpage-banner-title { text-align: center; }
 .subpage-banner-title--left { text-align: left; }
 .subpage-banner-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: center; }
-@media (max-width: 991px) { .subpage-banner-grid { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 991px) { .subpage-banner-grid { grid-template-columns: 1fr; gap: 0; } }
 /* Service banner media: tree-shaped mask + redwood branch overlay (matches live) */
 .subpage-banner-media { position: relative; }
 .subpage-banner-media img {
@@ -472,8 +545,12 @@ a.service-card:hover .service-text { color: #fff; }
   background: url('https://cdn.sanity.io/images/inapmf9l/production/d03cb1c1f8c10e72da7493dd636bcc250080ae91-1402x1116.png') no-repeat center / contain;
   opacity: 0.85; pointer-events: none; z-index: 1;
 }
-.subpage-banner-subtitle { max-width: 100%; margin: 1.5rem 0 0; }
-.subpage-banner-cta { margin-top: 1.75rem; }
+/* Small screens: live pins the tree cutout at the top right, over the banner, rather than stacking it. */
+@media (max-width: 991px) {
+  .subpage-banner .subpage-banner-media { position: absolute; top: 0; right: var(--gutter); width: 205px; }
+}
+.subpage-banner-subtitle { max-width: 100%; margin: 52px 0 16px; }
+.subpage-banner-cta { margin-top: 73px; }
 
 /* Video block: poster with play button, swaps to the embed on click */
 .video-frame { max-width: 400px; margin: 0 auto; }
@@ -507,15 +584,16 @@ a.service-card:hover .service-text { color: #fff; }
 /* Rich text: wide with side leaf (About bio) */
 .rt-leaf-right { position: relative; overflow: hidden; }
 .rt-leaf-right::before {
-  content: ''; position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
-  width: 660px; height: 840px; max-width: 48%;
-  background: url('https://cdn.sanity.io/images/inapmf9l/production/1ee98288ae649e270d10488b7d6665d8ab28cfc7-1452x1617.png?w=800&q=70&auto=format') no-repeat center / contain;
-  opacity: 0.5; z-index: 0; pointer-events: none;
+  /* Live: the fern is 806px wide, flush right, its base 170px below the section edge. */
+  content: ''; position: absolute; right: 0; top: auto; bottom: -170px;
+  width: 806px; height: 1230px; max-width: none;
+  background: url('/redwood-fern.png') no-repeat right bottom / 806px auto;
+  opacity: 1; z-index: 0; pointer-events: none;
 }
 .rt-leaf-right > .container { position: relative; z-index: 1; }
 /* On long legal pages the leaf is anchored to the top, not centred down the page. */
 .rt-leaf-right--top::before { top: 0; transform: none; }
-.prose--about { max-width: 620px; }
+.prose--about { max-width: 900px; }
 .prose--about .prose-img { max-width: 600px; }
 /* CTA band underlined action line (e.g. "Let's Go!") */
 .cta-underline { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px; }
@@ -523,9 +601,15 @@ a.service-card:hover .service-text { color: #fff; }
 
 /* Portable text spacing + heading scale (brand-sized, not browser defaults) */
 .prose p { margin: 0 0 1rem; }
-.prose h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); font-weight: 700; margin: 2.25rem 0 0.85rem; line-height: 1.1; }
-.prose h3 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.15; }
-.prose h4 { font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.2; }
+.prose h2 { font-size: 48px; font-weight: 700; margin: 2.25rem 0 0.85rem; line-height: 1.23; }
+/* The About page's section heading is the light cut on live, with more air before the portrait. */
+.prose--about h2 { font-weight: 300; margin-bottom: 64px; }
+/* Live leaves 200px under the last bio paragraph before the band. */
+main[data-path="/about"] .rt-leaf-right { padding-bottom: 184px; }
+/* Live body copy: h4 35.2px, h3 19.2px (the results and list headings), both bold. */
+.prose h3 { font-size: 35.2px; font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.23; }
+.prose h4 { font-size: 19.2px; font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.23; }
+@media (max-width: 991px) { .prose h3 { font-size: 25px; } }
 .prose h2:first-child, .prose h3:first-child, .prose h4:first-child { margin-top: 0; }
 .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
 /* Brand list: orange square markers with breathing room */
@@ -558,15 +642,15 @@ a.service-card:hover .service-text { color: #fff; }
 
 /* Video testimonial rows: video left, details right (Testimonials page) */
 .video-rows { display: flex; flex-direction: column; gap: 2.5rem; }
-.video-row { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #e3e3e3; }
+.video-row { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #e3e3e3; max-width: 1050px; }
 .video-grid-frame--wide { aspect-ratio: 16 / 9; border-radius: 0; }
 .video-row-details {
   padding: 40px 60px 40px 40px; display: flex; flex-direction: column; justify-content: center; gap: 1rem;
   background: url('/leaf2.png') no-repeat calc(100% - 40px) calc(100% - 40px);
 }
 .video-row-name { font-size: 35.2px; font-weight: 100; line-height: 1.23; color: var(--tdb-white); margin: 0; }
-.video-row-role { font-size: 19.2px; font-weight: 100; line-height: 1.23; color: var(--tdb-white); margin: 0; }
-.video-row-category { font-size: 16px; font-weight: 100; color: var(--tdb-white); margin: 0; }
+.video-row-role { font-size: 19.2px; font-weight: 100; line-height: 1.23; color: var(--tdb-white); margin: 11px 0 0; }
+.video-row-category { font-size: 16px; font-weight: 100; color: var(--tdb-white); margin: 11px 0 0; }
 @media (max-width: 767px) {
   .video-row { grid-template-columns: 1fr; }
   .video-row-details { padding: 28px; }
@@ -612,13 +696,13 @@ a.service-card:hover .service-text { color: #fff; }
 .cta-underline--link:hover { color: inherit; opacity: 0.85; }
 
 /* Work grid (portfolio cards: image + category + title, hover, linked) */
-.work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.work-card { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 4; color: var(--tdb-white); text-decoration: none; background: var(--tdb-dark); }
+.work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.work-card { position: relative; display: block; overflow: hidden; aspect-ratio: 427 / 670; color: var(--tdb-white); text-decoration: none; background: var(--tdb-dark); }
 .work-card-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .work-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(7,7,7,0) 45%, rgba(7,7,7,0.85)); z-index: 1; }
 .work-card-overlay { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 1.5rem; }
 .work-card-cat { margin: 0 0 0.2rem; color: var(--tdb-accent); font-weight: 700; font-size: 0.95rem; }
-.work-card-title { margin: 0; color: var(--tdb-white); font-size: 1.3rem; font-weight: 700; }
+.work-card-title { margin: 0; color: var(--tdb-white); font-size: 19.2px; font-weight: 700; }
 .work-card:hover .work-card-img { transform: scale(1.06); }
 @media (max-width: 991px) { .work-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .work-grid { grid-template-columns: 1fr; } }
@@ -631,18 +715,31 @@ a.service-card:hover .service-text { color: #fff; }
 .subpage-banner-footnote p:last-child { margin-bottom: 0; }
 
 /* Video: large variant (Programs) */
-.video-frame--large { max-width: 620px; }
+/* Live's programme video is a 500 by 889 portrait poster. The frame matches that geometry; the poster asset
+   itself is landscape today and is queued to be swapped for live's portrait frame. */
+.video-frame--large { max-width: 500px; }
+.video-frame--large .video-poster { aspect-ratio: 500 / 889; overflow: hidden; }
+.video-frame--large .video-poster img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Pricing tiers (Programs) */
 .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .tier-card { border: 1px solid rgba(255,255,255,0.28); background: var(--tdb-dark); padding: 2.5rem 2rem; display: flex; flex-direction: column; }
-.tier-name { font-size: clamp(2.2rem, 4vw, 3rem); font-weight: 700; text-align: center; margin: 0 0 1.5rem; }
+.tier-name { font-size: 75px; line-height: 1.23; font-weight: 400; text-align: center; margin: 0 0 1.5rem; }
+@media (max-width: 575px) { .tier-name { font-size: 50px; } }
 .tier-name--silver { color: #a19797; }
 .tier-name--bronze { color: #a28051; }
 .tier-name--gold { color: #ecec16; }
 .tier-meta { margin: 0 0 0.35rem; color: var(--tdb-white); }
 .tier-meta strong { font-weight: 700; }
 .tier-casestudy { display: inline-block; margin: 1rem 0 1.5rem; color: var(--tdb-white); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.tier-card .btn, .tier-card a.btn {
+  margin-top: auto; align-self: center; padding: 120px 0 0; background: transparent; border: 0;
+  font-size: 48px; font-weight: 400; letter-spacing: 0.05em; line-height: 1.23; color: var(--tdb-white);
+  text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px;
+}
+.tier-card .btn:hover { color: var(--tdb-accent); background: transparent; }
+.tier-card .btn-plus { display: none; }
+@media (max-width: 575px) { .tier-card .btn { font-size: 32px; padding-top: 48px; } }
 a.tier-casestudy:hover { color: var(--tdb-accent); }
 .tier-features { list-style: none; margin: 0 0 2rem; padding: 0; }
 .tier-item { margin: 0.55rem 0 0.2rem; color: var(--tdb-white); }
@@ -655,6 +752,19 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
    plain description and an underlined text link instead of a button. */
 .tier-grid--packages { gap: 2rem; }
 .tier-card--packages { background: #202020; border: 1px solid #e3e3e3; padding: 3.5rem 30px 3rem; }
+/* Programs page tiers on live: 428px cards with a 28px gap, padding 67/30/46, feature text on a 30px line
+   height with no per-item margins. On phones the card bleeds to the viewport edge with 330px of text. */
+main[data-path="/programs"] .tier-grid { gap: 28px; }
+main[data-path="/programs"] .tier-card { background: #202020; padding: 67px 30px 46px; }
+main[data-path="/programs"] .tier-meta, main[data-path="/programs"] .tier-features { line-height: 30px; }
+main[data-path="/programs"] .tier-item { margin: 0; }
+main[data-path="/programs"] .tier-subitem { margin: 0 0 0 1rem; }
+@media (max-width: 575px) {
+  main[data-path="/programs"] .tier-grid { max-width: none; }
+  main[data-path="/programs"] .tier-card { margin-inline: calc(-1 * var(--gutter)); border-left: 0; border-right: 0; padding: 30px var(--gutter) 50px; }
+  main[data-path="/programs"] .tier-name { margin-bottom: 30px; }
+  main[data-path="/programs"] .tier-card .btn { font-size: 30px; padding-top: 30px; }
+}
 .tier-card--packages .tier-name { font-size: 75px; font-weight: 400; line-height: 1.1; margin: 0 0 3rem; }
 .tier-card--packages .tier-features { margin-bottom: 1.25rem; }
 .tier-desc { color: var(--tdb-white); margin: 0 0 2rem; }
@@ -667,8 +777,8 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 }
 
 /* Logo cards (Trusted) — gray tiles, no dividers */
-.logo-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-.logo-card { background: var(--tdb-dark); display: grid; place-items: center; padding: 3rem 2rem; min-height: 210px; }
+.logo-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.logo-card { background: var(--tdb-dark); display: grid; place-items: center; padding: 2rem; aspect-ratio: 2 / 1; }
 .logo-card img { max-width: 100%; max-height: 120px; width: auto; height: auto; }
 @media (max-width: 991px) { .logo-cards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .logo-cards { grid-template-columns: 1fr; } }
@@ -680,6 +790,28 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 /* A long bold lead-in can sit in the eyebrow slot above the title (Gold). */
 .subpage-banner--plain .eyebrow { max-width: 70rem; font-size: 19.2px; line-height: 1.23; }
 @media (max-width: 991px) { .subpage-banner--plain { min-height: 320px; padding: 130px 0 48px; } }
+main[data-path="/testimonials"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
+main[data-path="/testimonials"] .subpage-banner--plain .eyebrow { margin-bottom: 8px; }
+main[data-path="/testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; }
+/* Trusted: live sets the title at 300 on desktop; on phones it is a 30px title at 200 and the clients quote is hidden. */
+@media (max-width: 991px) { .subpage-banner--plain .h1 { font-size: 35px; } }
+/* More Testimonials shares the Testimonials banner; the Gold listing puts its eyebrow at 200 on phones;
+   the Blog index puts the eyebrow at 225 with the grid close under the title. */
+main[data-path="/more-testimonials"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain .eyebrow { margin-bottom: 8px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain { padding-bottom: 0; }
+main[data-path="/more-testimonials"] .subpage-banner + .section { padding-top: 2px; }
+@media (max-width: 991px) { main[data-path="/gold"] .subpage-banner--plain { min-height: 0; padding-top: 200px; } }
+main[data-path="/blog"] .subpage-banner--plain-center { min-height: 0; padding: 225px 0 164px; }
+main[data-path="/blog"] .subpage-banner--plain-center .eyebrow { margin-bottom: 11px; }
+main[data-path="/trusted"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
+@media (max-width: 991px) {
+  main[data-path="/trusted"] .subpage-banner--plain { padding-top: 200px; }
+  main[data-path="/trusted"] .subpage-banner--plain .h1 { font-size: 30px; }
+}
+/* Live hides the "What Our Clients Say" blocks (carousel, or single quote without an eyebrow) at phone width. */
+@media (max-width: 767px) { .testimonial-section--carousel, .testimonial-section--clients { display: none; } }
 
 /* Plain centered variant (Contact Thank You): black + leaf, content centered */
 .subpage-banner--plain-center { align-items: center; text-align: center; min-height: 600px; padding: 150px 0 120px; }
@@ -697,8 +829,8 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .google-rating-count { font-size: 0.95rem; opacity: 0.8; }
 
 /* Quote grid (More Testimonials wall) — dark cards on black, white text */
-.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-.quote-card { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; padding: 2.5rem 2.5rem 2.25rem; margin: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; max-width: 1050px; }
+.quote-card { background: rgba(189, 186, 186, 0.14); border: 1px solid rgba(227, 227, 227, 0.35); border-radius: 0; padding: 30px; margin: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 .quote-card blockquote { margin: 0; font-size: 1.05rem; line-height: 1.7; color: #f2f2f2; }
 .quote-card figcaption { font-weight: 700; color: var(--tdb-white, #fff); font-size: 0.95rem; letter-spacing: 0.01em; }
 @media (max-width: 767px) { .quote-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
@@ -740,14 +872,22 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 @media (max-width: 991px) { .post-masthead { padding-top: 150px; } .post-masthead-name { font-size: 36px; } }
 
 /* Two-column body: article left, promo card right (roughly 2:1 on the live site). */
-.post-main { padding-top: 56px; }
-.post-layout { display: grid; grid-template-columns: minmax(0, 897fr) minmax(0, 414fr); gap: 30px; align-items: start; }
+.post-main { padding-top: 115px; }
+/* Live insets post and event content 60px inside the 1440 frame (sidebar ends at 1380). */
+.post-main > .container { padding-inline: 60px; }
+@media (max-width: 991px) { .post-main > .container { padding-inline: var(--gutter); } }
+/* Gold events carry a taller masthead: eyebrow at 296, title 140px below the series name. */
+main[data-path^="/gold/"] .post-masthead { padding-top: 296px; }
+main[data-path^="/gold/"] .post-main { padding-top: 140px; }
+.post-layout { display: grid; grid-template-columns: minmax(0, 1fr) 354px; gap: 60px; align-items: start; }
 .post-title { font-size: 54.4px; font-weight: 700; line-height: 1.23; margin: 0 0 1rem; }
 .post-meta { display: flex; flex-wrap: wrap; gap: 1.75rem; margin: 0 0 2.5rem; font-size: 16px; font-weight: 700; color: #e3e3e3; }
 .post-meta-item { display: inline-flex; align-items: center; gap: 0.45rem; }
 .post-meta-item svg { width: 15px; height: 15px; fill: currentColor; flex: none; }
 /* Post body copy is lighter and tighter than the marketing prose. */
-.post-body p, .post-body li { font-size: 16px; font-weight: 100; line-height: 27.2px; color: var(--tdb-white); }
+.post-body p, .post-body li { font-size: 16px; font-weight: 300; line-height: 27.2px; color: var(--tdb-white); }
+/* Live post images sit at 600px inside the 906px column, 16px above the copy. */
+.post-body .post-body-img { max-width: min(600px, 100%); margin-bottom: 16px; }
 .post-body a { color: var(--tdb-accent); font-weight: 700; text-decoration: none; }
 .post-body a:hover { text-decoration: underline; }
 .post-body-img { max-width: 100%; height: auto; margin: 1.75rem 0; }
@@ -770,7 +910,7 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .post-promo-btn { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
 
 @media (max-width: 991px) {
-  .post-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .post-layout { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
   .post-title { font-size: 38px; }
 }
 
@@ -782,7 +922,10 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 
 /* "More from The Design Boutique Blog" cards. */
 .post-related-heading { font-size: 35.2px; font-weight: 700; line-height: 1.23; text-align: center; margin: 0 0 2.5rem; }
-.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.post-related > .container { padding-inline: 30px; }
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.post-related .event-grid { column-gap: 30px; }
+.post-related .event-card { padding: 40px 80px 120px; }
 .related-card { display: block; background: #363636; border: 1px solid #070707; text-decoration: none; }
 .related-card img { display: block; width: 100%; aspect-ratio: 553 / 292; object-fit: cover; }
 .related-card-placeholder { display: block; width: 100%; aspect-ratio: 553 / 292; background: #202020; }
@@ -795,7 +938,7 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 .post-body-video figcaption { margin-top: 0.6rem; font-size: 15px; color: #e3e3e3; }
 
 /* Laney Said index grid: two wide columns of image-over-caption cards. */
-.post-grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 20%; row-gap: 35px; }
+.post-grid { display: grid; grid-template-columns: 340px 340px; column-gap: 320px; row-gap: 35px; justify-content: center; }
 .post-card { display: block; background: #363636; text-decoration: none; }
 .post-card img { display: block; width: 100%; aspect-ratio: 440 / 309; object-fit: cover; }
 .post-card-placeholder { display: block; width: 100%; aspect-ratio: 440 / 309; background: #202020; }
@@ -841,16 +984,16 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 @media (max-width: 991px) { .gold-related-grid { grid-template-columns: 1fr; } }
 
 /* Client case study: Industry / Services rail on the left, case study right. */
-.client-main { padding-top: 225px; }
-.client-layout { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 3rem; align-items: start; }
+.client-main { padding-top: 236px; }
+.client-layout { display: grid; grid-template-columns: 294px minmax(0, 1fr); gap: 60px; align-items: start; }
 .client-rail-group { margin-bottom: 2.25rem; }
 .client-rail-label { font-size: 16px; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.35rem; }
-.client-rail-value { font-size: 19.2px; font-weight: 100; color: var(--tdb-white); margin: 0; }
+.client-rail-value { font-size: 25px; line-height: 1.25; font-weight: 300; color: var(--tdb-white); margin: 0; }
 .client-rail-list { list-style: none; margin: 0; padding: 0; }
-.client-rail-list li { font-size: 19.2px; font-weight: 100; color: var(--tdb-white); margin: 0 0 0.15rem; }
+.client-rail-list li { font-size: 25px; line-height: 1.25; font-weight: 300; color: var(--tdb-white); margin: 0 0 0.15rem; }
 .client-tier { color: var(--tdb-accent); font-weight: 700; }
 .client-title { font-size: 54.4px; font-weight: 700; line-height: 1.23; margin: 0 0 1rem; }
-.client-intro { font-size: 19.2px; font-weight: 100; line-height: 1.55; color: var(--tdb-white); margin: 0 0 2rem; max-width: 62rem; }
+.client-intro { font-size: 25px; font-weight: 300; line-height: 1.25; color: var(--tdb-white); margin: 0 0 16px; max-width: none; }
 .client-body .post-body-img, .client-body img { margin: 0 0 1.75rem; }
 @media (max-width: 991px) {
   .client-main { padding-top: 160px; }
@@ -870,7 +1013,7 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
 .client-cover-name { font-size: 35.2px; font-weight: 700; color: var(--tdb-white); line-height: 1.2; }
 .client-cover-btn { background: var(--tdb-accent); color: var(--tdb-white); font-weight: 700; padding: 0.7rem 1.4rem; }
 /* Gallery: two-column masonry, 30px gutters, as on the live case studies. */
-.client-gallery { column-count: 2; column-gap: 30px; }
+.client-gallery { column-count: 2; column-gap: 30px; margin-top: 30px; }
 .client-gallery img { display: block; width: 100%; height: auto; margin-bottom: 30px; break-inside: avoid; }
 @media (max-width: 767px) {
   .client-gallery { column-count: 1; column-gap: 10px; }
@@ -1038,4 +1181,28 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
 
 @media (prefers-reduced-motion: reduce) {
   .pcgate-btn, .pcgate-track, .pcgate-track::before { transition: none; }
+}
+
+/* Phone-width parity for the home services cards and FAQ accordion (measured on live at 390):
+   service cards 260px on a 30px inset with no gap between them, a 50px icon, the title 7px under it;
+   FAQ items full-bleed, 84px tall, 16px regular titles, 1px apart. */
+@media (max-width: 767px) {
+  .services-grid { gap: 0; }
+  .service-card { min-height: 260px; padding: 30px; }
+  .service-icon { width: 50px; height: 50px; margin-bottom: 7px; }
+  .service-title { margin-bottom: 16px; }
+  .faq-list { margin-inline: calc(-1 * var(--gutter)); gap: 1px; }
+  .faq-item { margin: 0 0 1px; }
+  .faq-item summary { padding: 15px 30px 15px 15px; font-size: 16px; font-weight: 400; line-height: 27.2px; gap: 10px; }
+  .faq-answer { padding: 0 30px 15px 38px; }
+}
+
+/* Posts and events at phone width (measured on live at 390): eyebrow at 220, 30px series name,
+   35px title 40px under it, 25px related heading. Overrides the desktop masthead rules above. */
+@media (max-width: 991px) {
+  .post-masthead, main[data-path^="/gold/"] .post-masthead { padding-top: 220px; }
+  .post-masthead-name { font-size: 30px; }
+  .post-main, main[data-path^="/gold/"] .post-main { padding-top: 40px; }
+  .post-title { font-size: 35px; }
+  .post-related-heading { font-size: 25px; }
 }

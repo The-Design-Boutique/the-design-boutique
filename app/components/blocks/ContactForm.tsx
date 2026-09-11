@@ -129,7 +129,7 @@ export function ContactForm({ block }: { block: any }) {
   }
 
   return (
-    <Section settings={block.settings} className="with-leaf">
+    <Section settings={block.settings} className="with-leaf section--contact">
       <div className="contact-grid">
         <div className="contact-intro">
           {block.leftHeading ? <h2 className="h2">{block.leftHeading}</h2> : null}
