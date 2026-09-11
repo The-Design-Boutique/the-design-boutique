@@ -376,7 +376,17 @@ main[data-path^="/solutions"] .subpage-banner + .section .section-heading .lead 
 .faq-answer { padding: 0 1.5rem 1.25rem 3.5rem; color: var(--tdb-offwhite); }
 
 /* Contact + algorithms (two-column) */
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+/* Live: 620px intro column, 70px gap, 650px form column; 35.2px intro heading, 19.2px light lead, 25px form heading. */
+.section--contact { padding-block: 179px 181px; }
+@media (max-width: 991px) { .section--contact { padding-block: 96px; } }
+.contact-grid { display: grid; grid-template-columns: 620fr 650fr; gap: 70px; align-items: start; }
+.contact-grid .contact-intro .h2 { font-size: 35.2px; line-height: 1.23; margin-bottom: 27px; }
+.contact-grid .contact-intro .lead { font-size: 19.2px; font-weight: 300; line-height: 1.23; }
+.contact-grid .contact-form-heading .h2 { font-size: 25px; line-height: 1.23; }
+@media (max-width: 991px) {
+  .contact-grid .contact-intro .h2 { font-size: 25px; }
+  .contact-grid .contact-form-heading .h2 { font-size: 30px; }
+}
 @media (max-width: 991px) { .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .contact-intro .lead { margin-bottom: 1.5rem; }
 .contact-bullets { list-style: none; padding: 0; margin: 0 0 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
@@ -451,9 +461,14 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 
 /* Footer */
 /* Live's footer runs about 630px tall; ours was 432. */
-.site-footer { background: var(--tdb-black); padding-block: 120px 60px; }
+.site-footer { background: var(--tdb-black); padding-block: 108px 30px; }
 .site-footer .container--wide { max-width: 1640px; }
-.footer-top { display: grid; grid-template-columns: auto 1.7fr 0.7fr 1.05fr 1.15fr 1.25fr; gap: 1.75rem; align-items: start; }
+/* Live footer: four fixed columns (290/490/224/176) inset 8px, then the connect and newsletter
+   blocks wrap to a second row 30px below, spanning the first two and last two columns. */
+.footer-top { display: grid; grid-template-columns: 290px 490px 224px 176px; gap: 30px 0; align-items: start; padding-left: 8px; }
+.footer-top > .footer-col:nth-child(5) { grid-column: 1 / 3; }
+.footer-top > .footer-newsletter { grid-column: 3 / 5; }
+@media (max-width: 1200px) { .footer-top { padding-left: 0; } .footer-top > .footer-col:nth-child(5), .footer-top > .footer-newsletter { grid-column: auto; } }
 @media (max-width: 1200px) { .footer-top { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 767px) {
   .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -479,7 +494,7 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 .footer-subscribe input { padding: 0.85rem 1rem; background: transparent; border: 1px solid #5a5a5a; color: var(--tdb-white); font-family: inherit; font-size: 1rem; }
 .footer-subscribe input::placeholder { color: var(--tdb-accent); opacity: 1; }
 .footer-subscribe .btn { width: 100%; }
-.footer-bottom { margin-top: 3rem; padding-top: 1.75rem; border-top: 1px solid #333; }
+.footer-bottom { margin-top: 27px; padding-top: 30px; border-top: 1px solid #333; }
 .footer-bottom p { margin: 0; color: var(--tdb-offwhite); font-size: 0.95rem; }
 .footer-bottom a { color: var(--tdb-white); text-decoration: underline; }
 
@@ -579,7 +594,9 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 .prose p { margin: 0 0 1rem; }
 .prose h2 { font-size: 48px; font-weight: 700; margin: 2.25rem 0 0.85rem; line-height: 1.23; }
 /* The About page's section heading is the light cut on live, with more air before the portrait. */
-.prose--about h2 { font-weight: 300; margin-bottom: 40px; }
+.prose--about h2 { font-weight: 300; margin-bottom: 64px; }
+/* Live leaves 200px under the last bio paragraph before the band. */
+main[data-path="/about"] .rt-leaf-right { padding-bottom: 184px; }
 .prose h3 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.15; }
 .prose h4 { font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.2; }
 .prose h2:first-child, .prose h3:first-child, .prose h4:first-child { margin-top: 0; }
@@ -765,6 +782,13 @@ main[data-path="/programs"] .tier-subitem { margin: 0 0 0 1rem; }
 main[data-path="/testimonials"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
 main[data-path="/testimonials"] .subpage-banner--plain .eyebrow { margin-bottom: 8px; }
 main[data-path="/testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; }
+/* Trusted: live sets the title at 300 on desktop; on phones it is a 30px title at 200 and the clients quote is hidden. */
+main[data-path="/trusted"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
+@media (max-width: 991px) {
+  main[data-path="/trusted"] .subpage-banner--plain { padding-top: 200px; }
+  main[data-path="/trusted"] .subpage-banner--plain .h1 { font-size: 30px; }
+}
+@media (max-width: 767px) { main[data-path="/trusted"] .testimonial-section { display: none; } }
 
 /* Plain centered variant (Contact Thank You): black + leaf, content centered */
 .subpage-banner--plain-center { align-items: center; text-align: center; min-height: 600px; padding: 150px 0 120px; }
