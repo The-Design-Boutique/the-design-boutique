@@ -144,6 +144,12 @@ main > .section.rt-leaf-right--top:first-of-type:not(.hero):not(.subpage-banner)
 /* The programme video section on live: 92px above, 60px between heading and poster, 208px below. */
 .section.bg-leaves { padding: 92px 0 208px; }
 .bg-leaves .section-heading { margin-bottom: 60px; }
+@media (max-width: 767px) {
+  /* Live on phones: 50px above the heading, the poster 330x410 flush to the section bottom. */
+  .section.bg-leaves { padding: 50px 0 0; }
+  .bg-leaves .section-heading { margin-bottom: 30px; }
+  .bg-leaves .video-frame .video-poster { aspect-ratio: 330 / 410; }
+}
 
 /* Typography */
 .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 1.05rem; font-weight: 700; color: var(--tdb-white); margin: 0 0 0.9rem; }
@@ -878,7 +884,9 @@ main[data-path^="/gold/"] .post-main { padding-top: 140px; }
 .post-meta-item { display: inline-flex; align-items: center; gap: 0.45rem; }
 .post-meta-item svg { width: 15px; height: 15px; fill: currentColor; flex: none; }
 /* Post body copy is lighter and tighter than the marketing prose. */
-.post-body p, .post-body li { font-size: 16px; font-weight: 300; line-height: 32px; letter-spacing: -0.1px; color: var(--tdb-white); }
+.post-body p, .post-body li { font-size: 16px; font-weight: 300; line-height: 27.2px; color: var(--tdb-white); }
+/* Live post images sit at 600px inside the 906px column, 16px above the copy. */
+.post-body .post-body-img { max-width: 600px; margin-bottom: 16px; }
 .post-body a { color: var(--tdb-accent); font-weight: 700; text-decoration: none; }
 .post-body a:hover { text-decoration: underline; }
 .post-body-img { max-width: 100%; height: auto; margin: 1.75rem 0; }
