@@ -1195,3 +1195,13 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
   .faq-item summary { padding: 15px 30px 15px 15px; font-size: 16px; font-weight: 400; line-height: 27.2px; gap: 10px; }
   .faq-answer { padding: 0 30px 15px 38px; }
 }
+
+/* Posts and events at phone width (measured on live at 390): eyebrow at 220, 30px series name,
+   35px title 40px under it, 25px related heading. Overrides the desktop masthead rules above. */
+@media (max-width: 991px) {
+  .post-masthead, main[data-path^="/gold/"] .post-masthead { padding-top: 220px; }
+  .post-masthead-name { font-size: 30px; }
+  .post-main, main[data-path^="/gold/"] .post-main { padding-top: 40px; }
+  .post-title { font-size: 35px; }
+  .post-related-heading { font-size: 25px; }
+}
