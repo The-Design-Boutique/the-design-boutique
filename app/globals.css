@@ -100,6 +100,7 @@ main { overflow-x: clip; }
 .container { max-width: none; margin-inline: auto; padding-inline: var(--gutter); }
 .container--wide { max-width: 1440px; }
 .container--narrow { max-width: 820px; }
+main[data-path="/privacy-policy"] .prose--wide, main[data-path="/ada-compliance"] .prose--wide { max-width: 1050px; }
 
 .section { padding-block: 96px; }
 .section[data-pt='none'] { padding-top: 0; }
@@ -112,10 +113,10 @@ main { overflow-x: clip; }
 /* Pages that open with a content section instead of a hero must clear the fixed header. */
 main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 225px; }
 /* The long legal pages sit a little lower still, matching the live site. */
-main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 300px; }
+main > .section.rt-leaf-right--top:first-of-type:not(.hero):not(.subpage-banner) { padding-top: 300px; }
 @media (max-width: 991px) {
   main > .section:first-child:not(.hero):not(.subpage-banner) { padding-top: 160px; }
-  main > .section.rt-leaf-right--top:first-child:not(.hero):not(.subpage-banner) { padding-top: 190px; }
+  main > .section.rt-leaf-right--top:first-of-type:not(.hero):not(.subpage-banner) { padding-top: 190px; }
 }
 
 /* Backgrounds */
@@ -435,7 +436,8 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 .contact-form .fba-actions { margin-top: 22px; }
 .contact-form .btn--send { height: 38px; padding: 0; font-size: 19.2px; line-height: 38px; border-radius: 0; }
 @media (max-width: 991px) {
-  main[data-path="/contact"] > .section:first-of-type { padding-top: 150px; }
+  main[data-path="/contact"] > .section:first-of-type { padding-top: 175px; }
+  main[data-path="/contact"] .container .container { padding-inline: 0; }
   .contact-centered .contact-form-heading { margin-bottom: 40px; }
   .contact-centered .contact-form-heading .h2 { font-size: 35px; }
 }
@@ -786,12 +788,23 @@ main[data-path="/testimonials"] .subpage-banner--plain { min-height: 0; padding-
 main[data-path="/testimonials"] .subpage-banner--plain .eyebrow { margin-bottom: 8px; }
 main[data-path="/testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; }
 /* Trusted: live sets the title at 300 on desktop; on phones it is a 30px title at 200 and the clients quote is hidden. */
+@media (max-width: 991px) { .subpage-banner--plain .h1 { font-size: 35px; } }
+/* More Testimonials shares the Testimonials banner; the Gold listing puts its eyebrow at 200 on phones;
+   the Blog index puts the eyebrow at 225 with the grid close under the title. */
+main[data-path="/more-testimonials"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain .eyebrow { margin-bottom: 8px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain .h1 { font-size: 54.4px; }
+main[data-path="/more-testimonials"] .subpage-banner--plain { padding-bottom: 0; }
+main[data-path="/more-testimonials"] .subpage-banner + .section { padding-top: 2px; }
+@media (max-width: 991px) { main[data-path="/gold"] .subpage-banner--plain { min-height: 0; padding-top: 200px; } }
+main[data-path="/blog"] .subpage-banner--plain-center { min-height: 0; padding: 225px 0 164px; }
+main[data-path="/blog"] .subpage-banner--plain-center .eyebrow { margin-bottom: 11px; }
 main[data-path="/trusted"] .subpage-banner--plain { min-height: 0; padding-top: 300px; }
 @media (max-width: 991px) {
   main[data-path="/trusted"] .subpage-banner--plain { padding-top: 200px; }
   main[data-path="/trusted"] .subpage-banner--plain .h1 { font-size: 30px; }
 }
-@media (max-width: 767px) { main[data-path="/trusted"] .testimonial-section { display: none; } }
+@media (max-width: 767px) { .testimonial-section { display: none; } }
 
 /* Plain centered variant (Contact Thank You): black + leaf, content centered */
 .subpage-banner--plain-center { align-items: center; text-align: center; min-height: 600px; padding: 150px 0 120px; }
@@ -809,8 +822,8 @@ main[data-path="/trusted"] .subpage-banner--plain { min-height: 0; padding-top: 
 .google-rating-count { font-size: 0.95rem; opacity: 0.8; }
 
 /* Quote grid (More Testimonials wall) — dark cards on black, white text */
-.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-.quote-card { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; padding: 2.5rem 2.5rem 2.25rem; margin: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; max-width: 1050px; }
+.quote-card { background: rgba(189, 186, 186, 0.14); border: 1px solid rgba(227, 227, 227, 0.35); border-radius: 0; padding: 30px; margin: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 .quote-card blockquote { margin: 0; font-size: 1.05rem; line-height: 1.7; color: #f2f2f2; }
 .quote-card figcaption { font-weight: 700; color: var(--tdb-white, #fff); font-size: 0.95rem; letter-spacing: 0.01em; }
 @media (max-width: 767px) { .quote-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
@@ -916,7 +929,7 @@ main[data-path^="/gold/"] .post-main { padding-top: 140px; }
 .post-body-video figcaption { margin-top: 0.6rem; font-size: 15px; color: #e3e3e3; }
 
 /* Laney Said index grid: two wide columns of image-over-caption cards. */
-.post-grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 20%; row-gap: 35px; }
+.post-grid { display: grid; grid-template-columns: 340px 340px; column-gap: 320px; row-gap: 35px; justify-content: center; }
 .post-card { display: block; background: #363636; text-decoration: none; }
 .post-card img { display: block; width: 100%; aspect-ratio: 440 / 309; object-fit: cover; }
 .post-card-placeholder { display: block; width: 100%; aspect-ratio: 440 / 309; background: #202020; }
