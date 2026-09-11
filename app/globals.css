@@ -810,7 +810,7 @@ main[data-path="/trusted"] .subpage-banner--plain { min-height: 0; padding-top: 
   main[data-path="/trusted"] .subpage-banner--plain { padding-top: 200px; }
   main[data-path="/trusted"] .subpage-banner--plain .h1 { font-size: 30px; }
 }
-@media (max-width: 767px) { .testimonial-section { display: none; } }
+@media (max-width: 767px) { .testimonial-section--carousel { display: none; } }
 
 /* Plain centered variant (Contact Thank You): black + leaf, content centered */
 .subpage-banner--plain-center { align-items: center; text-align: center; min-height: 600px; padding: 150px 0 120px; }

@@ -12,7 +12,7 @@ export function TestimonialCarousel({ block }: { block: any }) {
   const prev = () => setI((x) => (x - 1 + items.length) % items.length)
   const next = () => setI((x) => (x + 1) % items.length)
   return (
-    <Section settings={block.settings} container="wide" className="testimonial-section">
+    <Section settings={block.settings} container="wide" className="testimonial-section testimonial-section--carousel">
       <div className="testimonial">
         {block.heading ? <h2 className="h2">{block.heading}</h2> : null}
         <div className="testimonial-body">
