@@ -282,6 +282,7 @@ export function FormRenderer({ form }: { form: FormDoc }) {
         ) : (
           <button type="submit" className="btn btn--send" disabled={status === 'sending'}>
             {status === 'sending' ? 'Sending' : settings.submitButtonText || 'Send'}
+            {status === 'sending' ? null : <span className="btn-plus" aria-hidden="true">+</span>}
           </button>
         )}
       </div>
