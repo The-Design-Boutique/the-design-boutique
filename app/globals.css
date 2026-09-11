@@ -288,6 +288,7 @@ a.service-card:hover .service-text { color: #fff; }
 @media (max-width: 991px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .about-media img { display: block; width: 100%; height: auto; }
 .about-content .h2, .about-content .prose h2 { font-size: 48px; font-weight: 300; line-height: 1.23; margin-bottom: 1.25rem; }
+@media (max-width: 991px) { .about-content .h2 { font-size: 30px; font-weight: 700; } .about-cards .h3, .about-cards h3 { font-size: 24px; } }
 .about-body { max-width: 62ch; margin: 0 0 2.25rem; }
 .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
 @media (max-width: 575px) { .about-cards { grid-template-columns: 1fr; } }
@@ -597,8 +598,10 @@ main[data-path="/contact"] > .section:first-of-type { padding-top: 225px; }
 .prose--about h2 { font-weight: 300; margin-bottom: 64px; }
 /* Live leaves 200px under the last bio paragraph before the band. */
 main[data-path="/about"] .rt-leaf-right { padding-bottom: 184px; }
-.prose h3 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.15; }
-.prose h4 { font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.2; }
+/* Live body copy: h4 35.2px, h3 19.2px (the results and list headings), both bold. */
+.prose h3 { font-size: 35.2px; font-weight: 700; margin: 2rem 0 0.6rem; line-height: 1.23; }
+.prose h4 { font-size: 19.2px; font-weight: 700; margin: 1.9rem 0 0.6rem; line-height: 1.23; }
+@media (max-width: 991px) { .prose h3 { font-size: 25px; } }
 .prose h2:first-child, .prose h3:first-child, .prose h4:first-child { margin-top: 0; }
 .prose ol { margin: 0 0 1rem; padding-left: 1.25rem; }
 /* Brand list: orange square markers with breathing room */
@@ -1156,4 +1159,18 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
 
 @media (prefers-reduced-motion: reduce) {
   .pcgate-btn, .pcgate-track, .pcgate-track::before { transition: none; }
+}
+
+/* Phone-width parity for the home services cards and FAQ accordion (measured on live at 390):
+   service cards 260px on a 30px inset with no gap between them, a 50px icon, the title 7px under it;
+   FAQ items full-bleed, 84px tall, 16px regular titles, 1px apart. */
+@media (max-width: 767px) {
+  .services-grid { gap: 0; }
+  .service-card { min-height: 260px; padding: 30px; }
+  .service-icon { width: 50px; height: 50px; margin-bottom: 7px; }
+  .service-title { margin-bottom: 16px; }
+  .faq-list { margin-inline: calc(-1 * var(--gutter)); gap: 1px; }
+  .faq-item { margin: 0 0 1px; }
+  .faq-item summary { padding: 15px 30px 15px 15px; font-size: 16px; font-weight: 400; line-height: 27.2px; gap: 10px; }
+  .faq-answer { padding: 0 30px 15px 38px; }
 }
