@@ -93,6 +93,9 @@ img {
    ============================================================ */
 
 /* Layout */
+/* Decorative overhangs (the redwood fern, the tree cutout) must never give a phone a sideways scroll. */
+main { overflow-x: clip; }
+
 /* Full-bleed: live's content column is the viewport minus the gutters (1340 at 1440). */
 .container { max-width: none; margin-inline: auto; padding-inline: var(--gutter); }
 .container--wide { max-width: 1440px; }
@@ -454,7 +457,7 @@ a.service-card:hover .service-text { color: #fff; }
 }
 
 /* Subpage banner (first section under the fixed header) */
-.subpage-banner { padding: 236px 0 52px; }
+.subpage-banner { position: relative; overflow: hidden; padding: 236px 0 52px; }
 /* Full-width hero variant (no side image): tall, content weighted to the lower third */
 .subpage-banner--hero { padding: 236px 0 52px; }
 .subpage-banner + .section { padding-top: 32px; }
@@ -464,7 +467,10 @@ a.service-card:hover .service-text { color: #fff; }
 .subpage-banner-title { text-align: center; }
 .subpage-banner-title--left { text-align: left; }
 .subpage-banner-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: center; }
-@media (max-width: 991px) { .subpage-banner-grid { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 991px) {
+  .subpage-banner-grid { grid-template-columns: 1fr; gap: 0; }
+  .subpage-banner-media { position: absolute; top: 0; right: var(--gutter); width: 205px; }
+}
 /* Service banner media: tree-shaped mask + redwood branch overlay (matches live) */
 .subpage-banner-media { position: relative; }
 .subpage-banner-media img {
@@ -680,7 +686,7 @@ a.tier-casestudy:hover { color: var(--tdb-accent); }
 
 /* Logo cards (Trusted) — gray tiles, no dividers */
 .logo-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-.logo-card { background: var(--tdb-dark); display: grid; place-items: center; padding: 3rem 2rem; min-height: 210px; }
+.logo-card { background: var(--tdb-dark); display: grid; place-items: center; padding: 2rem; aspect-ratio: 2 / 1; }
 .logo-card img { max-width: 100%; max-height: 120px; width: auto; height: auto; }
 @media (max-width: 991px) { .logo-cards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .logo-cards { grid-template-columns: 1fr; } }
@@ -883,7 +889,7 @@ a.client-cover:hover .client-cover-hover, a.client-cover:focus-visible .client-c
 .client-cover-name { font-size: 35.2px; font-weight: 700; color: var(--tdb-white); line-height: 1.2; }
 .client-cover-btn { background: var(--tdb-accent); color: var(--tdb-white); font-weight: 700; padding: 0.7rem 1.4rem; }
 /* Gallery: two-column masonry, 30px gutters, as on the live case studies. */
-.client-gallery { column-count: 2; column-gap: 30px; }
+.client-gallery { column-count: 2; column-gap: 30px; margin-top: 30px; }
 .client-gallery img { display: block; width: 100%; height: auto; margin-bottom: 30px; break-inside: avoid; }
 @media (max-width: 767px) {
   .client-gallery { column-count: 1; column-gap: 10px; }
